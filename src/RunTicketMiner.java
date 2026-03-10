@@ -35,4 +35,4 @@ public class RunTicketMiner {
     } // while 
   System.out.println("thank you for visiting! ");
   } // menu
-}
+} // RunTicketMiner
