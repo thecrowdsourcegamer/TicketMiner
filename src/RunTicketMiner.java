@@ -1,15 +1,23 @@
 import java.util.Scanner;
 
-public class RunTicketMiner {
     /** 
-     * @param args
-     * @throws Exception
-     * @author Derek Garcia, 
+     * Part 1 for project for advanced object programming.
+     * @author Derek Garcia, *****, ***** <- add names
      */
-    public static void main(String[] args) throws Exception {
+public class RunTicketMiner {
+
+  /** 
+   * @param args
+   * @throws Exception
+   */
+  public static void main(String[] args) throws Exception {
     menu();
   } // main
   
+
+      /** 
+     * Allows the user to navigate TicketMiner using provided commands.
+     */
   public static void menu() {
     try (Scanner keyboard = new Scanner(System.in)) {
       System.out.println("Please select a menu option.");
