@@ -63,24 +63,29 @@ class Admin extends User {
     void userMenu() {
     String userInput = keyboard.nextLine();
     System.out.println("Please choose an option.");
-    System.out.println("\n 1: Add \n 2: View \n 3: Update \n Delete: \n 5: Back");
+    System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete: \n5: Back");
 
-    
+        while(!userInput.equals("5")) {
 
-        switch (userInput) {
-            case "register":
-            System.out.println("Please s");
-
-            break;
-            case "login":
-            System.out.println("test - login");
-            // TODO: Login Method
-            break;
-            default:
-            System.out.println("Invalid option entered.");
-            break;
-        } // switch
-    }
+            switch (userInput) {
+                case "1":
+                System.out.println("add user");
+                break;
+                case "2":
+                System.out.println("view");
+                break;
+                case "3":
+                System.out.println("Update");
+                break;
+                case "4":
+                System.out.println("delete");
+                break;
+                default:
+                System.out.println("Invalid option entered.");
+                break;
+            } // switch
+        } //while
+    } //user menu
 
 
     void add() {
