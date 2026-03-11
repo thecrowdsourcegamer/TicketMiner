@@ -38,7 +38,7 @@ public class RunTicketMiner {
           default:
         System.out.println("Invalid option entered.");
             break;
-        } // switch–
+        } // switch
         
         
         
