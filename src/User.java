@@ -1,15 +1,19 @@
 import java.util.Scanner;
 
-public class User {
+public abstract class User {
     String userName;
     boolean canEdit;
-    Scanner keyboard = new Scanner(System.in);
+    Scanner keyboard;
 
-    
-    void userMenu () {
-        //this will be overwritten
+    public User(Scanner keyboard) {
+        this.keyboard = keyboard;
     }
-    void back() {}
+
+    abstract void userMenu ();
+
+    void back() {
+        System.out.println("going back");
+    }
 
     public String getUserName() {
         return userName;
@@ -29,20 +33,55 @@ public class User {
     public void setKeyboard(Scanner keyboard) {
         this.keyboard = keyboard;
     }
-
-
-
 } // user 
 
-class customer extends User {
+class Customer extends User {
+    public Customer(Scanner keyboard) {
+    super(keyboard);
+    }
 
-}
+    @Override
+    void userMenu() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+} // customer
 
-class organizer extends User {
+class Organizer extends User {
+    public Organizer(Scanner keyboard) {
+    super(keyboard);
+    }
+        @Override
+    void userMenu() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+} // organizer
 
-}
+class Admin extends User {
+    public Admin(Scanner keyboard) {
+    super(keyboard);
+    }
+    void userMenu() {
+    String userInput = keyboard.nextLine();
+    System.out.println("Please choose an option.");
+    System.out.println("\n 1: Add \n 2: View \n 3: Update \n Delete: \n 5: Back");
 
-class admin extends User {
+    
+
+        switch (userInput) {
+            case "register":
+            System.out.println("Please s");
+
+            break;
+            case "login":
+            System.out.println("test - login");
+            // TODO: Login Method
+            break;
+            default:
+            System.out.println("Invalid option entered.");
+            break;
+        } // switch
+    }
+
 
     void add() {
         // needs info as same as customer / organizer 
