@@ -21,7 +21,7 @@ public class RunTicketMiner {
   public static void menu() {
     try (Scanner keyboard = new Scanner(System.in)) {
       System.out.println("Please select a menu option.");
-      System.out.println("\n 1: Register \n 2: Login \n 3: EXIT");
+      System.out.println("\n1: Register \n2: Login \n3: EXIT");
       String userInput = keyboard.nextLine().strip().toLowerCase().trim();
 
       while(!userInput.equals("exit")) {

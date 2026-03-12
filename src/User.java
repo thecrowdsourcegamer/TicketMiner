@@ -63,7 +63,7 @@ class Admin extends User {
     void userMenu() {
     String userInput = keyboard.nextLine();
     System.out.println("Please choose an option.");
-    System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete: \n5: Back");
+    System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete: \n5: Exit");
 
         while(!userInput.equals("5")) {
 
