@@ -9,7 +9,7 @@ public abstract class User {
         this.keyboard = keyboard;
     }
 
-    abstract void userMenu ();
+    abstract void userMenu();
 
     void back() {
         System.out.println("going back");
@@ -60,30 +60,67 @@ class Admin extends User {
     public Admin(Scanner keyboard) {
     super(keyboard);
     }
+
+    @Override
     void userMenu() {
-    String userInput = keyboard.nextLine();
     System.out.println("Please choose an option.");
     System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete: \n5: Exit");
+    String userInput = keyboard.nextLine();
 
         while(!userInput.equals("5")) {
 
             switch (userInput) {
                 case "1":
-                System.out.println("add user");
+                System.out.println("Please select an option");
+                System.out.println("");
+                String subUserInputAdd = keyboard.nextLine();
+                    switch (subUserInputAdd) {
+                        case "1":
+                            
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
                 break;
                 case "2":
                 System.out.println("view");
+                    String subUserInputView = keyboard.nextLine();
+                    switch (subUserInputView) {
+                        case "1":
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
                 break;
                 case "3":
                 System.out.println("Update");
+                    String subUserInputUpdate = keyboard.nextLine();
+                    switch (subUserInputUpdate) {
+                        case "1":
+                            
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
                 break;
                 case "4":
                 System.out.println("delete");
+                    String subUserInputDelete = keyboard.nextLine();
+                    switch (subUserInputDelete) {
+                        case "1":
+                            break;
+                        default:
+                            throw new AssertionError();
+                    }
                 break;
                 default:
                 System.out.println("Invalid option entered.");
                 break;
             } // switch
+
+        System.out.println("Please select a menu option.");
+        System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete: \n5: Exit");
+        userInput = keyboard.nextLine();
         } //while
     } //user menu
 
