@@ -153,6 +153,12 @@ class Customer extends User {
     super(keyboard);
     }
 
+    public Customer(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard, double moneyAvailable, boolean membership) {
+    super(userId, firstName, lastName, userName, password, userType, keyboard);
+    this.moneyAvailable = moneyAvailable;
+    this.membership = membership;
+}
+
 
     @Override
     void userMenu() {
@@ -163,6 +169,10 @@ class Customer extends User {
 class Organizer extends User {
     public Organizer(Scanner keyboard) {
     super(keyboard);
+    }
+
+    public Organizer(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard) {
+    super(userId, firstName, lastName, userName, password, userType, keyboard);
     }
     @Override
     void userMenu() {
