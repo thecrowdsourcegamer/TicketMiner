@@ -1,10 +1,13 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
     /** 
      * Part 1 for project for advanced object programming.
      * @author Derek Garcia, *****, ***** <- add names
      */
 public class RunTicketMiner {
+    private static List<Venue> venues = new ArrayList<>();
 
   /** 
    * @param args
@@ -52,3 +55,4 @@ public class RunTicketMiner {
     System.out.println("thank you for visiting! ");
   } // menu
 } // RunTicketMiner
+
