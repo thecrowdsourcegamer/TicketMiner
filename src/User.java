@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 
 public abstract class User {
@@ -8,7 +9,7 @@ public abstract class User {
     private String password;
     private String userType;
     private boolean canEdit;
-    Scanner keyboard;
+    private Scanner keyboard;
 
     //constructor
     public User(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard) {
@@ -132,9 +133,26 @@ class Customer extends User {
     private double moneyAvailable;
     private boolean membership;
 
+    public double getMoneyAvailable() {
+        return moneyAvailable;
+    }
+
+    public boolean isMembership() {
+        return membership;
+    }
+
+    public void setMembership(boolean membership) {
+        this.membership = membership;
+    }
+
+    public void setMoneyAvailable(double moneyAvailable) {
+        this.moneyAvailable = moneyAvailable;
+    }
+
     public Customer(Scanner keyboard) {
     super(keyboard);
     }
+
 
     @Override
     void userMenu() {
@@ -153,36 +171,39 @@ class Organizer extends User {
 } // organizer
 
 class Admin extends User {
-    public Admin(Scanner keyboard) {
+    private  List<User> users;
+
+    public Admin(Scanner keyboard, List<User> users) {
     super(keyboard);
+    this.users = users;
     }
 
     @Override
     void userMenu() {
     System.out.println("Please choose an option.");
     System.out.println("\n1: Add new user \n2: View \n3: Update \n4: Delete \n5: Exit");
-    String userInput = keyboard.nextLine().trim();
+    String userInput = getKeyboard().nextLine().trim();
 
         while(!userInput.equals("5")) {
             switch (userInput) {
-                case "1" -> add(userInput);
-                case "2" -> view(userInput);
-                case "3" -> update(userInput);
-                case "4" -> delete(userInput);
+                case "1" -> add();
+                case "2" -> view();
+                case "3" -> update();
+                case "4" -> delete();
                 default -> System.out.println("Invalid option entered.");
             } // switch
 
         System.out.println("Please select a menu option.");
         System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete \n5: Exit");
-        userInput = keyboard.nextLine();
+        userInput = getKeyboard().nextLine();
         } //while
     } //user menu
 
 
-    private void add(String userInput) {
+    private void add() {
         System.out.println("Please select an option");
         System.out.println("1: Add new organizer \n2: Add new customer");
-        userInput = keyboard.nextLine();
+        String userInput = getKeyboard().nextLine().trim();
         switch (userInput) {
             case "1":
             break;
@@ -193,10 +214,10 @@ class Admin extends User {
         }
 
     }
-   private void view(String userInput) {
+   private void view() {
         System.out.println("Please select an option");
         System.out.println("1: Display all members \n2: Search for user");
-        userInput = keyboard.nextLine();
+        String userInput = getKeyboard().nextLine().trim();
         switch (userInput) {
             case "1":
             displayUsers();
@@ -214,16 +235,45 @@ class Admin extends User {
     }
 
     private void displayUsers() {
-        // part of view 
-    }
-    private void search() {
-        //part of view
+        if(users.isEmpty()) {
+            System.out.println("No users found.");
+            return;
+        }
+
+        for(User u : users) {
+            System.out.println(u);
+        }
     }
 
-    private void update(String userInput) {
+    private void search() {
+        System.out.println("Enter ID, name, or username:");
+        String input = getKeyboard().nextLine().trim();
+
+        for(User u : users) {
+
+            if(u.matchesUsername(input) || u.matchesName(input)) {
+                System.out.println(u);
+                return;
+            }
+
+            try {
+                int id = Integer.parseInt(input);
+
+                if(u.matchesId(id)) {
+                    System.out.println(u);
+                    return;
+                }
+
+            } catch(Exception e) {}
+    }
+
+    System.out.println("User not found.");
+    }
+
+    private void update() {
         System.out.println("Please select an option");
         System.out.println("1: Change Name \n2: Change Username \n3: Change Password");
-        userInput = keyboard.nextLine();
+        String userInput = getKeyboard().nextLine().trim();
         switch (userInput) {
             case "1":
             System.out.println("test");
@@ -234,7 +284,7 @@ class Admin extends User {
             break;
             default:
             System.out.println("Invalid option entered.");
-        }
+        } 
         // 3 options
         // change name
         // change username
@@ -243,21 +293,30 @@ class Admin extends User {
         // display menu options
     
     }
-    private void delete(String userInput) {
-        System.out.println("Please enter either ID, name, or username to delete the found user.");
-        userInput = keyboard.nextLine();
-        //delete member found
-        // error if no found
-        // display menu
-        switch (userInput) {
-            case "1":
-            break;
-            case "2":
-            break;
-            case "3":
-            break;
-            default:
-            System.out.println("Invalid option entered.");
+    private void delete() {
+    System.out.println("Enter ID, name, or username to delete:");
+    String input = getKeyboard().nextLine().trim();
+
+    for (int i = 0; i < users.size(); i++) {
+        User u = users.get(i);
+
+        if (u.matchesUsername(input) || u.matchesName(input)) {
+            users.remove(i);
+            System.out.println("User deleted.");
+            return;
         }
+
+        try {
+            int id = Integer.parseInt(input);
+            if (u.matchesId(id)) {
+                users.remove(i);
+                System.out.println("User deleted.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+        }
+    }
+
+    System.out.println("User not found.");
     } // delete
 } // user
