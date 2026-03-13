@@ -183,6 +183,11 @@ class Organizer extends User {
 class Admin extends User {
     private  List<User> users;
 
+    public Admin(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard, List<User> users) {
+        super(userId, firstName, lastName, userName, password, userType, keyboard);
+        this.users = users;
+    }
+
     public Admin(Scanner keyboard, List<User> users) {
     super(keyboard);
     this.users = users;
