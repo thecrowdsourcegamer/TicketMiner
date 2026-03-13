@@ -54,6 +54,7 @@ public class RunTicketMiner {
       } // while 
     } // try
     System.out.println("thank you for visiting! ");
+<<<<<<< HEAD
   }
   public static void manageVenue(Scanner keyboard) {
 
@@ -153,4 +154,8 @@ public static void addVenue(Scanner keyboard) {
 }
 }
 
+=======
+  } // menu
+} // RunTicketMiner
+>>>>>>> contributor/patch-5
 
