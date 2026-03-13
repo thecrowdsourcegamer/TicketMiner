@@ -1,14 +1,25 @@
 import java.util.Scanner;
 
 public abstract class User {
-    String userName;
-    boolean canEdit;
+    private int userId; 
+    private String firstName;
+    private String lastName;
+    private String userName;
+    private String password;
+    private String userType;
+    private boolean canEdit;
     Scanner keyboard;
-    String password;
-    String firstName;
-    String lastName;
-    String userType;
 
+    //constructor
+    public User(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard) {
+            this.userId = userId;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.userName = userName;
+            this.password = password;
+            this.userType = userType;
+            this.keyboard = keyboard;
+    }
 
     public User(Scanner keyboard) {
         this.keyboard = keyboard;
@@ -20,27 +31,107 @@ public abstract class User {
         System.out.println("going back");
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public boolean matchesId(int id) {
+        return this.userId == id;
+    }
+
+    public boolean matchesUsername(String username) {
+        return this.userName.equalsIgnoreCase(username);
+    }
+
+    public boolean matchesName(String name) {
+        return getFullName().equalsIgnoreCase(name);
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + userId +
+               ", Name: " + firstName + " " + lastName +
+               ", Username: " + userName +
+               ", Type: " + userType;
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
+    }
+
+    // Getters
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     public String getUserName() {
         return userName;
     }
-    public void setUserName(String userName) {
-        this.userName = userName;
+
+    public String getPassword() {
+        return password;
     }
+
+    public String getUserType() {
+        return userType;
+    }
+
     public boolean isCanEdit() {
         return canEdit;
     }
-    public void setCanEdit(boolean canEdit) {
-        this.canEdit = canEdit;
-    }
+
     public Scanner getKeyboard() {
         return keyboard;
     }
+
+    // Setters
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public void setCanEdit(boolean canEdit) {
+        this.canEdit = canEdit;
+    }
+
     public void setKeyboard(Scanner keyboard) {
         this.keyboard = keyboard;
     }
 } // user 
 
 class Customer extends User {
+    private double moneyAvailable;
+    private boolean membership;
+
     public Customer(Scanner keyboard) {
     super(keyboard);
     }
@@ -55,7 +146,7 @@ class Organizer extends User {
     public Organizer(Scanner keyboard) {
     super(keyboard);
     }
-        @Override
+    @Override
     void userMenu() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
