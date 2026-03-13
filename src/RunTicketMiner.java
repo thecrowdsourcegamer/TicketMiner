@@ -1,6 +1,6 @@
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
     /** 
      * Part 1 for project for advanced object programming.
@@ -54,7 +54,6 @@ public class RunTicketMiner {
       } // while 
     } // try
     System.out.println("thank you for visiting! ");
-<<<<<<< HEAD
   }
   public static void manageVenue(Scanner keyboard) {
 
@@ -132,7 +131,7 @@ public static void addVenue(Scanner keyboard) {
     } else if (type.equalsIgnoreCase("OpenAir")) {
         newVenue = new OpenAir(venueId, name, type, capacity, cost, location);
     } else if (type.equalsIgnoreCase("Stadium")) {
-        newVenue = new Stadium(venueId, name, type, capacity, cost, location);
+        // newVenue = new Stadium(venueId, name, type, capacity, cost, location);
     } else {
         System.out.println("Invalid venue type.");
         return;
@@ -153,9 +152,4 @@ public static void addVenue(Scanner keyboard) {
     }
 }
 }
-
-=======
-  } // menu
-} // RunTicketMiner
->>>>>>> contributor/patch-5
 
