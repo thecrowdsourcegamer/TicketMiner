@@ -33,9 +33,9 @@ public class RunTicketMiner {
             break;
           case "2":
           System.out.println("test - login");
-          Admin testAdmin = new Admin(keyboard);
-          testAdmin.setUserName("admin");
-          testAdmin.userMenu();
+          // Admin testAdmin = new Admin(keyboard);
+          // testAdmin.setUserName("admin");
+          // testAdmin.userMenu();
           break;
           default:
         System.out.println("Invalid option entered.");
