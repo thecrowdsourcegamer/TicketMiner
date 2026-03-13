@@ -219,15 +219,9 @@ class Admin extends User {
         System.out.println("1: Display all members \n2: Search for user");
         String userInput = getKeyboard().nextLine().trim();
         switch (userInput) {
-            case "1":
-            displayUsers();
-            break;
-            case "2":
-            search();
-            // search by ID name or user name
-            break;
-            default:
-            System.out.println("Invalid option entered.");
+            case "1" -> displayUsers();
+            case "2" -> search();
+            default -> System.out.println("Invalid option entered.");
         }
         // 2 options
         // display users
