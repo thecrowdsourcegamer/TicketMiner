@@ -4,6 +4,11 @@ public abstract class User {
     String userName;
     boolean canEdit;
     Scanner keyboard;
+    String password;
+    String firstName;
+    String lastName;
+    String userType;
+
 
     public User(Scanner keyboard) {
         this.keyboard = keyboard;
@@ -64,86 +69,81 @@ class Admin extends User {
     @Override
     void userMenu() {
     System.out.println("Please choose an option.");
-    System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete: \n5: Exit");
-    String userInput = keyboard.nextLine();
+    System.out.println("\n1: Add new user \n2: View \n3: Update \n4: Delete \n5: Exit");
+    String userInput = keyboard.nextLine().trim();
 
         while(!userInput.equals("5")) {
-
             switch (userInput) {
-                case "1":
-                System.out.println("Please select an option");
-                System.out.println("");
-                String subUserInputAdd = keyboard.nextLine();
-                    switch (subUserInputAdd) {
-                        case "1":
-                            
-                            break;
-                        default:
-                            throw new AssertionError();
-                    }
-                break;
-                case "2":
-                System.out.println("view");
-                    String subUserInputView = keyboard.nextLine();
-                    switch (subUserInputView) {
-                        case "1":
-                            break;
-                        default:
-                            throw new AssertionError();
-                    }
-                break;
-                case "3":
-                System.out.println("Update");
-                    String subUserInputUpdate = keyboard.nextLine();
-                    switch (subUserInputUpdate) {
-                        case "1":
-                            
-                            break;
-                        default:
-                            throw new AssertionError();
-                    }
-                break;
-                case "4":
-                System.out.println("delete");
-                    String subUserInputDelete = keyboard.nextLine();
-                    switch (subUserInputDelete) {
-                        case "1":
-                            break;
-                        default:
-                            throw new AssertionError();
-                    }
-                break;
-                default:
-                System.out.println("Invalid option entered.");
-                break;
+                case "1" -> add(userInput);
+                case "2" -> view(userInput);
+                case "3" -> update(userInput);
+                case "4" -> delete(userInput);
+                default -> System.out.println("Invalid option entered.");
             } // switch
 
         System.out.println("Please select a menu option.");
-        System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete: \n5: Exit");
+        System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete \n5: Exit");
         userInput = keyboard.nextLine();
         } //while
     } //user menu
 
 
-    void add() {
-        // needs info as same as customer / organizer 
-        // has menu options
+    private void add(String userInput) {
+        System.out.println("Please select an option");
+        System.out.println("1: Add new organizer \n2: Add new customer");
+        userInput = keyboard.nextLine();
+        switch (userInput) {
+            case "1":
+            break;
+            case "2":
+            break;
+            default:
+            System.out.println("Invalid option entered.");
+        }
 
     }
-    void view() {
+   private void view(String userInput) {
+        System.out.println("Please select an option");
+        System.out.println("1: Display all members \n2: Search for user");
+        userInput = keyboard.nextLine();
+        switch (userInput) {
+            case "1":
+            displayUsers();
+            break;
+            case "2":
+            search();
+            // search by ID name or user name
+            break;
+            default:
+            System.out.println("Invalid option entered.");
+        }
         // 2 options
         // display users
         // search
     }
 
-    void displayUsers() {
+    private void displayUsers() {
         // part of view 
     }
-    void search() {
+    private void search() {
         //part of view
     }
 
-    void update() {
+    private void update(String userInput) {
+        System.out.println("Please select an option");
+        System.out.println("1: Change Name \n2: Change Username \n3: Change Password");
+        userInput = keyboard.nextLine();
+        switch (userInput) {
+            case "1":
+            System.out.println("test");
+            break;
+            case "2":
+            break;
+            case "3":
+            break;
+            default:
+            System.out.println("Invalid option entered.");
+        }
         // 3 options
         // change name
         // change username
@@ -152,13 +152,21 @@ class Admin extends User {
         // display menu options
     
     }
-    void delete() {
+    private void delete(String userInput) {
+        System.out.println("Please enter either ID, name, or username to delete the found user.");
+        userInput = keyboard.nextLine();
         //delete member found
         // error if no found
         // display menu
-    }
-
-    
-
-
-}
+        switch (userInput) {
+            case "1":
+            break;
+            case "2":
+            break;
+            case "3":
+            break;
+            default:
+            System.out.println("Invalid option entered.");
+        }
+    } // delete
+} // user

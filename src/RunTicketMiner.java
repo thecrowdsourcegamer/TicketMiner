@@ -24,16 +24,18 @@ public class RunTicketMiner {
       System.out.println("\n1: Register \n2: Login \n3: EXIT");
       String userInput = keyboard.nextLine().strip().toLowerCase().trim();
 
-      while(!userInput.equals("exit")) {
+      while(!userInput.equals("3")) {
 
         switch (userInput) {
-          case "register":
+          case "1":
           System.out.println("test - register");
           // TODO: Register method
             break;
-          case "login":
+          case "2":
           System.out.println("test - login");
-          // TODO: Login Method
+          Admin testAdmin = new Admin(keyboard);
+          testAdmin.setUserName("admin");
+          testAdmin.userMenu();
           break;
           default:
         System.out.println("Invalid option entered.");
