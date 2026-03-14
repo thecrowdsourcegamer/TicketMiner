@@ -382,6 +382,14 @@ public class RunTicketMiner {
     //return venues;
   }
 
+  public static LocalDate formatDate(String date) {
+    String arr[] = date.split("/");
+    int day = Integer.parseInt(arr[1]);
+    int month = Integer.parseInt(arr[0]);
+    int year = Integer.parseInt(arr[2]);
+    return LocalDate.of(year, month, day);
+  }
+
   public static void readEventCSV(String filePath) {
     //ArrayList<Event> events = new ArrayList<>();
 
@@ -406,13 +414,13 @@ public class RunTicketMiner {
         String generalAdmissionPrice = fields[9].trim();
         
         if(type.equalsIgnoreCase("concert")) {
-          Concert concert = new Concert(Integer.parseInt(id), name, LocalDate.parse(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
+          Concert concert = new Concert(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
           events.add(concert);
         } else if (type.equalsIgnoreCase("sports")) {
-          Sport sport = new Sport(Integer.parseInt(id), name, LocalDate.parse(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null, null);
+          Sport sport = new Sport(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null, null);
           events.add(sport);
         } else if (type.equalsIgnoreCase("theater")) {
-          Special special = new Special(Integer.parseInt(id), name, LocalDate.parse(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
+          Special special = new Special(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
           events.add(special);
         } else {
           System.out.println("Invalid event type for ID: " + id);
@@ -424,5 +432,6 @@ public class RunTicketMiner {
 
     //return events;
   }
+
 }
 
