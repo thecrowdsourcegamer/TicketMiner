@@ -232,23 +232,21 @@ class Admin extends User {
     public void userMenu() {
         String userInput = "";
 
-        while (!userInput.equals("2")) {
+        while (!userInput.equals("4")) {
             System.out.println("\nAdmin Menu");
             System.out.println("1: Manage Users");
-            System.out.println("2: Back");
+            System.out.println("2: Manage Venue");
+            System.out.println("3: Manage Event");
+            System.out.println("4: Back");
 
             userInput = getKeyboard().nextLine().trim();
 
             switch (userInput) {
-                case "1":
-                    manageUsers();
-                    break;
-                case "2":
-                    back();
-                    break;
-                default:
-                    System.out.println("Invalid option entered.");
-                    break;
+                case "1" -> manageUsers();
+                case "2" -> RunTicketMiner.manageVenue(getKeyboard());
+                case "3" -> RunTicketMiner.manageEvent(getKeyboard());
+                case "4" -> back();
+                default -> System.out.println("Invalid option entered.");
             }
         }
     }

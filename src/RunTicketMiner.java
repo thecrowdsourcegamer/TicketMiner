@@ -40,7 +40,7 @@ public class RunTicketMiner {
       System.out.println("\n1: Register \n2: Login \n3: EXIT");
       String userInput = keyboard.nextLine().strip().toLowerCase().trim();
 
-      while(!userInput.equals("3")) {
+      while(!userInput.equals("exit")) {
 
         switch (userInput) {
         case "1" -> {
@@ -75,91 +75,71 @@ public class RunTicketMiner {
     } // try
     System.out.println("thank you for visiting! ");
   }
-  public static void manageVenue(Scanner keyboard) {
+    public static void manageVenue(Scanner keyboard) {
 
-        System.out.println("\nManage Venue");
-        System.out.println("1: Add Venue");
-        System.out.println("2: View Venues");
-        System.out.println("3: Update Venue");
-        System.out.println("4: Delete Venue");
-        System.out.println("5: Back");
+        String input = "";
 
-        String input = keyboard.nextLine().trim();
-
-        while(!input.equals("5")) {
-
-            switch(input) {
-
-                case "1":
-                     addVenue(keyboard);
-                    break;
-
-                case "2":
-                viewAllVenues();
-                  break;
-
-                case "3":
-                    System.out.println("Update venue not implemented yet.");
-                    break;
-
-                case "4":
-                    System.out.println("Delete venue not implemented yet.");
-                    break;
-
-                default:
-                    System.out.println("Invalid option.");
-            }
-
-            System.out.println("\nManage Venue");
+        while (!input.equals("6")) {
+            System.out.println("Please select an option");
             System.out.println("1: Add Venue");
-            System.out.println("2: View Venues");
-            System.out.println("3: Update Venue");
-            System.out.println("4: Delete Venue");
-            System.out.println("5: Back");
+            System.out.println("2: View All Venues");
+            System.out.println("3: Search Venue");
+            System.out.println("4: Update Venue");
+            System.out.println("5: Delete Venue");
+            System.out.println("6: Back");
 
             input = keyboard.nextLine().trim();
-        }
 
+            switch (input) {
+                case "1" -> addVenue(keyboard);
+                case "2" -> viewAllVenues();
+                case "3" -> searchVenue(keyboard);
+                case "4" -> updateVenue(keyboard);
+                case "5" -> deleteVenue(keyboard);
+                case "6" -> System.out.println("Going back.");
+                default -> System.out.println("Invalid option.");
+            }
+        }
     }
     
-  public static void addVenue(Scanner keyboard) {
+    public static void addVenue(Scanner keyboard) {
 
-    System.out.print("Enter venue ID: ");
-    int venueId = Integer.parseInt(keyboard.nextLine().trim());
+        System.out.print("Enter venue ID: ");
+        int venueId = Integer.parseInt(keyboard.nextLine().trim());
 
-    System.out.print("Enter venue name: ");
-    String name = keyboard.nextLine().trim();
+        System.out.print("Enter venue name: ");
+        String name = keyboard.nextLine().trim();
 
-    System.out.print("Enter venue type (Arena, Auditorium, OpenAir, Stadium): ");
-    String type = keyboard.nextLine().trim();
+        System.out.print("Enter venue type (Arena, Auditorium, OpenAir, Stadium): ");
+        String type = keyboard.nextLine().trim();
 
-    System.out.print("Enter capacity: ");
-    int capacity = Integer.parseInt(keyboard.nextLine().trim());
+        System.out.print("Enter capacity: ");
+        int capacity = Integer.parseInt(keyboard.nextLine().trim());
 
-    System.out.print("Enter cost: ");
-    double cost = Double.parseDouble(keyboard.nextLine().trim());
+        System.out.print("Enter cost: ");
+        double cost = Double.parseDouble(keyboard.nextLine().trim());
 
-    System.out.print("Enter location: ");
-    String location = keyboard.nextLine().trim();
+        System.out.print("Enter location: ");
+        String location = keyboard.nextLine().trim();
 
-    Venue newVenue = null;
+        Venue newVenue = null;
 
-    if (type.equalsIgnoreCase("Arena")) {
-        newVenue = new Arena(venueId, name, type, capacity, cost, location);
-    } else if (type.equalsIgnoreCase("Auditorium")) {
-        newVenue = new Auditorium(venueId, name, type, capacity, cost, location);
-    } else if (type.equalsIgnoreCase("OpenAir")) {
-        newVenue = new OpenAir(venueId, name, type, capacity, cost, location);
-    } else if (type.equalsIgnoreCase("Stadium")) {
-        // newVenue = new Stadium(venueId, name, type, capacity, cost, location);
-    } else {
-        System.out.println("Invalid venue type.");
-        return;
+        if (type.equalsIgnoreCase("Arena")) {
+            newVenue = new Arena(venueId, name, "Arena", capacity, cost, location);
+        } else if (type.equalsIgnoreCase("Auditorium")) {
+            newVenue = new Auditorium(venueId, name, "Auditorium", capacity, cost, location);
+        } else if (type.equalsIgnoreCase("OpenAir")) {
+            newVenue = new OpenAir(venueId, name, "OpenAir", capacity, cost, location);
+        } else if (type.equalsIgnoreCase("Stadium")) {
+            newVenue = new Stadium(venueId, name, "Stadium", capacity, cost, location);
+        } else {
+            System.out.println("Invalid venue type.");
+            return;
+        }
+
+        venues.add(newVenue);
+        System.out.println("Venue added successfully.");
     }
-
-    venues.add(newVenue);
-    System.out.println("Venue added successfully.");
-  }
 
   public static void viewAllVenues() {
 
@@ -173,117 +153,219 @@ public class RunTicketMiner {
     }
   }
 
-  public static void manageEvent(Scanner keyboard) {
+    public static void searchVenue(Scanner keyboard) {
 
-        System.out.println("\nManage Event");
-        System.out.println("1: Add Event");
-        System.out.println("2: View Events");
-        System.out.println("3: Update Event");
-        System.out.println("4: Delete Event");
-        System.out.println("5: Back");
-
+        System.out.println("Enter venue ID, name, or type:");
         String input = keyboard.nextLine().trim();
 
-        while(!input.equals("5")) {
+        boolean found = false;
 
-            switch(input) {
-
-                case "1":
-                     addEvent(keyboard);
-                    break;
-
-                case "2":
-                viewAllEvents();
-                  break;
-
-                case "3":
-                    System.out.println("Update venue not implemented yet.");
-                    break;
-
-                case "4":
-                    System.out.println("Delete venue not implemented yet.");
-                    break;
-
-                default:
-                    System.out.println("Invalid option.");
+        for (Venue venue : venues) {
+            if (venue.matchesSearch(input)) {
+                System.out.println(venue);
+                found = true;
             }
+        }
 
-            System.out.println("\nManage Event");
+        if (!found) {
+            System.out.println("Venue not found.");
+        }
+    }
+
+    public static Venue findVenue(String input) {
+
+        for (Venue venue : venues) {
+            if (venue.matchesSearch(input)) {
+                return venue;
+            }
+        }
+
+        return null;
+    }
+
+    public static void updateVenue(Scanner keyboard) {
+
+        System.out.println("Enter venue ID, name, or type to update:");
+        String input = keyboard.nextLine().trim();
+
+        Venue venue = findVenue(input);
+
+        if (venue == null) {
+            System.out.println("Venue not found.");
+            return;
+        }
+
+        System.out.println("Found venue: " + venue);
+
+        System.out.println("1: Change Name");
+        System.out.println("2: Change Capacity");
+        System.out.println("3: Change Cost");
+        System.out.println("4: Change Location");
+
+        String choice = keyboard.nextLine().trim();
+
+        switch (choice) {
+
+            case "1":
+                System.out.print("Enter new name: ");
+                venue.setVenueName(keyboard.nextLine().trim());
+                break;
+
+            case "2":
+                System.out.print("Enter new capacity: ");
+                venue.setCapacity(Integer.parseInt(keyboard.nextLine().trim()));
+                break;
+
+            case "3":
+                System.out.print("Enter new cost: ");
+                venue.setCost(Double.parseDouble(keyboard.nextLine().trim()));
+                break;
+
+            case "4":
+                System.out.print("Enter new location: ");
+                venue.setLocation(keyboard.nextLine().trim());
+                break;
+
+            default:
+                System.out.println("Invalid option.");
+        }
+
+        System.out.println("Venue updated successfully.");
+    }
+
+    public static void deleteVenue(Scanner keyboard) {
+
+        System.out.println("Enter venue ID, name, or type to delete:");
+        String input = keyboard.nextLine().trim();
+
+        Venue venue = findVenue(input);
+
+        if (venue == null) {
+            System.out.println("Venue not found.");
+            return;
+        }
+
+        System.out.println("Found venue: " + venue);
+
+        System.out.print("Confirm delete? (yes/no): ");
+        String confirm = keyboard.nextLine().trim();
+
+        if (confirm.equalsIgnoreCase("yes")) {
+            venues.remove(venue);
+            System.out.println("Venue deleted successfully.");
+        } else {
+            System.out.println("Delete cancelled.");
+        }
+    }
+
+    public static void manageEvent(Scanner keyboard) {
+        String input = "";
+
+        while (!input.equals("5")) {
+            System.out.println("Please select an option");
             System.out.println("1: Add Event");
-            System.out.println("2: View Events");
+            System.out.println("2: View Event");
             System.out.println("3: Update Event");
             System.out.println("4: Delete Event");
             System.out.println("5: Back");
 
             input = keyboard.nextLine().trim();
+
+            switch (input) {
+                case "1" -> addEvent(keyboard);
+                case "2" -> viewEventMenu(keyboard);
+                case "3" -> updateEvent(keyboard);
+                case "4" -> deleteEvent(keyboard);
+                case "5" -> System.out.println("Going back.");
+                default -> System.out.println("Invalid option.");
+            }
         }
-
-  }
-
-  public static void addEvent(Scanner keyboard) {
-    System.out.print("Enter event ID: ");
-    int id = Integer.parseInt(keyboard.nextLine().trim());
-
-    System.out.print("Enter event name: ");
-    String name = keyboard.nextLine().trim();
-
-    System.out.print("Enter event type (Concert, Sport, Theater): ");
-    String type = keyboard.nextLine().trim();
-
-    System.out.print("Enter event date (YYYY-MM-DD): ");
-    LocalDate date = LocalDate.parse(keyboard.nextLine().trim());
-
-    System.out.print("Enter event time (HH:MM): ");
-    LocalTime time = LocalTime.parse(keyboard.nextLine().trim());
-
-    System.out.print("Enter VIP price: ");
-    double vipPrice = Double.parseDouble(keyboard.nextLine().trim());
-
-    System.out.print("Enter Gold price: ");
-    double goldPrice = Double.parseDouble(keyboard.nextLine().trim());
-
-    System.out.print("Enter Silver price: ");
-    double silverPrice = Double.parseDouble(keyboard.nextLine().trim());
-
-    System.out.print("Enter Bronze price: ");
-    double bronzePrice = Double.parseDouble(keyboard.nextLine().trim());
-
-    System.out.print("Enter General Admission price: ");
-    double generalAdmissionPrice = Double.parseDouble(keyboard.nextLine().trim());
-
-    Event newEvent = null;
-
-    if (type.equalsIgnoreCase("Concert")) {
-      System.out.print("Enter artist ");
-      String artist = keyboard.nextLine().trim();
-      System.out.print("Enter genre ");
-      String genre = keyboard.nextLine().trim();
-
-      newEvent = new Concert(id, name, date, time, vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice, artist, genre);
-    } else if (type.equalsIgnoreCase("Sport")) {
-      System.out.print("Enter team1 ");
-      String team1 = keyboard.nextLine().trim();
-      System.out.print("Enter team2 ");
-      String team2 = keyboard.nextLine().trim();
-      System.out.print("Enter league ");
-      String league = keyboard.nextLine().trim();
-
-      newEvent = new Sport(id, name, date, time, vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice, team1, team2, league);
-    } else if (type.equalsIgnoreCase("Special")) {
-      System.out.print("Enter description ");
-      String description = keyboard.nextLine().trim();
-      System.out.print("Enter category ");
-      String category = keyboard.nextLine().trim();
-
-      newEvent = new Special(id, name, date, time, vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice, null, null);
-    } else {
-      System.out.println("Invalid event type.");
-      return;
     }
 
-    events.add(newEvent);
-    System.out.println("Event added successfully.");
-  }
+
+    public static void addEvent(Scanner keyboard) {
+        System.out.print("Enter event ID: ");
+        int id = Integer.parseInt(keyboard.nextLine().trim());
+
+        System.out.print("Enter event name: ");
+        String name = keyboard.nextLine().trim();
+
+        System.out.print("Enter event type (Concert, Sport, Special): ");
+        String type = keyboard.nextLine().trim();
+
+        System.out.print("Enter event date (YYYY-MM-DD): ");
+        LocalDate date = LocalDate.parse(keyboard.nextLine().trim());
+
+        System.out.print("Enter event time (HH:MM): ");
+        LocalTime time = LocalTime.parse(keyboard.nextLine().trim());
+
+        System.out.print("Enter VIP price: ");
+        double vipPrice = Double.parseDouble(keyboard.nextLine().trim());
+
+        System.out.print("Enter Gold price: ");
+        double goldPrice = Double.parseDouble(keyboard.nextLine().trim());
+
+        System.out.print("Enter Silver price: ");
+        double silverPrice = Double.parseDouble(keyboard.nextLine().trim());
+
+        System.out.print("Enter Bronze price: ");
+        double bronzePrice = Double.parseDouble(keyboard.nextLine().trim());
+
+        System.out.print("Enter General Admission price: ");
+        double generalAdmissionPrice = Double.parseDouble(keyboard.nextLine().trim());
+
+        Event newEvent = null;
+
+        if (type.equalsIgnoreCase("Concert")) {
+            System.out.print("Enter artist: ");
+            String artist = keyboard.nextLine().trim();
+
+            System.out.print("Enter genre: ");
+            String genre = keyboard.nextLine().trim();
+
+            newEvent = new Concert(
+                id, name, date, time,
+                vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
+                artist, genre
+            );
+
+        } else if (type.equalsIgnoreCase("Sport")) {
+            System.out.print("Enter team1: ");
+            String team1 = keyboard.nextLine().trim();
+
+            System.out.print("Enter team2: ");
+            String team2 = keyboard.nextLine().trim();
+
+            System.out.print("Enter league: ");
+            String league = keyboard.nextLine().trim();
+
+            newEvent = new Sport(
+                id, name, date, time,
+                vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
+                team1, team2, league
+            );
+
+        } else if (type.equalsIgnoreCase("Special")) {
+            System.out.print("Enter description: ");
+            String description = keyboard.nextLine().trim();
+
+            System.out.print("Enter category: ");
+            String category = keyboard.nextLine().trim();
+
+            newEvent = new Special(
+                id, name, date, time,
+                vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
+                description, category
+            );
+
+        } else {
+            System.out.println("Invalid event type.");
+            return;
+        }
+
+        events.add(newEvent);
+        System.out.println("Event added successfully.");
+    }
 
   public static void viewAllEvents() {
     if (events.isEmpty()) {
@@ -295,6 +377,115 @@ public class RunTicketMiner {
         System.out.println(event);
     }
   }
+
+    public static void searchEvent(Scanner keyboard) {
+        System.out.println("Enter event ID, name, or date:");
+        String input = keyboard.nextLine().trim();
+
+        boolean found = false;
+
+        for (Event event : events) {
+            if (event.matchesSearch(input)) {
+                System.out.println(event);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Event not found.");
+        }
+    }
+
+    public static Event findEvent(String input) {
+        for (Event event : events) {
+            if (event.matchesSearch(input)) {
+                return event;
+            }
+        }
+
+        return null;
+    }
+    public static void updateEvent(Scanner keyboard) {
+        System.out.println("Enter event ID, name, or date to update:");
+        String input = keyboard.nextLine().trim();
+
+        Event event = findEvent(input);
+
+        if (event == null) {
+            System.out.println("Event not found.");
+            return;
+        }
+
+        System.out.println("Found event: " + event);
+        System.out.println("1: Change Name");
+        System.out.println("2: Change Date and Time");
+
+        String choice = keyboard.nextLine().trim();
+
+        switch (choice) {
+            case "1" -> {
+                System.out.print("Enter new event name: ");
+                event.setEventName(keyboard.nextLine().trim());
+                System.out.println("Event name updated successfully.");
+            }
+            case "2" -> {
+                System.out.print("Enter new event date (YYYY-MM-DD): ");
+                LocalDate newDate = LocalDate.parse(keyboard.nextLine().trim());
+
+                System.out.print("Enter new event time (HH:MM): ");
+                LocalTime newTime = LocalTime.parse(keyboard.nextLine().trim());
+
+                event.setDate(newDate);
+                event.setTime(newTime);
+
+                System.out.println("Event date and time updated successfully.");
+            }
+            default -> System.out.println("Invalid option.");
+        }
+    }
+
+    public static void deleteEvent(Scanner keyboard) {
+        System.out.println("Enter event ID, name, or date to delete:");
+        String input = keyboard.nextLine().trim();
+
+        Event event = findEvent(input);
+
+        if (event == null) {
+            System.out.println("Event not found.");
+            return;
+        }
+
+        System.out.println("Found event: " + event);
+        System.out.print("Confirm delete? (yes/no): ");
+        String confirm = keyboard.nextLine().trim();
+
+        if (confirm.equalsIgnoreCase("yes")) {
+            events.remove(event);
+            System.out.println("Event deleted successfully.");
+        } else {
+            System.out.println("Delete cancelled.");
+        }
+    }
+
+    public static void viewEventMenu(Scanner keyboard) {
+        String input = "";
+
+        while (!input.equals("3")) {
+            System.out.println("View Events");
+            System.out.println("1: Display all events");
+            System.out.println("2: Search for an event");
+            System.out.println("3: Back");
+
+            input = keyboard.nextLine().trim();
+
+            switch (input) {
+                case "1" -> viewAllEvents();
+                case "2" -> searchEvent(keyboard);
+                case "3" -> System.out.println("Going back.");
+                default -> System.out.println("Invalid option.");
+            }
+        }
+    }
 
   public static void readUserCSV(String filePath) {
     //ArrayList<User> users = new ArrayList<>();
@@ -361,38 +552,53 @@ public class RunTicketMiner {
                 String name = fields[1].trim();
                 String type = fields[2].trim();
                 String capacity = fields[3].trim();
-                String cost = fields[5].trim();
+                String cost = fields[4].trim();
+                String location = fields[5].trim();
+
+                Venue venue = null;
 
                 if (type.equalsIgnoreCase("arena")) {
-                    Arena arena = new Arena(
-                        Integer.parseInt(id), name, type,
-                        Integer.parseInt(capacity), Double.parseDouble(cost), name
+                    venue = new Arena(
+                        Integer.parseInt(id),
+                        name,
+                        "Arena",
+                        Integer.parseInt(capacity),
+                        Double.parseDouble(cost),
+                        location
                     );
-                    venues.add(arena);
-
                 } else if (type.equalsIgnoreCase("auditorium")) {
-                    Auditorium auditorium = new Auditorium(
-                        Integer.parseInt(id), name, type,
-                        Integer.parseInt(capacity), Double.parseDouble(cost), name
+                    venue = new Auditorium(
+                        Integer.parseInt(id),
+                        name,
+                        "Auditorium",
+                        Integer.parseInt(capacity),
+                        Double.parseDouble(cost),
+                        location
                     );
-                    venues.add(auditorium);
-
-                } else if (type.equalsIgnoreCase("open air")) {
-                    OpenAir openAir = new OpenAir(
-                        Integer.parseInt(id), name, type,
-                        Integer.parseInt(capacity), Double.parseDouble(cost), name
+                } else if (type.equalsIgnoreCase("openair") || type.equalsIgnoreCase("open air")) {
+                    venue = new OpenAir(
+                        Integer.parseInt(id),
+                        name,
+                        "OpenAir",
+                        Integer.parseInt(capacity),
+                        Double.parseDouble(cost),
+                        location
                     );
-                    venues.add(openAir);
-
                 } else if (type.equalsIgnoreCase("stadium")) {
-                    Stadium stadium = new Stadium(
-                        Integer.parseInt(id), name, type,
-                        Integer.parseInt(capacity), Double.parseDouble(cost), name
+                    venue = new Stadium(
+                        Integer.parseInt(id),
+                        name,
+                        "Stadium",
+                        Integer.parseInt(capacity),
+                        Double.parseDouble(cost),
+                        location
                     );
-                    venues.add(stadium);
-
                 } else {
                     System.out.println("Invalid venue type for ID: " + id);
+                }
+
+                if (venue != null) {
+                    venues.add(venue);
                 }
             }
 
@@ -408,22 +614,9 @@ public class RunTicketMiner {
             File file = new File(filePath);
             Scanner csvScanner = new Scanner(file);
 
-<<<<<<< HEAD
             if (csvScanner.hasNextLine()) {
                 csvScanner.nextLine(); // skip header
             }
-=======
-  public static LocalDate formatDate(String date) {
-    String arr[] = date.split("/");
-    int day = Integer.parseInt(arr[1]);
-    int month = Integer.parseInt(arr[0]);
-    int year = Integer.parseInt(arr[2]);
-    return LocalDate.of(year, month, day);
-  }
-
-  public static void readEventCSV(String filePath) {
-    //ArrayList<Event> events = new ArrayList<>();
->>>>>>> cb81b46f0dc2bc8bb5e0790402497b53d912133d
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
@@ -432,7 +625,6 @@ public class RunTicketMiner {
                 String line = csvScanner.nextLine();
                 String[] fields = line.split(",");
 
-<<<<<<< HEAD
                 String id = fields[0].trim();
                 String type = fields[1].trim();
                 String name = fields[2].trim();
@@ -502,35 +694,9 @@ public class RunTicketMiner {
 
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found - " + filePath);
-=======
-    
-        String id = fields[0].trim();
-        String type = fields[1].trim();
-        String name = fields[2].trim();
-        String date = fields[3].trim();
-        String time = fields[4].trim();
-        String vipPrice = fields[5].trim();
-        String goldPrice = fields[6].trim();
-        String silverPrice = fields[7].trim();
-        String bronzePrice = fields[8].trim();
-        String generalAdmissionPrice = fields[9].trim();
-        
-        if(type.equalsIgnoreCase("concert")) {
-          Concert concert = new Concert(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
-          events.add(concert);
-        } else if (type.equalsIgnoreCase("sports")) {
-          Sport sport = new Sport(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null, null);
-          events.add(sport);
-        } else if (type.equalsIgnoreCase("theater")) {
-          Special special = new Special(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
-          events.add(special);
-        } else {
-          System.out.println("Invalid event type for ID: " + id);
->>>>>>> cb81b46f0dc2bc8bb5e0790402497b53d912133d
         }
     }
 
-<<<<<<< HEAD
     public static void registerCustomer(Scanner keyboard) {
 
         System.out.print("Enter first name: ");
@@ -624,10 +790,4 @@ public class RunTicketMiner {
     }
 
 } // RunTicketMiner
-=======
-    //return events;
-  }
-
-}
->>>>>>> cb81b46f0dc2bc8bb5e0790402497b53d912133d
 

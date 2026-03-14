@@ -1,44 +1,42 @@
 public abstract class Venue {
 
     private int venueId;
-    private String name;
-    private String type;
+    private String venueName;
+    private String venueType;
     private int capacity;
     private double cost;
     private String location;
 
-// Constructor
-    public Venue(int venueId, String name, String type, int capacity, double cost, String location) {
+    public Venue(int venueId, String venueName, String venueType,
+                 int capacity, double cost, String location) {
         this.venueId = venueId;
-        this.name = name;
-        this.type = type;
+        this.venueName = venueName;
+        this.venueType = venueType;
         this.capacity = capacity;
         this.cost = cost;
         this.location = location;
     }
 
-    public abstract String getVenueType();
-
-    public boolean matchesId(int id) {
+    public boolean matchesVenueId(int id) {
         return this.venueId == id;
     }
 
-    public boolean matchesName(String name) {
-        return this.name.equalsIgnoreCase(name);
+    public boolean matchesVenueName(String name) {
+        return this.venueName.equalsIgnoreCase(name);
     }
 
-    public boolean matchesType(String type) {
-        return this.type.equalsIgnoreCase(type);
+    public boolean matchesVenueType(String type) {
+        return this.venueType.equalsIgnoreCase(type);
     }
 
     public boolean matchesSearch(String input) {
-        if (matchesName(input) || matchesType(input)) {
+        if (matchesVenueName(input) || matchesVenueType(input)) {
             return true;
         }
 
         try {
             int id = Integer.parseInt(input);
-            return matchesId(id);
+            return matchesVenueId(id);
         } catch (NumberFormatException e) {
             return false;
         }
@@ -46,25 +44,24 @@ public abstract class Venue {
 
     @Override
     public String toString() {
-        return "ID: " + venueId +
-               ", Name: " + name +
-               ", Type: " + type +
-               ", Capacity: " + capacity +
-               ", Cost: $" + String.format("%.2f", cost) +
-               ", Location: " + location;
+        return "ID: " + venueId
+            + ", Name: " + venueName
+            + ", Type: " + venueType
+            + ", Capacity: " + capacity
+            + ", Cost: $" + String.format("%.2f", cost)
+            + ", Location: " + location;
     }
 
-// Getters and Setters
     public int getVenueId() {
         return venueId;
     }
 
-    public String getName() {
-        return name;
+    public String getVenueName() {
+        return venueName;
     }
 
-    public String getType() {
-        return type;
+    public String getVenueType() {
+        return venueType;
     }
 
     public int getCapacity() {
@@ -83,12 +80,12 @@ public abstract class Venue {
         this.venueId = venueId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setVenueName(String venueName) {
+        this.venueName = venueName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setVenueType(String venueType) {
+        this.venueType = venueType;
     }
 
     public void setCapacity(int capacity) {
