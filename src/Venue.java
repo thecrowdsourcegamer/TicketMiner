@@ -29,6 +29,13 @@ public abstract class Venue {
         return this.venueType.equalsIgnoreCase(type);
     }
 
+    /**
+     * Determines whether a venue matches a search value.
+     * Searches by venue ID, name, or type.
+     *
+     * @param input search value entered by the user
+     * @return true if the venue matches the search value
+     */
     public boolean matchesSearch(String input) {
         if (matchesVenueName(input) || matchesVenueType(input)) {
             return true;
