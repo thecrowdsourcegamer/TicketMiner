@@ -1,6 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -21,72 +24,102 @@ import java.util.Scanner;
 public class RunTicketMiner {
     private static List<Venue> venues = new ArrayList<>();
     private static List<Event> events = new ArrayList<>();
-    private static List<User> users = new ArrayList<>(); //non-admin users
+    private static List<User> users = new ArrayList<>(); // non-admin users
     private static List<Admin> admins = new ArrayList<>();
+    private static User currentUser = null;
 
-/**
- * Entry point of the TicketMiner application.
- *
- * @param args command line arguments
- * @throws Exception if an unexpected error occurs
- */
-  public static void main(String[] args) throws Exception {
-    menu();
-  } // main
-  
+    /**
+     * Entry point of the TicketMiner application.
+     *
+     * @param args command line arguments
+     * @throws Exception if an unexpected error occurs
+     */
+    public static void main(String[] args) throws Exception {
+        menu();
+    } // main
 
-/**
- * Displays the main menu and allows users to
- * register, login, or exit the system.
- */
-  public static void menu() {
-
-    readVenueCSV("csvs/Venue_List_PA1.csv");
-    readUserCSV("csvs/Customer_List_PA1.csv");
-    readEventCSV("csvs/Event_List_PA1.csv");
-
-    try (Scanner keyboard = new Scanner(System.in)) {
-      System.out.println("Please select a menu option.");
-      System.out.println("\n1: Register \n2: Login \n3: EXIT");
-      String userInput = keyboard.nextLine().strip().toLowerCase().trim();
-
-      while(!userInput.equals("exit")) {
-
-        switch (userInput) {
-        case "1" -> {
-            System.out.println("Please select the type of user you would like to create.");
-            System.out.println("1: Customer \n2: Organizer"); 
-            userInput = keyboard.nextLine().trim();
-            switch (userInput) {
-                case "1" -> registerCustomer(keyboard);
-                case "2" -> registerOrganizer(keyboard);
-                default -> System.out.println("Invalid option entered.");
-            }
+    /**
+     * Writes a message to the system log file.
+     *
+     * @param message action description to log
+     */
+    public static void log(String message) {
+        try (FileWriter writer = new FileWriter("log.txt", true)) {
+            writer.write(LocalDateTime.now() + " - " + message + "\n");
+        } catch (IOException e) {
+            System.out.println("Error writing to log file.");
         }
+    }
 
-        case "2" -> {
-            System.out.println("Please login into your account.");
-            User loggedInUser = loginUser(keyboard);
+    /**
+     * Returns the current username if someone is logged in.
+     *
+     * @return current username or system if no user is logged in
+     */
+    public static String getActorName() {
+        if (currentUser != null) {
+            return currentUser.getUserName();
+        }
+        return "system";
+    }
 
-            if (loggedInUser != null) {
-                System.out.println("Login successful. Welcome " + loggedInUser.getFullName());
-                loggedInUser.userMenu();
-            } else { System.out.println("Invalid username or password."); }
-        }
-        case "3", "exit" -> {
-            userInput = "exit";
-            continue;
-        }
-        default -> System.out.println("Invalid option entered.");
-        } // switch
-        
-        System.out.println("Please select a menu option.");
-        System.out.println("\n1: Register \n2: Login \n3: EXIT");
-        userInput = keyboard.nextLine();
-      } // while 
-    } // try
-    System.out.println("thank you for visiting! ");
-  }
+    /**
+     * Displays the main menu and allows users to
+     * register, login, or exit the system.
+     */
+    public static void menu() {
+
+        readVenueCSV("csvs/Venue_List_PA1.csv");
+        readUserCSV("csvs/Customer_List_PA1.csv");
+        readEventCSV("csvs/Event_List_PA1.csv");
+
+        try (Scanner keyboard = new Scanner(System.in)) {
+            System.out.println("Please select a menu option.");
+            System.out.println("\n1: Register \n2: Login \n3: EXIT");
+            String userInput = keyboard.nextLine().strip().toLowerCase().trim();
+
+            while (!userInput.equals("exit")) {
+
+                switch (userInput) {
+                    case "1" -> {
+                        System.out.println("Please select the type of user you would like to create.");
+                        System.out.println("1: Customer \n2: Organizer");
+                        userInput = keyboard.nextLine().trim();
+                        switch (userInput) {
+                            case "1" -> registerCustomer(keyboard);
+                            case "2" -> registerOrganizer(keyboard);
+                            default -> System.out.println("Invalid option entered.");
+                        }
+                    }
+
+                    case "2" -> {
+                        System.out.println("Please login into your account.");
+                        User loggedInUser = loginUser(keyboard);
+
+                        if (loggedInUser != null) {
+                            currentUser = loggedInUser;
+                            System.out.println("Login successful. Welcome " + loggedInUser.getFullName());
+                            loggedInUser.userMenu();
+                            currentUser = null;
+                        } else {
+                            System.out.println("Invalid username or password.");
+                        }
+                    }
+                    case "3", "exit" -> {
+                        log("Program exited");
+                        userInput = "exit";
+                        continue;
+                    }
+                    default -> System.out.println("Invalid option entered.");
+                } // switch
+
+                System.out.println("Please select a menu option.");
+                System.out.println("\n1: Register \n2: Login \n3: EXIT");
+                userInput = keyboard.nextLine().trim().toLowerCase();
+            } // while
+        } // try
+        System.out.println("thank you for visiting! ");
+    }
 
     /**
      * Displays the venue management menu.
@@ -121,8 +154,7 @@ public class RunTicketMiner {
         }
     }
 
-
-        /**
+    /**
      * Prompts the user for venue information and
      * adds the venue to the system.
      *
@@ -164,23 +196,26 @@ public class RunTicketMiner {
         }
 
         venues.add(newVenue);
+        log(getActorName() + " added venue ID " + venueId + " named " + name);
         System.out.println("Venue added successfully.");
     }
 
-  /**
-  * Displays all venues currently stored in the system.
-  */
-  public static void viewAllVenues() {
+    /**
+     * Displays all venues currently stored in the system.
+     */
+    public static void viewAllVenues() {
 
-    if (venues.isEmpty()) {
-        System.out.println("No venues found.");
-        return;
-    }
+        if (venues.isEmpty()) {
+            System.out.println("No venues found.");
+            return;
+        }
 
-    for (Venue venue : venues) {
-        System.out.println(venue);
+        log(getActorName() + " displayed all venues");
+
+        for (Venue venue : venues) {
+            System.out.println(venue);
+        }
     }
-  }
 
     /**
      * Searches for venues based on ID, name, or type.
@@ -201,16 +236,19 @@ public class RunTicketMiner {
             }
         }
 
-        if (!found) {
+        if (found) {
+            log(getActorName() + " searched for venue " + input);
+        } else {
             System.out.println("Venue not found.");
+            log(getActorName() + " searched for venue " + input + " but no match was found");
         }
     }
 
     /**
-     * Updates venue information such as name, capacity,
-     * cost, or location.
+     * Finds a venue by matching ID, name, or type.
      *
-     * @param keyboard Scanner used to read user input
+     * @param input search term
+     * @return matching venue or null if not found
      */
     public static Venue findVenue(String input) {
 
@@ -223,6 +261,12 @@ public class RunTicketMiner {
         return null;
     }
 
+    /**
+     * Updates venue information such as name, capacity,
+     * cost, or location.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void updateVenue(Scanner keyboard) {
 
         System.out.println("Enter venue ID, name, or type to update:");
@@ -232,6 +276,7 @@ public class RunTicketMiner {
 
         if (venue == null) {
             System.out.println("Venue not found.");
+            log(getActorName() + " attempted to update venue " + input + " but no match was found");
             return;
         }
 
@@ -249,34 +294,41 @@ public class RunTicketMiner {
             case "1" -> {
                 System.out.print("Enter new name: ");
                 venue.setVenueName(keyboard.nextLine().trim());
+                log(getActorName() + " updated venue name for venue ID " + venue.getVenueId());
             }
 
             case "2" -> {
                 System.out.print("Enter new capacity: ");
                 venue.setCapacity(Integer.parseInt(keyboard.nextLine().trim()));
+                log(getActorName() + " updated venue capacity for venue ID " + venue.getVenueId());
             }
 
             case "3" -> {
                 System.out.print("Enter new cost: ");
                 venue.setCost(Double.parseDouble(keyboard.nextLine().trim()));
+                log(getActorName() + " updated venue cost for venue ID " + venue.getVenueId());
             }
 
             case "4" -> {
                 System.out.print("Enter new location: ");
                 venue.setLocation(keyboard.nextLine().trim());
+                log(getActorName() + " updated venue location for venue ID " + venue.getVenueId());
             }
 
-            default -> System.out.println("Invalid option.");
+            default -> {
+                System.out.println("Invalid option.");
+                return;
+            }
         }
 
         System.out.println("Venue updated successfully.");
     }
 
-       /**
-    * Deletes a venue from the system after confirmation.
-    *
-    * @param keyboard Scanner used to read user input
-    */
+    /**
+     * Deletes a venue from the system after confirmation.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void deleteVenue(Scanner keyboard) {
 
         System.out.println("Enter venue ID, name, or type to delete:");
@@ -286,6 +338,7 @@ public class RunTicketMiner {
 
         if (venue == null) {
             System.out.println("Venue not found.");
+            log(getActorName() + " attempted to delete venue " + input + " but no match was found");
             return;
         }
 
@@ -296,12 +349,18 @@ public class RunTicketMiner {
 
         if (confirm.equalsIgnoreCase("yes")) {
             venues.remove(venue);
+            log(getActorName() + " deleted venue ID " + venue.getVenueId());
             System.out.println("Venue deleted successfully.");
         } else {
             System.out.println("Delete cancelled.");
         }
     }
 
+    /**
+     * Displays the venue viewing submenu.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void viewVenueMenu(Scanner keyboard) {
 
         String input = "";
@@ -323,13 +382,12 @@ public class RunTicketMiner {
         }
     }
 
-
-       /**
-    * Displays the event management menu.
-    * Users can add, view, update, or delete events.
-    *
-    * @param keyboard Scanner used to read user input
-    */
+    /**
+     * Displays the event management menu.
+     * Users can add, view, update, or delete events.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void manageEvent(Scanner keyboard) {
         String input = "";
 
@@ -354,13 +412,12 @@ public class RunTicketMiner {
         }
     }
 
-
     /**
-    * Prompts the user to enter event information and
-    * adds the event to the system.
-    *
-    * @param keyboard Scanner used to read user input
-    */
+     * Prompts the user to enter event information and
+     * adds the event to the system.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void addEvent(Scanner keyboard) {
         System.out.print("Enter event ID: ");
         int id = Integer.parseInt(keyboard.nextLine().trim());
@@ -442,22 +499,25 @@ public class RunTicketMiner {
         }
 
         events.add(newEvent);
+        log(getActorName() + " added event ID " + id + " named " + name);
         System.out.println("Event added successfully.");
     }
-   /**
-   * Displays all events stored in the system.
-  */
-  public static void viewAllEvents() {
-    if (events.isEmpty()) {
-        System.out.println("No events found.");
-        return;
-    }
 
-    for (Event event : events) {
-        System.out.println(event);
-    }
-  }
+    /**
+     * Displays all events stored in the system.
+     */
+    public static void viewAllEvents() {
+        if (events.isEmpty()) {
+            System.out.println("No events found.");
+            return;
+        }
 
+        log(getActorName() + " displayed all events");
+
+        for (Event event : events) {
+            System.out.println(event);
+        }
+    }
 
     /**
      * Searches for an event using ID, name, or date.
@@ -477,11 +537,20 @@ public class RunTicketMiner {
             }
         }
 
-        if (!found) {
+        if (found) {
+            log(getActorName() + " searched for event " + input);
+        } else {
             System.out.println("Event not found.");
+            log(getActorName() + " searched for event " + input + " but no match was found");
         }
     }
 
+    /**
+     * Finds an event by matching ID, name, or date.
+     *
+     * @param input search term
+     * @return matching event or null if not found
+     */
     public static Event findEvent(String input) {
         for (Event event : events) {
             if (event.matchesSearch(input)) {
@@ -506,6 +575,7 @@ public class RunTicketMiner {
 
         if (event == null) {
             System.out.println("Event not found.");
+            log(getActorName() + " attempted to update event " + input + " but no match was found");
             return;
         }
 
@@ -519,6 +589,7 @@ public class RunTicketMiner {
             case "1" -> {
                 System.out.print("Enter new event name: ");
                 event.setEventName(keyboard.nextLine().trim());
+                log(getActorName() + " updated event name for event ID " + event.getEventId());
                 System.out.println("Event name updated successfully.");
             }
             case "2" -> {
@@ -531,6 +602,7 @@ public class RunTicketMiner {
                 event.setDate(newDate);
                 event.setTime(newTime);
 
+                log(getActorName() + " updated event date/time for event ID " + event.getEventId());
                 System.out.println("Event date and time updated successfully.");
             }
             default -> System.out.println("Invalid option.");
@@ -550,6 +622,7 @@ public class RunTicketMiner {
 
         if (event == null) {
             System.out.println("Event not found.");
+            log(getActorName() + " attempted to delete event " + input + " but no match was found");
             return;
         }
 
@@ -559,6 +632,7 @@ public class RunTicketMiner {
 
         if (confirm.equalsIgnoreCase("yes")) {
             events.remove(event);
+            log(getActorName() + " deleted event ID " + event.getEventId());
             System.out.println("Event deleted successfully.");
         } else {
             System.out.println("Delete cancelled.");
@@ -597,53 +671,77 @@ public class RunTicketMiner {
      *
      * @param filePath path to the user CSV file
      */
-  public static void readUserCSV(String filePath) {
-    //ArrayList<User> users = new ArrayList<>();
-    //ArrayList<Admin> admins = new ArrayList<>();
+    public static void readUserCSV(String filePath) {
+        try {
+            File file = new File(filePath);
+            Scanner csvScanner = new Scanner(file);
 
-    try {
-        File file = new File(filePath);
-        Scanner csvScanner = new Scanner(file);
+            if (csvScanner.hasNextLine()) {
+                csvScanner.nextLine(); // skip header
+            }
 
-        if (csvScanner.hasNextLine()) {
-            csvScanner.nextLine(); // skip header}
+            while (csvScanner.hasNextLine()) {
+                String line = csvScanner.nextLine();
+                String[] fields = line.split(",");
+
+                String id = fields[0].trim();
+                String firstName = fields[1].trim();
+                String lastName = fields[2].trim();
+                String username = fields[3].trim();
+                String password = fields[4].trim();
+                String userType = fields[5].trim();
+
+                Scanner keyboard = new Scanner(System.in);
+
+                if (userType.equalsIgnoreCase("customer")) {
+                    String moneyAvailable = fields[6].trim();
+                    String membership = fields[7].trim();
+                    Customer customer = new Customer(
+                        Integer.parseInt(id),
+                        firstName,
+                        lastName,
+                        username,
+                        password,
+                        userType,
+                        keyboard,
+                        Double.parseDouble(moneyAvailable),
+                        Boolean.parseBoolean(membership)
+                    );
+                    users.add(customer);
+                } else if (userType.equalsIgnoreCase("organizer")) {
+                    Organizer organizer = new Organizer(
+                        Integer.parseInt(id),
+                        firstName,
+                        lastName,
+                        username,
+                        password,
+                        userType,
+                        keyboard
+                    );
+                    users.add(organizer);
+                } else if (userType.equalsIgnoreCase("admin")) {
+                    Admin admin = new Admin(
+                        Integer.parseInt(id),
+                        firstName,
+                        lastName,
+                        username,
+                        password,
+                        userType,
+                        keyboard,
+                        users,
+                        admins
+                    );
+                    admins.add(admin);
+                } else {
+                    System.out.println("Invalid user type for ID: " + id);
+                }
+            }
+
+            csvScanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found - " + filePath);
         }
-
-        while (csvScanner.hasNextLine()) {
-            String line = csvScanner.nextLine();
-            String[] fields = line.split(",");
-
-        
-            String id = fields[0].trim();
-            String firstName = fields[1].trim();
-            String lastName = fields[2].trim();
-            String username = fields[3].trim();
-            String password = fields[4].trim();
-            String userType = fields[5].trim();
-
-            Scanner keyboard = new Scanner(System.in);
-        
-        if (userType.equalsIgnoreCase("customer")) {
-          String moneyAvailable = fields[6].trim();
-          String membership = fields[7].trim();
-          Customer customer = new Customer(Integer.parseInt(id), firstName, lastName, username, password, userType, keyboard, Double.parseDouble(moneyAvailable), Boolean.parseBoolean(membership));
-          users.add(customer);
-        } else if (userType.equalsIgnoreCase("organizer")) {
-          Organizer organizer = new Organizer(Integer.parseInt(id), firstName, lastName, username, password, userType, keyboard);
-          users.add(organizer);
-        } else if (userType.equalsIgnoreCase("admin")) {
-          Admin admin = new Admin(Integer.parseInt(id), firstName, lastName, username, password, userType, keyboard, users, admins);
-          admins.add(admin);
-        } else {
-          System.out.println("Invalid user type for ID: " + id);
-        }
-      }
-    } catch (FileNotFoundException e) {
-      System.out.println("Error: File not found - " + filePath);
     }
-
-    //return admins;
-  }
 
     /**
      * Reads venue information from a CSV file and loads
@@ -859,7 +957,7 @@ public class RunTicketMiner {
         );
 
         users.add(customer);
-
+        log("Registered new customer " + username + " with ID " + newId);
         System.out.println("Customer registered successfully.");
     }
 
@@ -895,7 +993,7 @@ public class RunTicketMiner {
         );
 
         users.add(organizer);
-
+        log("Registered new organizer " + username + " with ID " + newId);
         System.out.println("Organizer registered successfully.");
     }
 
@@ -915,15 +1013,19 @@ public class RunTicketMiner {
 
         for (User user : users) {
             if (user.matchesUsername(username) && user.checkPassword(password)) {
+                log("User " + username + " logged in");
                 return user;
             }
         }
 
         for (Admin admin : admins) {
             if (admin.matchesUsername(username) && admin.checkPassword(password)) {
+                log("Admin " + username + " logged in");
                 return admin;
             }
         }
+
+        log("Failed login attempt for username " + username);
         return null;
     }
 

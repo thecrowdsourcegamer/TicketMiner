@@ -15,7 +15,8 @@ public abstract class User {
     private boolean canEdit;
     private Scanner keyboard;
 
-    public User(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard) {
+    public User(int userId, String firstName, String lastName, String userName, String password, String userType,
+            Scanner keyboard) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,10 +55,10 @@ public abstract class User {
     @Override
     public String toString() {
         return "ID: " + userId
-            + ", Name: " + firstName + " " + lastName
-            + ", Username: " + userName
-            + ", Password: " + password
-            + ", Type: " + userType;
+                + ", Name: " + firstName + " " + lastName
+                + ", Username: " + userName
+                + ", Password: " + password
+                + ", Type: " + userType;
     }
 
     public int getUserId() {
@@ -133,8 +134,8 @@ class Customer extends User {
     private boolean membership;
 
     public Customer(int userId, String firstName, String lastName, String userName,
-                    String password, String userType, Scanner keyboard,
-                    double moneyAvailable, boolean membership) {
+            String password, String userType, Scanner keyboard,
+            double moneyAvailable, boolean membership) {
         super(userId, firstName, lastName, userName, password, userType, keyboard);
         this.moneyAvailable = moneyAvailable;
         this.membership = membership;
@@ -159,8 +160,8 @@ class Customer extends User {
     @Override
     public String toString() {
         return super.toString()
-            + ", Money Available: " + moneyAvailable
-            + ", Membership: " + membership;
+                + ", Money Available: " + moneyAvailable
+                + ", Membership: " + membership;
     }
 
     @Override
@@ -175,7 +176,10 @@ class Customer extends User {
             userInput = getKeyboard().nextLine().trim();
 
             switch (userInput) {
-                case "1" -> System.out.println(this);
+                case "1" -> {
+                    System.out.println(this);
+                    RunTicketMiner.log(getUserName() + " viewed customer profile");
+                }
                 case "2" -> back();
                 default -> System.out.println("Invalid option entered.");
             }
@@ -189,7 +193,7 @@ class Customer extends User {
 class Organizer extends User {
 
     public Organizer(int userId, String firstName, String lastName, String userName,
-                     String password, String userType, Scanner keyboard) {
+            String password, String userType, Scanner keyboard) {
         super(userId, firstName, lastName, userName, password, userType, keyboard);
     }
 
@@ -205,7 +209,10 @@ class Organizer extends User {
             userInput = getKeyboard().nextLine().trim();
 
             switch (userInput) {
-                case "1" -> System.out.println(this);
+                case "1" -> {
+                    System.out.println(this);
+                    RunTicketMiner.log(getUserName() + " viewed organizer profile");
+                }
                 case "2" -> back();
                 default -> System.out.println("Invalid option entered.");
             }
@@ -221,8 +228,8 @@ class Admin extends User {
     private List<Admin> admins;
 
     public Admin(int userId, String firstName, String lastName, String userName,
-                 String password, String userType, Scanner keyboard,
-                 List<User> users, List<Admin> admins) {
+            String password, String userType, Scanner keyboard,
+            List<User> users, List<Admin> admins) {
         super(userId, firstName, lastName, userName, password, userType, keyboard);
         this.users = users;
         this.admins = admins;
@@ -300,6 +307,7 @@ class Admin extends User {
             case "1" -> {
                 users.add(new Organizer(newId, firstName, lastName, username,
                         password, "organizer", getKeyboard()));
+                RunTicketMiner.log(getUserName() + " added organizer " + username + " with ID " + newId);
                 System.out.println("Organizer added successfully.");
             }
 
@@ -312,12 +320,14 @@ class Admin extends User {
 
                 users.add(new Customer(newId, firstName, lastName, username,
                         password, "customer", getKeyboard(), money, membership));
+                RunTicketMiner.log(getUserName() + " added customer " + username + " with ID " + newId);
                 System.out.println("Customer added successfully.");
             }
 
             case "3" -> {
                 admins.add(new Admin(newId, firstName, lastName, username,
                         password, "admin", getKeyboard(), users, admins));
+                RunTicketMiner.log(getUserName() + " added admin " + username + " with ID " + newId);
                 System.out.println("Admin added successfully.");
             }
 
@@ -345,6 +355,8 @@ class Admin extends User {
             return;
         }
 
+        RunTicketMiner.log(getUserName() + " displayed all members");
+
         for (User u : users) {
             System.out.println(u);
         }
@@ -362,8 +374,10 @@ class Admin extends User {
 
         if (found != null) {
             System.out.println(found);
+            RunTicketMiner.log(getUserName() + " searched for user " + input + " and found user ID " + found.getUserId());
         } else {
             System.out.println("User not found.");
+            RunTicketMiner.log(getUserName() + " searched for user " + input + " but no match was found");
         }
     }
 
@@ -375,6 +389,7 @@ class Admin extends User {
 
         if (found == null) {
             System.out.println("User not found.");
+            RunTicketMiner.log(getUserName() + " attempted to update user " + input + " but no match was found");
             return;
         }
 
@@ -393,12 +408,16 @@ class Admin extends User {
                 String lastName = getKeyboard().nextLine().trim();
                 found.setFirstName(firstName);
                 found.setLastName(lastName);
+                RunTicketMiner.log(getUserName() + " updated name for user ID " + found.getUserId());
                 System.out.println("Name updated successfully.");
             }
 
             case "2" -> {
+                String oldUsername = found.getUserName();
                 String newUsername = promptUniqueUsername();
                 found.setUserName(newUsername);
+                RunTicketMiner.log(getUserName() + " updated username for user ID " + found.getUserId()
+                        + " from " + oldUsername + " to " + newUsername);
                 System.out.println("Username updated successfully.");
             }
 
@@ -406,6 +425,7 @@ class Admin extends User {
                 System.out.print("Enter new password: ");
                 String newPassword = getKeyboard().nextLine().trim();
                 found.setPassword(newPassword);
+                RunTicketMiner.log(getUserName() + " updated password for user ID " + found.getUserId());
                 System.out.println("Password updated successfully.");
             }
 
@@ -421,6 +441,7 @@ class Admin extends User {
 
         if (found == null) {
             System.out.println("User not found.");
+            RunTicketMiner.log(getUserName() + " attempted to delete user " + input + " but no match was found");
             return;
         }
 
@@ -439,6 +460,7 @@ class Admin extends User {
             users.remove(found);
         }
 
+        RunTicketMiner.log(getUserName() + " deleted user ID " + found.getUserId());
         System.out.println("User deleted successfully.");
     }
 
