@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import com.opencsv.CSVWriter;
 
 /**
  * Main driver class for the TicketMiner system.
@@ -1029,4 +1030,113 @@ public class RunTicketMiner {
         return null;
     }
 
+    public static void writeUserCSV(String filePath) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
+
+            String[] header = {
+                "ID", "First Name", "Last Name", "Username", "Password",
+                "User Type", "Money Available", "TicketMiner Membership", "Concerts Purchased"
+            };
+            writer.writeNext(header);
+
+            // write customers + organizers
+            for (User user : users) {
+                String[] line = {
+                    String.valueOf(user.getUserId()),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getUserName(),
+                    user.getPassword(),
+                    user.getUserType(),
+                    "",
+                    "",
+                    ""
+                };
+
+                if (user instanceof Customer customer) {
+                    line[6] = String.valueOf(customer.getMoneyAvailable());
+                    line[7] = String.valueOf(customer.isMembership());
+                    line[8] = "0";
+                }
+
+                writer.writeNext(line);
+            }
+
+            // write admins too, otherwise they disappear when file is rewritten
+            for (Admin admin : admins) {
+                String[] line = {
+                    String.valueOf(admin.getUserId()),
+                    admin.getFirstName(),
+                    admin.getLastName(),
+                    admin.getUserName(),
+                    admin.getPassword(),
+                    admin.getUserType(),
+                    "",
+                    "",
+                    ""
+                };
+                writer.writeNext(line);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error writing user CSV: " + e.getMessage());
+        }
+    }
+
+    public static void writeVenueCSV(String filePath) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
+
+            // MUST match readVenueCSV()
+            String[] header = {"ID", "Name", "Type", "Capacity", "Cost", "Location"};
+            writer.writeNext(header);
+
+            for (Venue venue : venues) {
+                String[] line = {
+                    String.valueOf(venue.getVenueId()),
+                    venue.getVenueName(),
+                    venue.getVenueType(),
+                    String.valueOf(venue.getCapacity()),
+                    String.valueOf(venue.getCost()),
+                    venue.getLocation()
+                };
+                writer.writeNext(line);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error writing venue CSV: " + e.getMessage());
+        }
+    }
+
+    public static void writeEventCSV(String filePath) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
+
+            String[] header = {
+                "ID", "Type", "Name", "Date", "Time",
+                "VIP Price", "Gold Price", "Silver Price", "Bronze Price", "General Admission Price"
+            };
+            writer.writeNext(header);
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+
+            for (Event event : events) {
+                String[] line = {
+                    String.valueOf(event.getEventId()),
+                    event.getEventType(),
+                    event.getEventName(),
+                    event.getDate().format(dateFormatter),
+                    event.getTime().format(timeFormatter),
+                    String.valueOf(event.getVipPrice()),
+                    String.valueOf(event.getGoldPrice()),
+                    String.valueOf(event.getSilverPrice()),
+                    String.valueOf(event.getBronzePrice()),
+                    String.valueOf(event.getGeneralAdmissionPrice())
+                };
+                writer.writeNext(line);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error writing event CSV: " + e.getMessage());
+        }
+    }
 } // RunTicketMiner
