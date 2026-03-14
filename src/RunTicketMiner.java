@@ -7,28 +7,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-    /** 
-     * Part 1 for project for advanced object programming.
-     * @author Derek Garcia, Emiliano Puchaicela, ***** <- add names
-     */
+/**
+ * Main driver class for the TicketMiner system.
+ *
+ * This class starts the application, loads CSV data,
+ * and provides menu navigation for users to manage
+ * venues, events, and accounts.
+ *
+ * @author Derek Garcia
+ * @author Emiliano Puchaicela
+ * @author Haydee Rojo Ovalle
+ */
 public class RunTicketMiner {
     private static List<Venue> venues = new ArrayList<>();
     private static List<Event> events = new ArrayList<>();
     private static List<User> users = new ArrayList<>(); //non-admin users
     private static List<Admin> admins = new ArrayList<>();
 
-  /** 
-   * @param args
-   * @throws Exception
-   */
+/**
+ * Entry point of the TicketMiner application.
+ *
+ * @param args command line arguments
+ * @throws Exception if an unexpected error occurs
+ */
   public static void main(String[] args) throws Exception {
     menu();
   } // main
   
 
-      /** 
-     * Allows the user to navigate TicketMiner using provided commands.
-     */
+/**
+ * Displays the main menu and allows users to
+ * register, login, or exit the system.
+ */
   public static void menu() {
 
     readVenueCSV("csvs/Venue_List_PA1.csv");
@@ -77,6 +87,13 @@ public class RunTicketMiner {
     } // try
     System.out.println("thank you for visiting! ");
   }
+
+    /**
+     * Displays the venue management menu.
+     * Users can add, view, search, update, or delete venues.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void manageVenue(Scanner keyboard) {
 
         String input = "";
@@ -104,6 +121,13 @@ public class RunTicketMiner {
         }
     }
 
+
+        /**
+     * Prompts the user for venue information and
+     * adds the venue to the system.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void addVenue(Scanner keyboard) {
 
         System.out.print("Enter venue ID: ");
@@ -143,6 +167,9 @@ public class RunTicketMiner {
         System.out.println("Venue added successfully.");
     }
 
+  /**
+  * Displays all venues currently stored in the system.
+  */
   public static void viewAllVenues() {
 
     if (venues.isEmpty()) {
@@ -155,6 +182,11 @@ public class RunTicketMiner {
     }
   }
 
+    /**
+     * Searches for venues based on ID, name, or type.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void searchVenue(Scanner keyboard) {
 
         System.out.println("Enter venue ID, name, or type:");
@@ -174,6 +206,12 @@ public class RunTicketMiner {
         }
     }
 
+    /**
+     * Updates venue information such as name, capacity,
+     * cost, or location.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static Venue findVenue(String input) {
 
         for (Venue venue : venues) {
@@ -234,6 +272,11 @@ public class RunTicketMiner {
         System.out.println("Venue updated successfully.");
     }
 
+       /**
+    * Deletes a venue from the system after confirmation.
+    *
+    * @param keyboard Scanner used to read user input
+    */
     public static void deleteVenue(Scanner keyboard) {
 
         System.out.println("Enter venue ID, name, or type to delete:");
@@ -280,6 +323,13 @@ public class RunTicketMiner {
         }
     }
 
+
+       /**
+    * Displays the event management menu.
+    * Users can add, view, update, or delete events.
+    *
+    * @param keyboard Scanner used to read user input
+    */
     public static void manageEvent(Scanner keyboard) {
         String input = "";
 
@@ -305,6 +355,12 @@ public class RunTicketMiner {
     }
 
 
+    /**
+    * Prompts the user to enter event information and
+    * adds the event to the system.
+    *
+    * @param keyboard Scanner used to read user input
+    */
     public static void addEvent(Scanner keyboard) {
         System.out.print("Enter event ID: ");
         int id = Integer.parseInt(keyboard.nextLine().trim());
@@ -388,7 +444,9 @@ public class RunTicketMiner {
         events.add(newEvent);
         System.out.println("Event added successfully.");
     }
-
+   /**
+   * Displays all events stored in the system.
+  */
   public static void viewAllEvents() {
     if (events.isEmpty()) {
         System.out.println("No events found.");
@@ -400,6 +458,12 @@ public class RunTicketMiner {
     }
   }
 
+
+    /**
+     * Searches for an event using ID, name, or date.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void searchEvent(Scanner keyboard) {
         System.out.println("Enter event ID, name, or date:");
         String input = keyboard.nextLine().trim();
@@ -427,6 +491,13 @@ public class RunTicketMiner {
 
         return null;
     }
+
+    /**
+     * Updates event information such as name, date,
+     * or time of the event.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void updateEvent(Scanner keyboard) {
         System.out.println("Enter event ID, name, or date to update:");
         String input = keyboard.nextLine().trim();
@@ -466,6 +537,11 @@ public class RunTicketMiner {
         }
     }
 
+    /**
+     * Removes an event from the system after confirmation.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void deleteEvent(Scanner keyboard) {
         System.out.println("Enter event ID, name, or date to delete:");
         String input = keyboard.nextLine().trim();
@@ -489,6 +565,12 @@ public class RunTicketMiner {
         }
     }
 
+    /**
+     * Displays the event viewing submenu.
+     * Users can display all events or search for a specific event.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void viewEventMenu(Scanner keyboard) {
         String input = "";
 
@@ -509,6 +591,12 @@ public class RunTicketMiner {
         }
     }
 
+    /**
+     * Reads user information from a CSV file and loads
+     * users into the system.
+     *
+     * @param filePath path to the user CSV file
+     */
   public static void readUserCSV(String filePath) {
     //ArrayList<User> users = new ArrayList<>();
     //ArrayList<Admin> admins = new ArrayList<>();
@@ -557,6 +645,12 @@ public class RunTicketMiner {
     //return admins;
   }
 
+    /**
+     * Reads venue information from a CSV file and loads
+     * venues into the system.
+     *
+     * @param filePath path to the venue CSV file
+     */
     public static void readVenueCSV(String filePath) {
         try {
             File file = new File(filePath);
@@ -631,6 +725,12 @@ public class RunTicketMiner {
         }
     }
 
+    /**
+     * Reads event information from a CSV file and loads
+     * events into the system.
+     *
+     * @param filePath path to the event CSV file
+     */
     public static void readEventCSV(String filePath) {
         try {
             File file = new File(filePath);
@@ -719,6 +819,11 @@ public class RunTicketMiner {
         }
     }
 
+    /**
+     * Registers a new customer and adds them to the system.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void registerCustomer(Scanner keyboard) {
 
         System.out.print("Enter first name: ");
@@ -758,6 +863,11 @@ public class RunTicketMiner {
         System.out.println("Customer registered successfully.");
     }
 
+    /**
+     * Registers a new organizer and adds them to the system.
+     *
+     * @param keyboard Scanner used to read user input
+     */
     public static void registerOrganizer(Scanner keyboard) {
 
         System.out.print("Enter first name: ");
@@ -789,6 +899,12 @@ public class RunTicketMiner {
         System.out.println("Organizer registered successfully.");
     }
 
+    /**
+     * Authenticates a user based on username and password.
+     *
+     * @param keyboard Scanner used to read user input
+     * @return the authenticated User object, or null if login fails
+     */
     public static User loginUser(Scanner keyboard) {
 
         System.out.print("Enter username: ");
