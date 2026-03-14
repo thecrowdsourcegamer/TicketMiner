@@ -1,8 +1,12 @@
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * User hierarchy for TicketMiner.
+ * Supports Customer, Organizer, and Admin users.
+ */
 public abstract class User {
-    private int userId; 
+    private int userId;
     private String firstName;
     private String lastName;
     private String userName;
@@ -11,25 +15,20 @@ public abstract class User {
     private boolean canEdit;
     private Scanner keyboard;
 
-    //constructor
     public User(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard) {
-            this.userId = userId;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.userName = userName;
-            this.password = password;
-            this.userType = userType;
-            this.keyboard = keyboard;
-    }
-
-    public User(Scanner keyboard) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.password = password;
+        this.userType = userType;
         this.keyboard = keyboard;
     }
 
-    abstract void userMenu();
+    public abstract void userMenu();
 
-    void back() {
-        System.out.println("going back");
+    public void back() {
+        System.out.println("Going back.");
     }
 
     public String getFullName() {
@@ -48,19 +47,18 @@ public abstract class User {
         return getFullName().equalsIgnoreCase(name);
     }
 
-    @Override
-    public String toString() {
-        return "ID: " + userId +
-               ", Name: " + firstName + " " + lastName +
-               ", Username: " + userName +
-               ", Type: " + userType;
-    }
-
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 
-    // Getters
+    @Override
+    public String toString() {
+        return "ID: " + userId
+            + ", Name: " + firstName + " " + lastName
+            + ", Username: " + userName
+            + ", Password: " + password
+            + ", Type: " + userType;
+    }
 
     public int getUserId() {
         return userId;
@@ -94,8 +92,6 @@ public abstract class User {
         return keyboard;
     }
 
-    // Setters
-
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -127,11 +123,22 @@ public abstract class User {
     public void setKeyboard(Scanner keyboard) {
         this.keyboard = keyboard;
     }
-} // user 
+}
 
+/**
+ * Customer user.
+ */
 class Customer extends User {
     private double moneyAvailable;
     private boolean membership;
+
+    public Customer(int userId, String firstName, String lastName, String userName,
+                    String password, String userType, Scanner keyboard,
+                    double moneyAvailable, boolean membership) {
+        super(userId, firstName, lastName, userName, password, userType, keyboard);
+        this.moneyAvailable = moneyAvailable;
+        this.membership = membership;
+    }
 
     public double getMoneyAvailable() {
         return moneyAvailable;
@@ -149,108 +156,203 @@ class Customer extends User {
         this.moneyAvailable = moneyAvailable;
     }
 
-    public Customer(Scanner keyboard) {
-    super(keyboard);
+    @Override
+    public String toString() {
+        return super.toString()
+            + ", Money Available: " + moneyAvailable
+            + ", Membership: " + membership;
     }
 
-    public Customer(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard, double moneyAvailable, boolean membership) {
-    super(userId, firstName, lastName, userName, password, userType, keyboard);
-    this.moneyAvailable = moneyAvailable;
-    this.membership = membership;
+    @Override
+    public void userMenu() {
+        String userInput = "";
+
+        while (!userInput.equals("2")) {
+            System.out.println("\nCustomer Menu");
+            System.out.println("1: View Profile");
+            System.out.println("2: Back");
+
+            userInput = getKeyboard().nextLine().trim();
+
+            switch (userInput) {
+                case "1" -> System.out.println(this);
+                case "2" -> back();
+                default -> System.out.println("Invalid option entered.");
+            }
+        }
+    }
 }
 
-
-    @Override
-    void userMenu() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-} // customer
-
+/**
+ * Organizer user.
+ */
 class Organizer extends User {
-    public Organizer(Scanner keyboard) {
-    super(keyboard);
+
+    public Organizer(int userId, String firstName, String lastName, String userName,
+                     String password, String userType, Scanner keyboard) {
+        super(userId, firstName, lastName, userName, password, userType, keyboard);
     }
 
-    public Organizer(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard) {
-    super(userId, firstName, lastName, userName, password, userType, keyboard);
-    }
     @Override
-    void userMenu() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void userMenu() {
+        String userInput = "";
+
+        while (!userInput.equals("2")) {
+            System.out.println("\nOrganizer Menu");
+            System.out.println("1: View Profile");
+            System.out.println("2: Back");
+
+            userInput = getKeyboard().nextLine().trim();
+
+            switch (userInput) {
+                case "1" -> System.out.println(this);
+                case "2" -> back();
+                default -> System.out.println("Invalid option entered.");
+            }
+        }
     }
-} // organizer
+}
 
+/**
+ * Admin user with manage-users functionality.
+ */
 class Admin extends User {
-    private  List<User> users;
+    private List<User> users;
+    private List<Admin> admins;
 
-    public Admin(int userId, String firstName, String lastName, String userName, String password, String userType, Scanner keyboard, List<User> users) {
+    public Admin(int userId, String firstName, String lastName, String userName,
+                 String password, String userType, Scanner keyboard,
+                 List<User> users, List<Admin> admins) {
         super(userId, firstName, lastName, userName, password, userType, keyboard);
         this.users = users;
-    }
-
-    public Admin(Scanner keyboard, List<User> users) {
-    super(keyboard);
-    this.users = users;
+        this.admins = admins;
     }
 
     @Override
-    void userMenu() {
-    System.out.println("Please choose an option.");
-    System.out.println("\n1: Add new user \n2: View \n3: Update \n4: Delete \n5: Exit");
-    String userInput = getKeyboard().nextLine().trim();
+    public void userMenu() {
+        String userInput = "";
 
-        while(!userInput.equals("5")) {
+        while (!userInput.equals("2")) {
+            System.out.println("\nAdmin Menu");
+            System.out.println("1: Manage Users");
+            System.out.println("2: Back");
+
+            userInput = getKeyboard().nextLine().trim();
+
+            switch (userInput) {
+                case "1":
+                    manageUsers();
+                    break;
+                case "2":
+                    back();
+                    break;
+                default:
+                    System.out.println("Invalid option entered.");
+                    break;
+            }
+        }
+    }
+
+    private void manageUsers() {
+        String userInput = "";
+
+        while (!userInput.equals("5")) {
+            System.out.println("\nManage Users");
+            System.out.println("1: Add");
+            System.out.println("2: View");
+            System.out.println("3: Update");
+            System.out.println("4: Delete");
+            System.out.println("5: Back");
+
+            userInput = getKeyboard().nextLine().trim();
+
             switch (userInput) {
                 case "1" -> add();
                 case "2" -> view();
                 case "3" -> update();
                 case "4" -> delete();
+                case "5" -> back();
                 default -> System.out.println("Invalid option entered.");
-            } // switch
-
-        System.out.println("Please select a menu option.");
-        System.out.println("\n1: Add \n2: View \n3: Update \n4: Delete \n5: Exit");
-        userInput = getKeyboard().nextLine();
-        } //while
-    } //user menu
-
+            }
+        }
+    }
 
     private void add() {
         System.out.println("Please select an option");
-        System.out.println("1: Add new organizer \n2: Add new customer");
-        String userInput = getKeyboard().nextLine().trim();
-        switch (userInput) {
-            case "1":
-            break;
-            case "2":
-            break;
-            default:
-            System.out.println("Invalid option entered.");
-        }
+        System.out.println("1: Add new organizer");
+        System.out.println("2: Add new customer");
+        System.out.println("3: Add new admin");
 
-    }
-   private void view() {
-        System.out.println("Please select an option");
-        System.out.println("1: Display all members \n2: Search for user");
         String userInput = getKeyboard().nextLine().trim();
+
+        System.out.print("Enter first name: ");
+        String firstName = getKeyboard().nextLine().trim();
+
+        System.out.print("Enter last name: ");
+        String lastName = getKeyboard().nextLine().trim();
+
+        String username = promptUniqueUsername();
+
+        System.out.print("Enter password: ");
+        String password = getKeyboard().nextLine().trim();
+
+        int newId = getNextUserId();
+
+        switch (userInput) {
+            case "1" -> {
+                users.add(new Organizer(newId, firstName, lastName, username,
+                        password, "organizer", getKeyboard()));
+                System.out.println("Organizer added successfully.");
+            }
+
+            case "2" -> {
+                System.out.print("Enter money available: ");
+                double money = Double.parseDouble(getKeyboard().nextLine().trim());
+
+                System.out.print("Membership (true/false): ");
+                boolean membership = Boolean.parseBoolean(getKeyboard().nextLine().trim());
+
+                users.add(new Customer(newId, firstName, lastName, username,
+                        password, "customer", getKeyboard(), money, membership));
+                System.out.println("Customer added successfully.");
+            }
+
+            case "3" -> {
+                admins.add(new Admin(newId, firstName, lastName, username,
+                        password, "admin", getKeyboard(), users, admins));
+                System.out.println("Admin added successfully.");
+            }
+
+            default -> System.out.println("Invalid option entered.");
+        }
+    }
+
+    private void view() {
+        System.out.println("Please select an option");
+        System.out.println("1: Display all members");
+        System.out.println("2: Search for user");
+
+        String userInput = getKeyboard().nextLine().trim();
+
         switch (userInput) {
             case "1" -> displayUsers();
             case "2" -> search();
             default -> System.out.println("Invalid option entered.");
         }
-        // 2 options
-        // display users
-        // search
     }
 
     private void displayUsers() {
-        if(users.isEmpty()) {
+        if (users.isEmpty() && admins.isEmpty()) {
             System.out.println("No users found.");
             return;
         }
 
-        for(User u : users) {
+        for (User u : users) {
             System.out.println(u);
+        }
+
+        for (Admin a : admins) {
+            System.out.println(a);
         }
     }
 
@@ -258,74 +360,165 @@ class Admin extends User {
         System.out.println("Enter ID, name, or username:");
         String input = getKeyboard().nextLine().trim();
 
-        for(User u : users) {
+        User found = findAnyUser(input);
 
-            if(u.matchesUsername(input) || u.matchesName(input)) {
-                System.out.println(u);
-                return;
-            }
-
-            try {
-                int id = Integer.parseInt(input);
-
-                if(u.matchesId(id)) {
-                    System.out.println(u);
-                    return;
-                }
-
-            } catch(Exception e) {}
-    }
-
-    System.out.println("User not found.");
+        if (found != null) {
+            System.out.println(found);
+        } else {
+            System.out.println("User not found.");
+        }
     }
 
     private void update() {
-        System.out.println("Please select an option");
-        System.out.println("1: Change Name \n2: Change Username \n3: Change Password");
-        String userInput = getKeyboard().nextLine().trim();
-        switch (userInput) {
-            case "1":
-            System.out.println("test");
-            break;
-            case "2":
-            break;
-            case "3":
-            break;
-            default:
-            System.out.println("Invalid option entered.");
-        } 
-        // 3 options
-        // change name
-        // change username
-        // change password
-        // if no user found message
-        // display menu options
-    
-    }
-    private void delete() {
-    System.out.println("Enter ID, name, or username to delete:");
-    String input = getKeyboard().nextLine().trim();
+        System.out.println("Enter ID, name, or username to update:");
+        String input = getKeyboard().nextLine().trim();
 
-    for (int i = 0; i < users.size(); i++) {
-        User u = users.get(i);
+        User found = findAnyUser(input);
 
-        if (u.matchesUsername(input) || u.matchesName(input)) {
-            users.remove(i);
-            System.out.println("User deleted.");
+        if (found == null) {
+            System.out.println("User not found.");
             return;
+        }
+
+        System.out.println("Please select an option");
+        System.out.println("1: Change Name");
+        System.out.println("2: Change Username");
+        System.out.println("3: Change Password");
+
+        String userInput = getKeyboard().nextLine().trim();
+
+        switch (userInput) {
+            case "1" -> {
+                System.out.print("Enter new first name: ");
+                String firstName = getKeyboard().nextLine().trim();
+                System.out.print("Enter new last name: ");
+                String lastName = getKeyboard().nextLine().trim();
+                found.setFirstName(firstName);
+                found.setLastName(lastName);
+                System.out.println("Name updated successfully.");
+            }
+
+            case "2" -> {
+                String newUsername = promptUniqueUsername();
+                found.setUserName(newUsername);
+                System.out.println("Username updated successfully.");
+            }
+
+            case "3" -> {
+                System.out.print("Enter new password: ");
+                String newPassword = getKeyboard().nextLine().trim();
+                found.setPassword(newPassword);
+                System.out.println("Password updated successfully.");
+            }
+
+            default -> System.out.println("Invalid option entered.");
+        }
+    }
+
+    private void delete() {
+        System.out.println("Enter ID, name, or username to delete:");
+        String input = getKeyboard().nextLine().trim();
+
+        User found = findAnyUser(input);
+
+        if (found == null) {
+            System.out.println("User not found.");
+            return;
+        }
+
+        System.out.println("Found user: " + found);
+        System.out.print("Confirm delete? (yes/no): ");
+        String confirm = getKeyboard().nextLine().trim();
+
+        if (!confirm.equalsIgnoreCase("yes")) {
+            System.out.println("Delete cancelled.");
+            return;
+        }
+
+        if (found instanceof Admin) {
+            admins.remove(found);
+        } else {
+            users.remove(found);
+        }
+
+        System.out.println("User deleted successfully.");
+    }
+
+    private User findAnyUser(String input) {
+        for (User u : users) {
+            if (matchesSearch(u, input)) {
+                return u;
+            }
+        }
+
+        for (Admin a : admins) {
+            if (matchesSearch(a, input)) {
+                return a;
+            }
+        }
+
+        return null;
+    }
+
+    private boolean matchesSearch(User user, String input) {
+        if (user.matchesUsername(input) || user.matchesName(input)) {
+            return true;
         }
 
         try {
             int id = Integer.parseInt(input);
-            if (u.matchesId(id)) {
-                users.remove(i);
-                System.out.println("User deleted.");
-                return;
-            }
+            return user.matchesId(id);
         } catch (NumberFormatException e) {
+            return false;
         }
     }
 
-    System.out.println("User not found.");
-    } // delete
-} // user
+    private boolean usernameExists(String username) {
+        for (User u : users) {
+            if (u.getUserName().equalsIgnoreCase(username)) {
+                return true;
+            }
+        }
+
+        for (Admin a : admins) {
+            if (a.getUserName().equalsIgnoreCase(username)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private String promptUniqueUsername() {
+        String username;
+
+        do {
+            System.out.print("Enter username: ");
+            username = getKeyboard().nextLine().trim();
+
+            if (usernameExists(username)) {
+                System.out.println("Username already exists. Enter a different username.");
+            }
+        } while (usernameExists(username));
+
+        return username;
+    }
+
+    private int getNextUserId() {
+        int maxId = getUserId();
+
+        for (User u : users) {
+            if (u.getUserId() > maxId) {
+                maxId = u.getUserId();
+            }
+        }
+
+        for (Admin a : admins) {
+            if (a.getUserId() > maxId) {
+                maxId = a.getUserId();
+            }
+        }
+
+        return maxId + 1;
+    }
+}
