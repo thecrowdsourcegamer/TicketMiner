@@ -408,9 +408,22 @@ public class RunTicketMiner {
             File file = new File(filePath);
             Scanner csvScanner = new Scanner(file);
 
+<<<<<<< HEAD
             if (csvScanner.hasNextLine()) {
                 csvScanner.nextLine(); // skip header
             }
+=======
+  public static LocalDate formatDate(String date) {
+    String arr[] = date.split("/");
+    int day = Integer.parseInt(arr[1]);
+    int month = Integer.parseInt(arr[0]);
+    int year = Integer.parseInt(arr[2]);
+    return LocalDate.of(year, month, day);
+  }
+
+  public static void readEventCSV(String filePath) {
+    //ArrayList<Event> events = new ArrayList<>();
+>>>>>>> cb81b46f0dc2bc8bb5e0790402497b53d912133d
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
@@ -419,6 +432,7 @@ public class RunTicketMiner {
                 String line = csvScanner.nextLine();
                 String[] fields = line.split(",");
 
+<<<<<<< HEAD
                 String id = fields[0].trim();
                 String type = fields[1].trim();
                 String name = fields[2].trim();
@@ -488,9 +502,35 @@ public class RunTicketMiner {
 
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found - " + filePath);
+=======
+    
+        String id = fields[0].trim();
+        String type = fields[1].trim();
+        String name = fields[2].trim();
+        String date = fields[3].trim();
+        String time = fields[4].trim();
+        String vipPrice = fields[5].trim();
+        String goldPrice = fields[6].trim();
+        String silverPrice = fields[7].trim();
+        String bronzePrice = fields[8].trim();
+        String generalAdmissionPrice = fields[9].trim();
+        
+        if(type.equalsIgnoreCase("concert")) {
+          Concert concert = new Concert(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
+          events.add(concert);
+        } else if (type.equalsIgnoreCase("sports")) {
+          Sport sport = new Sport(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null, null);
+          events.add(sport);
+        } else if (type.equalsIgnoreCase("theater")) {
+          Special special = new Special(Integer.parseInt(id), name, formatDate(date), LocalTime.parse(time), Double.parseDouble(vipPrice), Double.parseDouble(goldPrice), Double.parseDouble(silverPrice), Double.parseDouble(bronzePrice), Double.parseDouble(generalAdmissionPrice), null, null);
+          events.add(special);
+        } else {
+          System.out.println("Invalid event type for ID: " + id);
+>>>>>>> cb81b46f0dc2bc8bb5e0790402497b53d912133d
         }
     }
 
+<<<<<<< HEAD
     public static void registerCustomer(Scanner keyboard) {
 
         System.out.print("Enter first name: ");
@@ -584,4 +624,10 @@ public class RunTicketMiner {
     }
 
 } // RunTicketMiner
+=======
+    //return events;
+  }
+
+}
+>>>>>>> cb81b46f0dc2bc8bb5e0790402497b53d912133d
 
