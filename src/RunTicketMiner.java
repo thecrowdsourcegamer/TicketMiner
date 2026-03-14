@@ -63,10 +63,12 @@ public class RunTicketMiner {
                 loggedInUser.userMenu();
             } else { System.out.println("Invalid username or password."); }
         }
+        case "3", "exit" -> {
+            userInput = "exit";
+            continue;
+        }
         default -> System.out.println("Invalid option entered.");
         } // switch
-        
-        
         
         System.out.println("Please select a menu option.");
         System.out.println("\n1: Register \n2: Login \n3: EXIT");
@@ -82,7 +84,7 @@ public class RunTicketMiner {
         while (!input.equals("6")) {
             System.out.println("Please select an option");
             System.out.println("1: Add Venue");
-            System.out.println("2: View All Venues");
+            System.out.println("2: View Venues");
             System.out.println("3: Search Venue");
             System.out.println("4: Update Venue");
             System.out.println("5: Delete Venue");
@@ -92,7 +94,7 @@ public class RunTicketMiner {
 
             switch (input) {
                 case "1" -> addVenue(keyboard);
-                case "2" -> viewAllVenues();
+                case "2" -> viewVenueMenu(keyboard);
                 case "3" -> searchVenue(keyboard);
                 case "4" -> updateVenue(keyboard);
                 case "5" -> deleteVenue(keyboard);
@@ -101,7 +103,7 @@ public class RunTicketMiner {
             }
         }
     }
-    
+
     public static void addVenue(Scanner keyboard) {
 
         System.out.print("Enter venue ID: ");
@@ -255,6 +257,27 @@ public class RunTicketMiner {
             System.out.println("Venue deleted successfully.");
         } else {
             System.out.println("Delete cancelled.");
+        }
+    }
+
+    public static void viewVenueMenu(Scanner keyboard) {
+
+        String input = "";
+
+        while (!input.equals("3")) {
+            System.out.println("View Venues");
+            System.out.println("1: Display all venues");
+            System.out.println("2: Search venue");
+            System.out.println("3: Back");
+
+            input = keyboard.nextLine().trim();
+
+            switch (input) {
+                case "1" -> viewAllVenues();
+                case "2" -> searchVenue(keyboard);
+                case "3" -> System.out.println("Going back.");
+                default -> System.out.println("Invalid option.");
+            }
         }
     }
 
