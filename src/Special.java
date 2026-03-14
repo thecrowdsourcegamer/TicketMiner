@@ -1,6 +1,12 @@
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * Represents a special event.
+ *
+ * Stores a description and category
+ * for the event.
+ */
 public class Special extends Event {
     private String description;
     private String category;

@@ -208,28 +208,27 @@ public class RunTicketMiner {
 
         switch (choice) {
 
-            case "1":
+            case "1" -> {
                 System.out.print("Enter new name: ");
                 venue.setVenueName(keyboard.nextLine().trim());
-                break;
+            }
 
-            case "2":
+            case "2" -> {
                 System.out.print("Enter new capacity: ");
                 venue.setCapacity(Integer.parseInt(keyboard.nextLine().trim()));
-                break;
+            }
 
-            case "3":
+            case "3" -> {
                 System.out.print("Enter new cost: ");
                 venue.setCost(Double.parseDouble(keyboard.nextLine().trim()));
-                break;
+            }
 
-            case "4":
+            case "4" -> {
                 System.out.print("Enter new location: ");
                 venue.setLocation(keyboard.nextLine().trim());
-                break;
+            }
 
-            default:
-                System.out.println("Invalid option.");
+            default -> System.out.println("Invalid option.");
         }
 
         System.out.println("Venue updated successfully.");
@@ -813,4 +812,3 @@ public class RunTicketMiner {
     }
 
 } // RunTicketMiner
-
