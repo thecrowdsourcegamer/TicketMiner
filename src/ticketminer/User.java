@@ -225,8 +225,8 @@ class Organizer extends User {
  * Admin user with manage-users functionality.
  */
 class Admin extends User {
-    private List<User> users;
-    private List<Admin> admins;
+    private final List<User> users;
+    private final List<Admin> admins;
 
     public Admin(int userId, String firstName, String lastName, String userName,
             String password, String userType, Scanner keyboard,

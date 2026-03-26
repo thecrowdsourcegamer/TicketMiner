@@ -13,4 +13,28 @@ public class Sport extends Event{
         this.team2 = team2;
         this.league = league;
     }
+
+    public String getLeague() {
+        return league;
+    }
+
+    public void setLeague(String league) {
+        this.league = league;
+    }
+
+    public String getTeam2() {
+        return team2;
+    }
+
+    public void setTeam2(String team2) {
+        this.team2 = team2;
+    }
+
+    public String getTeam1() {
+        return team1;
+    }
+
+    public void setTeam1(String team1) {
+        this.team1 = team1;
+    }
 }
