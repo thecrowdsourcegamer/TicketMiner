@@ -1,3 +1,4 @@
+package ticketminer;
 public class Stadium extends Venue {
 
     public Stadium(int venueId, String name, String type, int capacity, double cost, String location) {

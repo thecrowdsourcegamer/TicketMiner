@@ -1,3 +1,4 @@
+package ticketminer;
 public class Arena extends Venue {
 
     public Arena(int venueId, String name, String type, int capacity, double cost, String location) {

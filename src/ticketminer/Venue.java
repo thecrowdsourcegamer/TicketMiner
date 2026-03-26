@@ -1,3 +1,5 @@
+package ticketminer;
+
 public abstract class Venue {
 
     private int venueId;

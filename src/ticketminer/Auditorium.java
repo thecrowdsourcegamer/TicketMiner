@@ -1,3 +1,4 @@
+package ticketminer;
 public class Auditorium extends Venue {
 
     public Auditorium(int venueId, String name, String type, int capacity, double cost, String location) {
