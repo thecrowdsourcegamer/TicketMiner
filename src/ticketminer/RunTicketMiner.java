@@ -1,4 +1,5 @@
 package ticketminer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -24,10 +25,10 @@ import com.opencsv.CSVWriter;
  * @author Haydee Rojo Ovalle
  */
 public class RunTicketMiner {
-    private static List<Venue> venues = new ArrayList<>();
-    private static List<Event> events = new ArrayList<>();
-    private static List<User> users = new ArrayList<>(); // non-admin users
-    private static List<Admin> admins = new ArrayList<>();
+    private static final List<Venue> venues = new ArrayList<>();
+    private static final List<Event> events = new ArrayList<>();
+    private static final List<User> users = new ArrayList<>(); // non-admin users
+    private static final List<Admin> admins = new ArrayList<>();
     private static User currentUser = null;
 
     /**
@@ -461,10 +462,9 @@ public class RunTicketMiner {
             String genre = keyboard.nextLine().trim();
 
             newEvent = new Concert(
-                id, name, date, time,
-                vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
-                artist, genre
-            );
+                    id, name, date, time,
+                    vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
+                    artist, genre);
 
         } else if (type.equalsIgnoreCase("Sport")) {
             System.out.print("Enter team1: ");
@@ -477,10 +477,9 @@ public class RunTicketMiner {
             String league = keyboard.nextLine().trim();
 
             newEvent = new Sport(
-                id, name, date, time,
-                vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
-                team1, team2, league
-            );
+                    id, name, date, time,
+                    vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
+                    team1, team2, league);
 
         } else if (type.equalsIgnoreCase("Special")) {
             System.out.print("Enter description: ");
@@ -490,10 +489,9 @@ public class RunTicketMiner {
             String category = keyboard.nextLine().trim();
 
             newEvent = new Special(
-                id, name, date, time,
-                vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
-                description, category
-            );
+                    id, name, date, time,
+                    vipPrice, goldPrice, silverPrice, bronzePrice, generalAdmissionPrice,
+                    description, category);
 
         } else {
             System.out.println("Invalid event type.");
@@ -676,70 +674,65 @@ public class RunTicketMiner {
     public static void readUserCSV(String filePath) {
         try {
             File file = new File(filePath);
-            Scanner csvScanner = new Scanner(file);
-
-            if (csvScanner.hasNextLine()) {
-                csvScanner.nextLine(); // skip header
-            }
-
-            while (csvScanner.hasNextLine()) {
-                String line = csvScanner.nextLine();
-                String[] fields = line.split(",");
-
-                String id = fields[0].trim();
-                String firstName = fields[1].trim();
-                String lastName = fields[2].trim();
-                String username = fields[3].trim();
-                String password = fields[4].trim();
-                String userType = fields[5].trim();
-
-                Scanner keyboard = new Scanner(System.in);
-
-                if (userType.equalsIgnoreCase("customer")) {
-                    String moneyAvailable = fields[6].trim();
-                    String membership = fields[7].trim();
-                    Customer customer = new Customer(
-                        Integer.parseInt(id),
-                        firstName,
-                        lastName,
-                        username,
-                        password,
-                        userType,
-                        keyboard,
-                        Double.parseDouble(moneyAvailable),
-                        Boolean.parseBoolean(membership)
-                    );
-                    users.add(customer);
-                } else if (userType.equalsIgnoreCase("organizer")) {
-                    Organizer organizer = new Organizer(
-                        Integer.parseInt(id),
-                        firstName,
-                        lastName,
-                        username,
-                        password,
-                        userType,
-                        keyboard
-                    );
-                    users.add(organizer);
-                } else if (userType.equalsIgnoreCase("admin")) {
-                    Admin admin = new Admin(
-                        Integer.parseInt(id),
-                        firstName,
-                        lastName,
-                        username,
-                        password,
-                        userType,
-                        keyboard,
-                        users,
-                        admins
-                    );
-                    admins.add(admin);
-                } else {
-                    System.out.println("Invalid user type for ID: " + id);
+            try (Scanner csvScanner = new Scanner(file)) {
+                if (csvScanner.hasNextLine()) {
+                    csvScanner.nextLine(); // skip header
+                }
+                
+                while (csvScanner.hasNextLine()) {
+                    String line = csvScanner.nextLine();
+                    String[] fields = line.split(",");
+                    
+                    String id = fields[0].trim();
+                    String firstName = fields[1].trim();
+                    String lastName = fields[2].trim();
+                    String username = fields[3].trim();
+                    String password = fields[4].trim();
+                    String userType = fields[5].trim();
+                    
+                    Scanner keyboard = new Scanner(System.in);
+                    
+                    if (userType.equalsIgnoreCase("customer")) {
+                        String moneyAvailable = fields[6].trim();
+                        String membership = fields[7].trim();
+                        Customer customer = new Customer(
+                                Integer.parseInt(id),
+                                firstName,
+                                lastName,
+                                username,
+                                password,
+                                userType,
+                                keyboard,
+                                Double.parseDouble(moneyAvailable),
+                                Boolean.parseBoolean(membership));
+                        users.add(customer);
+                    } else if (userType.equalsIgnoreCase("organizer")) {
+                        Organizer organizer = new Organizer(
+                                Integer.parseInt(id),
+                                firstName,
+                                lastName,
+                                username,
+                                password,
+                                userType,
+                                keyboard);
+                        users.add(organizer);
+                    } else if (userType.equalsIgnoreCase("admin")) {
+                        Admin admin = new Admin(
+                                Integer.parseInt(id),
+                                firstName,
+                                lastName,
+                                username,
+                                password,
+                                userType,
+                                keyboard,
+                                users,
+                                admins);
+                        admins.add(admin);
+                    } else {
+                        System.out.println("Invalid user type for ID: " + id);
+                    }
                 }
             }
-
-            csvScanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found - " + filePath);
         }
@@ -754,71 +747,65 @@ public class RunTicketMiner {
     public static void readVenueCSV(String filePath) {
         try {
             File file = new File(filePath);
-            Scanner csvScanner = new Scanner(file);
-
-            if (csvScanner.hasNextLine()) {
-                csvScanner.nextLine(); // skip header
-            }
-
-            while (csvScanner.hasNextLine()) {
-                String line = csvScanner.nextLine();
-                String[] fields = line.split(",");
-
-                String id = fields[0].trim();
-                String name = fields[1].trim();
-                String type = fields[2].trim();
-                String capacity = fields[3].trim();
-                String cost = fields[4].trim();
-                String location = fields[5].trim();
-
-                Venue venue = null;
-
-                if (type.equalsIgnoreCase("arena")) {
-                    venue = new Arena(
-                        Integer.parseInt(id),
-                        name,
-                        "Arena",
-                        Integer.parseInt(capacity),
-                        Double.parseDouble(cost),
-                        location
-                    );
-                } else if (type.equalsIgnoreCase("auditorium")) {
-                    venue = new Auditorium(
-                        Integer.parseInt(id),
-                        name,
-                        "Auditorium",
-                        Integer.parseInt(capacity),
-                        Double.parseDouble(cost),
-                        location
-                    );
-                } else if (type.equalsIgnoreCase("openair") || type.equalsIgnoreCase("open air")) {
-                    venue = new OpenAir(
-                        Integer.parseInt(id),
-                        name,
-                        "OpenAir",
-                        Integer.parseInt(capacity),
-                        Double.parseDouble(cost),
-                        location
-                    );
-                } else if (type.equalsIgnoreCase("stadium")) {
-                    venue = new Stadium(
-                        Integer.parseInt(id),
-                        name,
-                        "Stadium",
-                        Integer.parseInt(capacity),
-                        Double.parseDouble(cost),
-                        location
-                    );
-                } else {
-                    System.out.println("Invalid venue type for ID: " + id);
+            try (Scanner csvScanner = new Scanner(file)) {
+                if (csvScanner.hasNextLine()) {
+                    csvScanner.nextLine(); // skip header
                 }
-
-                if (venue != null) {
-                    venues.add(venue);
+                
+                while (csvScanner.hasNextLine()) {
+                    String line = csvScanner.nextLine();
+                    String[] fields = line.split(",");
+                    
+                    String id = fields[0].trim();
+                    String name = fields[1].trim();
+                    String type = fields[2].trim();
+                    String capacity = fields[3].trim();
+                    String cost = fields[4].trim();
+                    String location = fields[5].trim();
+                    
+                    Venue venue = null;
+                    
+                    if (type.equalsIgnoreCase("arena")) {
+                        venue = new Arena(
+                                Integer.parseInt(id),
+                                name,
+                                "Arena",
+                                Integer.parseInt(capacity),
+                                Double.parseDouble(cost),
+                                location);
+                    } else if (type.equalsIgnoreCase("auditorium")) {
+                        venue = new Auditorium(
+                                Integer.parseInt(id),
+                                name,
+                                "Auditorium",
+                                Integer.parseInt(capacity),
+                                Double.parseDouble(cost),
+                                location);
+                    } else if (type.equalsIgnoreCase("openair") || type.equalsIgnoreCase("open air")) {
+                        venue = new OpenAir(
+                                Integer.parseInt(id),
+                                name,
+                                "OpenAir",
+                                Integer.parseInt(capacity),
+                                Double.parseDouble(cost),
+                                location);
+                    } else if (type.equalsIgnoreCase("stadium")) {
+                        venue = new Stadium(
+                                Integer.parseInt(id),
+                                name,
+                                "Stadium",
+                                Integer.parseInt(capacity),
+                                Double.parseDouble(cost),
+                                location);
+                    } else {
+                        System.out.println("Invalid venue type for ID: " + id);
+                    }
+                    
+                    if (venue != null) {
+                        venues.add(venue);
+                    }
                 }
             }
-
-            csvScanner.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found - " + filePath);
@@ -834,85 +821,80 @@ public class RunTicketMiner {
     public static void readEventCSV(String filePath) {
         try {
             File file = new File(filePath);
-            Scanner csvScanner = new Scanner(file);
-
-            if (csvScanner.hasNextLine()) {
-                csvScanner.nextLine(); // skip header
-            }
-
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
-
-            while (csvScanner.hasNextLine()) {
-                String line = csvScanner.nextLine();
-                String[] fields = line.split(",");
-
-                String id = fields[0].trim();
-                String type = fields[1].trim();
-                String name = fields[2].trim();
-                String date = fields[3].trim();
-                String time = fields[4].trim();
-                String vipPrice = fields[5].trim();
-                String goldPrice = fields[6].trim();
-                String silverPrice = fields[7].trim();
-                String bronzePrice = fields[8].trim();
-                String generalAdmissionPrice = fields[9].trim();
-
-                if (type.equalsIgnoreCase("concert")) {
-                    Concert concert = new Concert(
-                        Integer.parseInt(id),
-                        name,
-                        LocalDate.parse(date, dateFormatter),
-                        LocalTime.parse(time, timeFormatter),
-                        Double.parseDouble(vipPrice),
-                        Double.parseDouble(goldPrice),
-                        Double.parseDouble(silverPrice),
-                        Double.parseDouble(bronzePrice),
-                        Double.parseDouble(generalAdmissionPrice),
-                        null,
-                        null
-                    );
-                    events.add(concert);
-
-                } else if (type.equalsIgnoreCase("sport")) {
-                    Sport sport = new Sport(
-                        Integer.parseInt(id),
-                        name,
-                        LocalDate.parse(date, dateFormatter),
-                        LocalTime.parse(time, timeFormatter),
-                        Double.parseDouble(vipPrice),
-                        Double.parseDouble(goldPrice),
-                        Double.parseDouble(silverPrice),
-                        Double.parseDouble(bronzePrice),
-                        Double.parseDouble(generalAdmissionPrice),
-                        null,
-                        null,
-                        null
-                    );
-                    events.add(sport);
-
-                } else if (type.equalsIgnoreCase("special")) {
-                    Special special = new Special(
-                        Integer.parseInt(id),
-                        name,
-                        LocalDate.parse(date, dateFormatter),
-                        LocalTime.parse(time, timeFormatter),
-                        Double.parseDouble(vipPrice),
-                        Double.parseDouble(goldPrice),
-                        Double.parseDouble(silverPrice),
-                        Double.parseDouble(bronzePrice),
-                        Double.parseDouble(generalAdmissionPrice),
-                        null,
-                        null
-                    );
-                    events.add(special);
-
-                } else {
-                    System.out.println("Invalid event type for ID: " + id);
+            try (Scanner csvScanner = new Scanner(file)) {
+                if (csvScanner.hasNextLine()) {
+                    csvScanner.nextLine(); // skip header
+                }
+                
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+                
+                while (csvScanner.hasNextLine()) {
+                    String line = csvScanner.nextLine();
+                    String[] fields = line.split(",");
+                    
+                    String id = fields[0].trim();
+                    String type = fields[1].trim();
+                    String name = fields[2].trim();
+                    String date = fields[3].trim();
+                    String time = fields[4].trim();
+                    String vipPrice = fields[5].trim();
+                    String goldPrice = fields[6].trim();
+                    String silverPrice = fields[7].trim();
+                    String bronzePrice = fields[8].trim();
+                    String generalAdmissionPrice = fields[9].trim();
+                    
+                    if (type.equalsIgnoreCase("concert")) {
+                        Concert concert = new Concert(
+                                Integer.parseInt(id),
+                                name,
+                                LocalDate.parse(date, dateFormatter),
+                                LocalTime.parse(time, timeFormatter),
+                                Double.parseDouble(vipPrice),
+                                Double.parseDouble(goldPrice),
+                                Double.parseDouble(silverPrice),
+                                Double.parseDouble(bronzePrice),
+                                Double.parseDouble(generalAdmissionPrice),
+                                null,
+                                null);
+                        events.add(concert);
+                        
+                    } else if (type.equalsIgnoreCase("sport")) {
+                        Sport sport = new Sport(
+                                Integer.parseInt(id),
+                                name,
+                                LocalDate.parse(date, dateFormatter),
+                                LocalTime.parse(time, timeFormatter),
+                                Double.parseDouble(vipPrice),
+                                Double.parseDouble(goldPrice),
+                                Double.parseDouble(silverPrice),
+                                Double.parseDouble(bronzePrice),
+                                Double.parseDouble(generalAdmissionPrice),
+                                null,
+                                null,
+                                null);
+                        events.add(sport);
+                        
+                    } else if (type.equalsIgnoreCase("special")) {
+                        Special special = new Special(
+                                Integer.parseInt(id),
+                                name,
+                                LocalDate.parse(date, dateFormatter),
+                                LocalTime.parse(time, timeFormatter),
+                                Double.parseDouble(vipPrice),
+                                Double.parseDouble(goldPrice),
+                                Double.parseDouble(silverPrice),
+                                Double.parseDouble(bronzePrice),
+                                Double.parseDouble(generalAdmissionPrice),
+                                null,
+                                null);
+                        events.add(special);
+                        
+                    } else {
+                        System.out.println("Invalid event type for ID: " + id);
+                    }
                 }
             }
-
-            csvScanner.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found - " + filePath);
@@ -947,16 +929,15 @@ public class RunTicketMiner {
         int newId = users.size() + admins.size() + 1;
 
         Customer customer = new Customer(
-            newId,
-            firstName,
-            lastName,
-            username,
-            password,
-            "customer",
-            keyboard,
-            money,
-            membership
-        );
+                newId,
+                firstName,
+                lastName,
+                username,
+                password,
+                "customer",
+                keyboard,
+                money,
+                membership);
 
         users.add(customer);
         log("Registered new customer " + username + " with ID " + newId);
@@ -985,14 +966,13 @@ public class RunTicketMiner {
         int newId = users.size() + admins.size() + 1;
 
         Organizer organizer = new Organizer(
-            newId,
-            firstName,
-            lastName,
-            username,
-            password,
-            "organizer",
-            keyboard
-        );
+                newId,
+                firstName,
+                lastName,
+                username,
+                password,
+                "organizer",
+                keyboard);
 
         users.add(organizer);
         log("Registered new organizer " + username + " with ID " + newId);
@@ -1035,23 +1015,23 @@ public class RunTicketMiner {
         try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
 
             String[] header = {
-                "ID", "First Name", "Last Name", "Username", "Password",
-                "User Type", "Money Available", "TicketMiner Membership", "Concerts Purchased"
+                    "ID", "First Name", "Last Name", "Username", "Password",
+                    "User Type", "Money Available", "TicketMiner Membership", "Concerts Purchased"
             };
             writer.writeNext(header);
 
             // write customers + organizers
             for (User user : users) {
                 String[] line = {
-                    String.valueOf(user.getUserId()),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getUserName(),
-                    user.getPassword(),
-                    user.getUserType(),
-                    "",
-                    "",
-                    ""
+                        String.valueOf(user.getUserId()),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUserName(),
+                        user.getPassword(),
+                        user.getUserType(),
+                        "",
+                        "",
+                        ""
                 };
 
                 if (user instanceof Customer customer) {
@@ -1066,15 +1046,15 @@ public class RunTicketMiner {
             // write admins too, otherwise they disappear when file is rewritten
             for (Admin admin : admins) {
                 String[] line = {
-                    String.valueOf(admin.getUserId()),
-                    admin.getFirstName(),
-                    admin.getLastName(),
-                    admin.getUserName(),
-                    admin.getPassword(),
-                    admin.getUserType(),
-                    "",
-                    "",
-                    ""
+                        String.valueOf(admin.getUserId()),
+                        admin.getFirstName(),
+                        admin.getLastName(),
+                        admin.getUserName(),
+                        admin.getPassword(),
+                        admin.getUserType(),
+                        "",
+                        "",
+                        ""
                 };
                 writer.writeNext(line);
             }
@@ -1088,17 +1068,17 @@ public class RunTicketMiner {
         try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
 
             // MUST match readVenueCSV()
-            String[] header = {"ID", "Name", "Type", "Capacity", "Cost", "Location"};
+            String[] header = { "ID", "Name", "Type", "Capacity", "Cost", "Location" };
             writer.writeNext(header);
 
             for (Venue venue : venues) {
                 String[] line = {
-                    String.valueOf(venue.getVenueId()),
-                    venue.getVenueName(),
-                    venue.getVenueType(),
-                    String.valueOf(venue.getCapacity()),
-                    String.valueOf(venue.getCost()),
-                    venue.getLocation()
+                        String.valueOf(venue.getVenueId()),
+                        venue.getVenueName(),
+                        venue.getVenueType(),
+                        String.valueOf(venue.getCapacity()),
+                        String.valueOf(venue.getCost()),
+                        venue.getLocation()
                 };
                 writer.writeNext(line);
             }
@@ -1112,8 +1092,8 @@ public class RunTicketMiner {
         try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
 
             String[] header = {
-                "ID", "Type", "Name", "Date", "Time",
-                "VIP Price", "Gold Price", "Silver Price", "Bronze Price", "General Admission Price"
+                    "ID", "Type", "Name", "Date", "Time",
+                    "VIP Price", "Gold Price", "Silver Price", "Bronze Price", "General Admission Price"
             };
             writer.writeNext(header);
 
@@ -1122,16 +1102,16 @@ public class RunTicketMiner {
 
             for (Event event : events) {
                 String[] line = {
-                    String.valueOf(event.getEventId()),
-                    event.getEventType(),
-                    event.getEventName(),
-                    event.getDate().format(dateFormatter),
-                    event.getTime().format(timeFormatter),
-                    String.valueOf(event.getVipPrice()),
-                    String.valueOf(event.getGoldPrice()),
-                    String.valueOf(event.getSilverPrice()),
-                    String.valueOf(event.getBronzePrice()),
-                    String.valueOf(event.getGeneralAdmissionPrice())
+                        String.valueOf(event.getEventId()),
+                        event.getEventType(),
+                        event.getEventName(),
+                        event.getDate().format(dateFormatter),
+                        event.getTime().format(timeFormatter),
+                        String.valueOf(event.getVipPrice()),
+                        String.valueOf(event.getGoldPrice()),
+                        String.valueOf(event.getSilverPrice()),
+                        String.valueOf(event.getBronzePrice()),
+                        String.valueOf(event.getGeneralAdmissionPrice())
                 };
                 writer.writeNext(line);
             }
