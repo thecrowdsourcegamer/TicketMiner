@@ -62,6 +62,8 @@ public abstract class User {
                 + ", Type: " + userType;
     }
 
+    // GETTERS ------------------------------------------
+
     public int getUserId() {
         return userId;
     }
@@ -93,6 +95,8 @@ public abstract class User {
     public Scanner getKeyboard() {
         return keyboard;
     }
+
+    // SETTERS -------------------------------------
 
     public void setUserId(int userId) {
         this.userId = userId;
