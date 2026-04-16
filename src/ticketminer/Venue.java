@@ -6,17 +6,32 @@ public abstract class Venue {
     private String venueName;
     private String venueType;
     private int capacity;
+    private int concertCapacity;
     private double cost;
-    private String location;
+    private double vipPercent;
+    private double goldPercent;
+    private double silverPercent;
+    private double bronzePercent;
+    private double generalAdmissionPercent;
+    private double reservedExtraPercent;
 
     public Venue(int venueId, String venueName, String venueType,
-                 int capacity, double cost, String location) {
+                 int capacity, int concertCapacity, double cost,
+                 double vipPercent, double goldPercent, double silverPercent,
+                 double bronzePercent, double generalAdmissionPercent,
+                 double reservedExtraPercent) {
         this.venueId = venueId;
         this.venueName = venueName;
         this.venueType = venueType;
         this.capacity = capacity;
+        this.concertCapacity = concertCapacity;
         this.cost = cost;
-        this.location = location;
+        this.vipPercent = vipPercent;
+        this.goldPercent = goldPercent;
+        this.silverPercent = silverPercent;
+        this.bronzePercent = bronzePercent;
+        this.generalAdmissionPercent = generalAdmissionPercent;
+        this.reservedExtraPercent = reservedExtraPercent;
     }
 
     public boolean matchesVenueId(int id) {
@@ -31,13 +46,6 @@ public abstract class Venue {
         return this.venueType.equalsIgnoreCase(type);
     }
 
-    /**
-     * Determines whether a venue matches a search value.
-     * Searches by venue ID, name, or type.
-     *
-     * @param input search value entered by the user
-     * @return true if the venue matches the search value
-     */
     public boolean matchesSearch(String input) {
         if (matchesVenueName(input) || matchesVenueType(input)) {
             return true;
@@ -57,8 +65,14 @@ public abstract class Venue {
             + ", Name: " + venueName
             + ", Type: " + venueType
             + ", Capacity: " + capacity
+            + ", Concert Capacity: " + concertCapacity
             + ", Cost: $" + String.format("%.2f", cost)
-            + ", Location: " + location;
+            + ", VIP Percent: " + vipPercent
+            + ", Gold Percent: " + goldPercent
+            + ", Silver Percent: " + silverPercent
+            + ", Bronze Percent: " + bronzePercent
+            + ", General Admission Percent: " + generalAdmissionPercent
+            + ", Reserved Extra Percent: " + reservedExtraPercent;
     }
 
     public int getVenueId() {
@@ -77,12 +91,36 @@ public abstract class Venue {
         return capacity;
     }
 
+    public int getConcertCapacity() {
+        return concertCapacity;
+    }
+
     public double getCost() {
         return cost;
     }
 
-    public String getLocation() {
-        return location;
+    public double getVipPercent() {
+        return vipPercent;
+    }
+
+    public double getGoldPercent() {
+        return goldPercent;
+    }
+
+    public double getSilverPercent() {
+        return silverPercent;
+    }
+
+    public double getBronzePercent() {
+        return bronzePercent;
+    }
+
+    public double getGeneralAdmissionPercent() {
+        return generalAdmissionPercent;
+    }
+
+    public double getReservedExtraPercent() {
+        return reservedExtraPercent;
     }
 
     public void setVenueId(int venueId) {
@@ -101,11 +139,35 @@ public abstract class Venue {
         this.capacity = capacity;
     }
 
+    public void setConcertCapacity(int concertCapacity) {
+        this.concertCapacity = concertCapacity;
+    }
+
     public void setCost(double cost) {
         this.cost = cost;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setVipPercent(double vipPercent) {
+        this.vipPercent = vipPercent;
+    }
+
+    public void setGoldPercent(double goldPercent) {
+        this.goldPercent = goldPercent;
+    }
+
+    public void setSilverPercent(double silverPercent) {
+        this.silverPercent = silverPercent;
+    }
+
+    public void setBronzePercent(double bronzePercent) {
+        this.bronzePercent = bronzePercent;
+    }
+
+    public void setGeneralAdmissionPercent(double generalAdmissionPercent) {
+        this.generalAdmissionPercent = generalAdmissionPercent;
+    }
+
+    public void setReservedExtraPercent(double reservedExtraPercent) {
+        this.reservedExtraPercent = reservedExtraPercent;
     }
 }

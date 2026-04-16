@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,9 +26,13 @@ import java.util.Scanner;
  * @author Haydee Rojo Ovalle
  */
 public class RunTicketMiner {
-    private static final String USER_CSV = "csvs/Customer_List_PA1.csv";
-    private static final String VENUE_CSV = "csvs/Venue_List_PA1.csv";
-    private static final String EVENT_CSV = "csvs/Event_List_PA1.csv";
+    private static final String USER_INPUT_CSV = "csvs/Customer_List_PA1.csv";
+    private static final String VENUE_INPUT_CSV = "csvs/Venue_List_PA1.csv";
+    private static final String EVENT_INPUT_CSV = "csvs/Event_List_PA1.csv";
+
+    private static final String USER_OUTPUT_CSV = "csvs/Updated_Customer_List_PA1.csv";
+    private static final String VENUE_OUTPUT_CSV = "csvs/Updated_Venue_List_PA1.csv";
+    private static final String EVENT_OUTPUT_CSV = "csvs/Updated_Event_List_PA1.csv";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a");
     private static final Scanner KEYBOARD = new Scanner(System.in);
@@ -44,7 +49,7 @@ public class RunTicketMiner {
      * @param args command line arguments
      * @throws Exception if an unexpected error occurs
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         menu();
     } // main
 
@@ -79,26 +84,38 @@ public class RunTicketMiner {
         users.clear();
         admins.clear();
 
-        readVenueCSV(VENUE_CSV);
-        readUserCSV(USER_CSV);
-        readEventCSV(EVENT_CSV);
+        readVenueCSV(VENUE_INPUT_CSV);
+        readUserCSV(USER_INPUT_CSV);
+        readEventCSV(EVENT_INPUT_CSV);
     }
 
     public static void saveAllData() {
-        writeVenueCSV(VENUE_CSV);
-        writeUserCSV(USER_CSV);
-        writeEventCSV(EVENT_CSV);
+        writeVenueCSV(VENUE_OUTPUT_CSV);
+        writeUserCSV(USER_OUTPUT_CSV);
+        writeEventCSV(EVENT_OUTPUT_CSV);
     }
 
-    private static Venue createVenue(int venueId, String name, String type, int capacity, double cost, String location) {
+    private static Venue createVenue(int venueId, String name, String type, int capacity,
+                                    int concertCapacity, double cost,
+                                    double vipPercent, double goldPercent, double silverPercent,
+                                    double bronzePercent, double generalAdmissionPercent,
+                                    double reservedExtraPercent) {
         if (type.equalsIgnoreCase("Arena")) {
-            return new Arena(venueId, name, "Arena", capacity, cost, location);
+            return new Arena(venueId, name, "Arena", capacity, concertCapacity, cost,
+                    vipPercent, goldPercent, silverPercent, bronzePercent,
+                    generalAdmissionPercent, reservedExtraPercent);
         } else if (type.equalsIgnoreCase("Auditorium")) {
-            return new Auditorium(venueId, name, "Auditorium", capacity, cost, location);
+            return new Auditorium(venueId, name, "Auditorium", capacity, concertCapacity, cost,
+                    vipPercent, goldPercent, silverPercent, bronzePercent,
+                    generalAdmissionPercent, reservedExtraPercent);
         } else if (type.equalsIgnoreCase("OpenAir") || type.equalsIgnoreCase("Open Air")) {
-            return new OpenAir(venueId, name, "OpenAir", capacity, cost, location);
+            return new OpenAir(venueId, name, "OpenAir", capacity, concertCapacity, cost,
+                    vipPercent, goldPercent, silverPercent, bronzePercent,
+                    generalAdmissionPercent, reservedExtraPercent);
         } else if (type.equalsIgnoreCase("Stadium")) {
-            return new Stadium(venueId, name, "Stadium", capacity, cost, location);
+            return new Stadium(venueId, name, "Stadium", capacity, concertCapacity, cost,
+                    vipPercent, goldPercent, silverPercent, bronzePercent,
+                    generalAdmissionPercent, reservedExtraPercent);
         }
 
         return null;
@@ -139,6 +156,76 @@ public class RunTicketMiner {
             return Double.parseDouble(value.trim());
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid " + fieldName + " in row: " + line);
+        }
+    }
+
+    public static double readDouble(Scanner keyboard, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = keyboard.nextLine().trim();
+
+            try {
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please enter a valid decimal value.");
+            }
+        }
+    }
+
+    public static int readInt(Scanner keyboard, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = keyboard.nextLine().trim();
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please enter a whole number.");
+            }
+        }
+    }
+
+    public static boolean readBoolean(Scanner keyboard, String prompt) {
+        while (true) {
+            System.out.print(prompt + " (true/false): ");
+            String input = keyboard.nextLine().trim().toLowerCase();
+
+            if (input.equals("true") || input.equals("t") || input.equals("yes") || input.equals("y")) {
+                return true;
+            }
+            if (input.equals("false") || input.equals("f") || input.equals("no") || input.equals("n")) {
+                return false;
+            }
+
+            System.out.println("Invalid input. Please enter true/false or yes/no.");
+        }
+    }
+
+    public static LocalDate readDate(Scanner keyboard, String prompt) {
+        while (true) {
+            System.out.print(prompt + " (YYYY-MM-DD): ");
+            String input = keyboard.nextLine().trim();
+
+            try {
+                return LocalDate.parse(input);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date. Please use YYYY-MM-DD.");
+            }
+        }
+    }
+
+    public static LocalTime readTime(Scanner keyboard, String prompt) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm");
+
+        while (true) {
+            System.out.print(prompt + " (HH:MM): ");
+            String input = keyboard.nextLine().trim();
+
+            try {
+                return LocalTime.parse(input, timeFormatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid time. Please use HH:MM in 24-hour format.");
+            }
         }
     }
 
@@ -236,9 +323,7 @@ public class RunTicketMiner {
      * @param keyboard Scanner used to read user input
      */
     public static void addVenue(Scanner keyboard) {
-
-        System.out.print("Enter venue ID: ");
-        int venueId = Integer.parseInt(keyboard.nextLine().trim());
+        int venueId = readInt(keyboard, "Enter venue ID: ");
 
         System.out.print("Enter venue name: ");
         String name = keyboard.nextLine().trim();
@@ -246,16 +331,19 @@ public class RunTicketMiner {
         System.out.print("Enter venue type (Arena, Auditorium, OpenAir, Stadium): ");
         String type = keyboard.nextLine().trim();
 
-        System.out.print("Enter capacity: ");
-        int capacity = Integer.parseInt(keyboard.nextLine().trim());
+        int capacity = readInt(keyboard, "Enter capacity: ");
+        int concertCapacity = readInt(keyboard, "Enter concert capacity: ");
+        double cost = readDouble(keyboard, "Enter cost: ");
+        double vipPercent = readDouble(keyboard, "Enter VIP percent: ");
+        double goldPercent = readDouble(keyboard, "Enter Gold percent: ");
+        double silverPercent = readDouble(keyboard, "Enter Silver percent: ");
+        double bronzePercent = readDouble(keyboard, "Enter Bronze percent: ");
+        double generalAdmissionPercent = readDouble(keyboard, "Enter General Admission percent: ");
+        double reservedExtraPercent = readDouble(keyboard, "Enter Reserved Extra percent: ");
 
-        System.out.print("Enter cost: ");
-        double cost = Double.parseDouble(keyboard.nextLine().trim());
-
-        System.out.print("Enter location: ");
-        String location = keyboard.nextLine().trim();
-
-        Venue newVenue = createVenue(venueId, name, type, capacity, cost, location);
+        Venue newVenue = createVenue(venueId, name, type, capacity, concertCapacity, cost,
+                vipPercent, goldPercent, silverPercent, bronzePercent,
+                generalAdmissionPercent, reservedExtraPercent);
 
         if (newVenue == null) {
             System.out.println("Invalid venue type.");
@@ -263,7 +351,7 @@ public class RunTicketMiner {
         }
 
         venues.add(newVenue);
-        writeVenueCSV(VENUE_CSV);
+        writeVenueCSV(VENUE_OUTPUT_CSV);
         log(getActorName() + " added venue ID " + venueId + " named " + name);
         System.out.println("Venue added successfully.");
     }
@@ -353,7 +441,7 @@ public class RunTicketMiner {
         System.out.println("1: Change Name");
         System.out.println("2: Change Capacity");
         System.out.println("3: Change Cost");
-        System.out.println("4: Change Location");
+
 
         String choice = keyboard.nextLine().trim();
 
@@ -366,21 +454,13 @@ public class RunTicketMiner {
             }
 
             case "2" -> {
-                System.out.print("Enter new capacity: ");
-                venue.setCapacity(Integer.parseInt(keyboard.nextLine().trim()));
+                venue.setCapacity(readInt(keyboard, "Enter new capacity: "));
                 log(getActorName() + " updated venue capacity for venue ID " + venue.getVenueId());
             }
 
             case "3" -> {
-                System.out.print("Enter new cost: ");
-                venue.setCost(Double.parseDouble(keyboard.nextLine().trim()));
+                venue.setCost(readDouble(keyboard, "Enter new cost: "));
                 log(getActorName() + " updated venue cost for venue ID " + venue.getVenueId());
-            }
-
-            case "4" -> {
-                System.out.print("Enter new location: ");
-                venue.setLocation(keyboard.nextLine().trim());
-                log(getActorName() + " updated venue location for venue ID " + venue.getVenueId());
             }
 
             default -> {
@@ -389,7 +469,7 @@ public class RunTicketMiner {
             }
         }
 
-        writeVenueCSV(VENUE_CSV);
+        writeVenueCSV(VENUE_OUTPUT_CSV);
         System.out.println("Venue updated successfully.");
     }
 
@@ -418,7 +498,7 @@ public class RunTicketMiner {
 
         if (confirm.equalsIgnoreCase("yes")) {
             venues.remove(venue);
-            writeVenueCSV(VENUE_CSV);
+            writeVenueCSV(VENUE_OUTPUT_CSV);
             log(getActorName() + " deleted venue ID " + venue.getVenueId());
             System.out.println("Venue deleted successfully.");
         } else {
@@ -489,8 +569,7 @@ public class RunTicketMiner {
      * @param keyboard Scanner used to read user input
      */
     public static void addEvent(Scanner keyboard) {
-        System.out.print("Enter event ID: ");
-        int id = Integer.parseInt(keyboard.nextLine().trim());
+        int id = readInt(keyboard, "Enter event ID: ");
 
         System.out.print("Enter event name: ");
         String name = keyboard.nextLine().trim();
@@ -498,26 +577,19 @@ public class RunTicketMiner {
         System.out.print("Enter event type (Concert, Sport, Special): ");
         String type = keyboard.nextLine().trim();
 
-        System.out.print("Enter event date (YYYY-MM-DD): ");
-        LocalDate date = LocalDate.parse(keyboard.nextLine().trim());
+        LocalDate date = readDate(keyboard, "Enter event date");
 
-        System.out.print("Enter event time (HH:MM): ");
-        LocalTime time = LocalTime.parse(keyboard.nextLine().trim());
+        LocalTime time = readTime(keyboard, "Enter event time");
 
-        System.out.print("Enter VIP price: ");
-        double vipPrice = Double.parseDouble(keyboard.nextLine().trim());
+        double vipPrice = readDouble(keyboard, "Enter VIP price: ");
 
-        System.out.print("Enter Gold price: ");
-        double goldPrice = Double.parseDouble(keyboard.nextLine().trim());
+        double goldPrice = readDouble(keyboard, "Enter Gold price: ");
 
-        System.out.print("Enter Silver price: ");
-        double silverPrice = Double.parseDouble(keyboard.nextLine().trim());
+        double silverPrice = readDouble(keyboard, "Enter Silver price: ");
 
-        System.out.print("Enter Bronze price: ");
-        double bronzePrice = Double.parseDouble(keyboard.nextLine().trim());
+        double bronzePrice = readDouble(keyboard, "Enter Bronze price: ");
 
-        System.out.print("Enter General Admission price: ");
-        double generalAdmissionPrice = Double.parseDouble(keyboard.nextLine().trim());
+        double generalAdmissionPrice = readDouble(keyboard, "Enter General Admission price: ");
 
         Event newEvent = null;
 
@@ -566,7 +638,7 @@ public class RunTicketMiner {
         }
 
         events.add(newEvent);
-        writeEventCSV(EVENT_CSV);
+        writeEventCSV(EVENT_OUTPUT_CSV);
         log(getActorName() + " added event ID " + id + " named " + name);
         System.out.println("Event added successfully.");
     }
@@ -657,21 +729,18 @@ public class RunTicketMiner {
             case "1" -> {
                 System.out.print("Enter new event name: ");
                 event.setEventName(keyboard.nextLine().trim());
-                writeEventCSV(EVENT_CSV);
+                writeEventCSV(EVENT_OUTPUT_CSV);
                 log(getActorName() + " updated event name for event ID " + event.getEventId());
                 System.out.println("Event name updated successfully.");
             }
             case "2" -> {
-                System.out.print("Enter new event date (YYYY-MM-DD): ");
-                LocalDate newDate = LocalDate.parse(keyboard.nextLine().trim());
-
-                System.out.print("Enter new event time (HH:MM): ");
-                LocalTime newTime = LocalTime.parse(keyboard.nextLine().trim());
+                LocalDate newDate = readDate(keyboard, "Enter event date");
+                LocalTime newTime = readTime(keyboard, "Enter event time");
 
                 event.setDate(newDate);
                 event.setTime(newTime);
 
-                writeEventCSV(EVENT_CSV);
+                writeEventCSV(EVENT_OUTPUT_CSV);
                 log(getActorName() + " updated event date/time for event ID " + event.getEventId());
                 System.out.println("Event date and time updated successfully.");
             }
@@ -702,7 +771,7 @@ public class RunTicketMiner {
 
         if (confirm.equalsIgnoreCase("yes")) {
             events.remove(event);
-            writeEventCSV(EVENT_CSV);
+            writeEventCSV(EVENT_OUTPUT_CSV);
             log(getActorName() + " deleted event ID " + event.getEventId());
             System.out.println("Event deleted successfully.");
         } else {
@@ -827,7 +896,7 @@ public class RunTicketMiner {
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
 
-                if (fields.length < 6) {
+                if (fields.length < 12) {
                     System.out.println("Skipping bad venue row: " + line);
                     continue;
                 }
@@ -836,10 +905,18 @@ public class RunTicketMiner {
                 String name = fields[1].trim();
                 String type = fields[2].trim();
                 int capacity = parseIntField(fields[3], "capacity", line);
-                double cost = parseDoubleField(fields[4], "cost", line);
-                String location = fields[5].trim();
+                int concertCapacity = parseIntField(fields[4], "concert capacity", line);
+                double cost = parseDoubleField(fields[5], "cost", line);
+                double vipPercent = parseDoubleField(fields[6], "VIP percent", line);
+                double goldPercent = parseDoubleField(fields[7], "Gold percent", line);
+                double silverPercent = parseDoubleField(fields[8], "Silver percent", line);
+                double bronzePercent = parseDoubleField(fields[9], "Bronze percent", line);
+                double generalAdmissionPercent = parseDoubleField(fields[10], "General Admission percent", line);
+                double reservedExtraPercent = parseDoubleField(fields[11], "Reserved Extra percent", line);
 
-                Venue venue = createVenue(id, name, type, capacity, cost, location);
+                Venue venue = createVenue(id, name, type, capacity, concertCapacity, cost,
+                        vipPercent, goldPercent, silverPercent, bronzePercent,
+                        generalAdmissionPercent, reservedExtraPercent);
 
                 if (venue != null) {
                     venues.add(venue);
@@ -960,11 +1037,8 @@ public class RunTicketMiner {
         System.out.print("Enter password: ");
         String password = keyboard.nextLine().trim();
 
-        System.out.print("Enter money available: ");
-        double money = Double.parseDouble(keyboard.nextLine().trim());
-
-        System.out.print("Membership (true/false): ");
-        boolean membership = Boolean.parseBoolean(keyboard.nextLine().trim());
+        double money = readDouble(keyboard, "Enter money available: ");
+        boolean membership = readBoolean(keyboard, "Membership (true/false): ");
 
         int newId = users.size() + admins.size() + 1;
 
@@ -980,7 +1054,7 @@ public class RunTicketMiner {
                 membership);
 
         users.add(customer);
-        writeUserCSV(USER_CSV);
+        writeUserCSV(USER_OUTPUT_CSV);
         log("Registered new customer " + username + " with ID " + newId);
         System.out.println("Customer registered successfully.");
     }
@@ -1016,7 +1090,7 @@ public class RunTicketMiner {
                 keyboard);
 
         users.add(organizer);
-        writeUserCSV(USER_CSV);
+        writeUserCSV(USER_OUTPUT_CSV);
         log("Registered new organizer " + username + " with ID " + newId);
         System.out.println("Organizer registered successfully.");
     }
@@ -1102,7 +1176,10 @@ public class RunTicketMiner {
 
     public static void writeVenueCSV(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            writeCsvLine(writer, "ID", "Name", "Type", "Capacity", "Cost", "Location");
+            writeCsvLine(writer,
+                    "ID", "Name", "Type", "Capacity", "Concert Capacity", "Cost",
+                    "VIP Percent", "Gold Percent", "Silver Percent", "Bronze Percent",
+                    "General Admission Percent", "Reserved Extra Percent");
 
             for (Venue venue : venues) {
                 writeCsvLine(writer,
@@ -1110,8 +1187,14 @@ public class RunTicketMiner {
                         venue.getVenueName(),
                         venue.getVenueType(),
                         String.valueOf(venue.getCapacity()),
+                        String.valueOf(venue.getConcertCapacity()),
                         String.valueOf(venue.getCost()),
-                        venue.getLocation());
+                        String.valueOf(venue.getVipPercent()),
+                        String.valueOf(venue.getGoldPercent()),
+                        String.valueOf(venue.getSilverPercent()),
+                        String.valueOf(venue.getBronzePercent()),
+                        String.valueOf(venue.getGeneralAdmissionPercent()),
+                        String.valueOf(venue.getReservedExtraPercent()));
             }
 
         } catch (IOException e) {
