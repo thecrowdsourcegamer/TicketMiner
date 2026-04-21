@@ -26,13 +26,16 @@ import java.util.Scanner;
  * @author Haydee Rojo Ovalle
  */
 public class RunTicketMiner {
-    private static final String USER_INPUT_CSV = "csvs/Customer_List_PA1.csv";
-    private static final String VENUE_INPUT_CSV = "csvs/Venue_List_PA1.csv";
-    private static final String EVENT_INPUT_CSV = "csvs/Event_List_PA1.csv";
+    private static final String CSV_DIR = "csvs/";
 
-    private static final String USER_OUTPUT_CSV = "csvs/Updated_Customer_List_PA1.csv";
-    private static final String VENUE_OUTPUT_CSV = "csvs/Updated_Venue_List_PA1.csv";
-    private static final String EVENT_OUTPUT_CSV = "csvs/Updated_Event_List_PA1.csv";
+    private static final String USER_INPUT_CSV = CSV_DIR + "Customer_List_PA1.csv";
+    private static final String VENUE_INPUT_CSV = CSV_DIR + "Venue_List_PA1.csv";
+    private static final String EVENT_INPUT_CSV = CSV_DIR + "Event_List_PA1.csv";
+
+    private static final String USER_OUTPUT_CSV = CSV_DIR + "Updated_Customer_List_PA1.csv";
+    private static final String VENUE_OUTPUT_CSV = CSV_DIR + "Updated_Venue_List_PA1.csv";
+    private static final String EVENT_OUTPUT_CSV = CSV_DIR + "Updated_Event_List_PA1.csv";
+
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a");
     private static final Scanner KEYBOARD = new Scanner(System.in);
