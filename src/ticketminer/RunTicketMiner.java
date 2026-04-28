@@ -26,6 +26,7 @@ import java.util.Scanner;
  * @author Haydee Rojo Ovalle
  */
 public class RunTicketMiner {
+    // Constants
     private static final String CSV_DIR = "csvs/";
 
     private static final String USER_INPUT_CSV = CSV_DIR + "Customer_List_PA1.csv";
@@ -53,6 +54,18 @@ public class RunTicketMiner {
      * @throws Exception if an unexpected error occurs
      */
     public static void main(String[] args) {
+        System.out.println("""
+          d8,        d8b                                          d8,                          
+   d8P   `8P         ?88                 d8P                     `8P                           
+d888888P              88b             d888888P                                                 
+  ?88'    88b d8888b  888  d88' d8888b  ?88'        88bd8b,d88b   88b  88bd88b  d8888b  88bd88b
+  88P     88Pd8P' `P  888bd8P' d8b_,dP  88P         88P'`?8P'?8b  88P  88P' ?8bd8b_,dP  88P'  `
+  88b    d88 88b     d88888b   88b      88b        d88  d88  88P d88  d88   88P88b     d88     
+  `?8b  d88' `?888P'd88' `?88b,`?888P'  `?8b      d88' d88'  88bd88' d88'   88b`?888P'd88'     
+                                                                                               
+                                                                                               
+                                                                                               
+""");
         menu();
     } // main
 
@@ -81,6 +94,9 @@ public class RunTicketMiner {
         return "system";
     }
 
+    /**
+     * clears the array lists then reads the CSVs of Venue, User, and Events. 
+     */
     public static void loadAllData() {
         venues.clear();
         events.clear();
@@ -92,12 +108,30 @@ public class RunTicketMiner {
         readEventCSV(EVENT_INPUT_CSV);
     }
 
+     /**
+     * Save written data to new output CSVs
+     */
     public static void saveAllData() {
         writeVenueCSV(VENUE_OUTPUT_CSV);
         writeUserCSV(USER_OUTPUT_CSV);
         writeEventCSV(EVENT_OUTPUT_CSV);
     }
 
+    /** 
+     * @param venueId
+     * @param name
+     * @param type
+     * @param capacity
+     * @param concertCapacity
+     * @param cost
+     * @param vipPercent
+     * @param goldPercent
+     * @param silverPercent
+     * @param bronzePercent
+     * @param generalAdmissionPercent
+     * @param reservedExtraPercent
+     * @return Venue
+     */
     private static Venue createVenue(int venueId, String name, String type, int capacity,
                                     int concertCapacity, double cost,
                                     double vipPercent, double goldPercent, double silverPercent,
@@ -124,6 +158,10 @@ public class RunTicketMiner {
         return null;
     }
 
+    /** 
+     * @param value
+     * @return String
+     */
     private static String csvEscape(String value) {
         if (value == null) {
             return "";
@@ -136,6 +174,11 @@ public class RunTicketMiner {
         return value;
     }
 
+    /** 
+     * @param writer
+     * @param values
+     * @throws IOException
+     */
     private static void writeCsvLine(FileWriter writer, String... values) throws IOException {
         for (int i = 0; i < values.length; i++) {
             writer.write(csvEscape(values[i]));
@@ -146,6 +189,12 @@ public class RunTicketMiner {
         writer.write("\n");
     }
 
+    /** 
+     * @param value
+     * @param fieldName
+     * @param line
+     * @return int
+     */
     private static int parseIntField(String value, String fieldName, String line) {
         try {
             return Integer.parseInt(value.trim());
@@ -154,6 +203,12 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param value
+     * @param fieldName
+     * @param line
+     * @return double
+     */
     private static double parseDoubleField(String value, String fieldName, String line) {
         try {
             return Double.parseDouble(value.trim());
@@ -162,6 +217,11 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param keyboard
+     * @param prompt
+     * @return double
+     */
     public static double readDouble(Scanner keyboard, String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -175,6 +235,11 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param keyboard
+     * @param prompt
+     * @return int
+     */
     public static int readInt(Scanner keyboard, String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -188,6 +253,11 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param keyboard
+     * @param prompt
+     * @return boolean
+     */
     public static boolean readBoolean(Scanner keyboard, String prompt) {
         while (true) {
             System.out.print(prompt + " (true/false): ");
@@ -204,6 +274,11 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param keyboard
+     * @param prompt
+     * @return LocalDate
+     */
     public static LocalDate readDate(Scanner keyboard, String prompt) {
         while (true) {
             System.out.print(prompt + " (YYYY-MM-DD): ");
@@ -217,6 +292,11 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param keyboard
+     * @param prompt
+     * @return LocalTime
+     */
     public static LocalTime readTime(Scanner keyboard, String prompt) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("H:mm");
 
@@ -1130,6 +1210,9 @@ public class RunTicketMiner {
         return null;
     }
 
+    /** 
+     * @param filePath
+     */
     public static void writeUserCSV(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
             writeCsvLine(writer,
@@ -1177,6 +1260,9 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param filePath
+     */
     public static void writeVenueCSV(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
             writeCsvLine(writer,
@@ -1205,6 +1291,9 @@ public class RunTicketMiner {
         }
     }
 
+    /** 
+     * @param filePath
+     */
     public static void writeEventCSV(String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
             writeCsvLine(writer,

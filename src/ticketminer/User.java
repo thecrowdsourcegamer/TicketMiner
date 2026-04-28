@@ -33,26 +33,48 @@ public abstract class User {
         System.out.println("Going back.");
     }
 
+    /** 
+     * @return String
+     */
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
+    /** 
+     * @param id
+     * @return boolean
+     */
     public boolean matchesId(int id) {
         return this.userId == id;
     }
 
+    /** 
+     * @param username
+     * @return boolean
+     */
     public boolean matchesUsername(String username) {
         return this.userName.equalsIgnoreCase(username);
     }
 
+    /** 
+     * @param name
+     * @return boolean
+     */
     public boolean matchesName(String name) {
         return getFullName().equalsIgnoreCase(name);
     }
 
+    /** 
+     * @param password
+     * @return boolean
+     */
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 
+    /** 
+     * @return String
+     */
     @Override
     public String toString() {
         return "ID: " + userId
@@ -64,68 +86,117 @@ public abstract class User {
 
     // GETTERS ------------------------------------------
 
+    /** 
+     * @return int
+     */
     public int getUserId() {
         return userId;
     }
 
+    /** 
+     * @return String
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /** 
+     * @return String
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /** 
+     * @return String
+     */
     public String getUserName() {
         return userName;
     }
 
+    /** 
+     * @return String
+     */
     public String getPassword() {
         return password;
     }
 
+    /** 
+     * @return String
+     */
     public String getUserType() {
         return userType;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isCanEdit() {
         return canEdit;
     }
 
+    /** 
+     * @return Scanner
+     */
     public Scanner getKeyboard() {
         return keyboard;
     }
 
+
     // SETTERS -------------------------------------
 
+     /** 
+     * @param userId
+     */
     public void setUserId(int userId) {
         this.userId = userId;
     }
 
+    /** 
+     * @param firstName
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /** 
+     * @param lastName
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /** 
+     * @param userName
+     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    /** 
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /** 
+     * @param userType
+     */
     public void setUserType(String userType) {
         this.userType = userType;
     }
 
+    /** 
+     * @param canEdit
+     */
     public void setCanEdit(boolean canEdit) {
         this.canEdit = canEdit;
     }
 
+    /** 
+     * @param keyboard
+     */
     public void setKeyboard(Scanner keyboard) {
         this.keyboard = keyboard;
     }
