@@ -3,3 +3,4 @@ bin/
 *.class
 .vscode/
 log.txt
+google_checks.xml
