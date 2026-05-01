@@ -11,7 +11,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -350,6 +349,7 @@ d888888P              88b             d888888P
                         }
                     }
                     case "3", "exit" -> {
+                        saveAllData();
                         log("Program exited");
                         userInput = "exit";
                         continue;
@@ -890,12 +890,28 @@ d888888P              88b             d888888P
         }
     }
 
-    public static int [] headerIndexes(String header[], String params[]){
-        int headerIndexes[] = new int[params.length];
-        for(int i = 0; i < params.length; i++){
-            headerIndexes[i] = Arrays.binarySearch(header, params[i]);
+    public static int[] headerIndexes(String[] header, String[] params) {
+        int[] headerIndexes = new int[params.length];
+
+        for (int i = 0; i < params.length; i++) {
+            headerIndexes[i] = findHeaderIndex(header, params[i]);
+
+            if (headerIndexes[i] < 0) {
+                throw new IllegalArgumentException("Missing required CSV column: " + params[i]);
+            }
         }
+
         return headerIndexes;
+    }
+
+    private static int findHeaderIndex(String[] header, String columnName) {
+        for (int i = 0; i < header.length; i++) {
+            if (header[i].trim().equalsIgnoreCase(columnName)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     /**
@@ -908,7 +924,8 @@ d888888P              88b             d888888P
         try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath))) {
             String line = reader.readLine(); // skip header
             String header[] = line.split(",", -1);
-            String params[] = {"ID", "First Name", "Last Name", "Username", "Password", "User Type", "Money Available", "TicketMiner Membership"};
+            String params[] = {"ID", "First Name", "Last Name", "Username", "Password", "User Type",
+                "Money Available", "TicketMiner Membership", "Concerts Purchased"};
             int headerIndexes[] = headerIndexes(header, params);
 
             while ((line = reader.readLine()) != null) {
@@ -1054,8 +1071,8 @@ d888888P              88b             d888888P
                 }
 
                 int id = parseIntField(fields[headerIndexes[0]], "event id", line);
-                String type = fields[headerIndexes[1]].trim();
-                String name = fields[headerIndexes[2]].trim();
+                String name = fields[headerIndexes[1]].trim();
+                String type = fields[headerIndexes[2]].trim();
                 String date = fields[headerIndexes[3]].trim();
                 String time = fields[headerIndexes[4]].trim();
                 double vipPrice = parseDoubleField(fields[headerIndexes[5]], "VIP price", line);
