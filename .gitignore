@@ -4,3 +4,4 @@ bin/
 .vscode/
 log.txt
 google_checks.xml
+csvs/Updated_*.csv

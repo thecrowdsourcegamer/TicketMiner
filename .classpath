@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="src"/>
+    <classpathentry kind="src" path="test"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="lib" path="lib/junit-jupiter-api_5.14.3.jar"/>
+    <classpathentry kind="lib" path="lib/junit-jupiter-engine_5.14.3.jar"/>
+    <classpathentry kind="lib" path="lib/junit-platform-commons_1.14.3.jar"/>
+    <classpathentry kind="lib" path="lib/junit-platform-engine_1.14.3.jar"/>
+    <classpathentry kind="lib" path="lib/junit-platform-launcher_1.14.3.jar"/>
+    <classpathentry kind="lib" path="lib/org.apiguardian.api_1.1.2.jar"/>
+    <classpathentry kind="lib" path="lib/org.opentest4j_1.3.0.jar"/>
+    <classpathentry kind="lib" path="lib/opencsv-5.9.jar"/>
+    <classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>
