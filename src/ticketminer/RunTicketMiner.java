@@ -27,7 +27,7 @@ import java.util.Scanner;
  * @author Haydee Rojo Ovalle
  */
 public class RunTicketMiner {
-    // Constants
+    // Constant
     private static final String CSV_DIR = "csvs/";
 
     private static final String USER_INPUT_CSV = CSV_DIR + "Customer_List_PA1.csv";
@@ -63,9 +63,6 @@ d888888P              88b             d888888P
   88P     88Pd8P' `P  888bd8P' d8b_,dP  88P         88P'`?8P'?8b  88P  88P' ?8bd8b_,dP  88P'  `
   88b    d88 88b     d88888b   88b      88b        d88  d88  88P d88  d88   88P88b     d88     
   `?8b  d88' `?888P'd88' `?88b,`?888P'  `?8b      d88' d88'  88bd88' d88'   88b`?888P'd88'     
-                                                                                               
-                                                                                               
-                                                                                               
 """);
         menu();
     } // main
@@ -261,7 +258,7 @@ d888888P              88b             d888888P
      */
     public static boolean readBoolean(Scanner keyboard, String prompt) {
         while (true) {
-            System.out.print(prompt + " (true/false): ");
+            System.out.print(prompt);
             String input = keyboard.nextLine().trim().toLowerCase();
 
             if (input.equals("true") || input.equals("t") || input.equals("yes") || input.equals("y")) {
@@ -741,6 +738,10 @@ d888888P              88b             d888888P
         for (Event event : events) {
             System.out.println(event);
         }
+    }
+
+    static List<Event> getEvents() {
+        return events;
     }
 
     /**

@@ -13,6 +13,11 @@ public abstract class Event {
     private double bronzePrice;
     private double generalAdmissionPrice;
     private String eventType;
+    private int vipSold;
+    private int goldSold;
+    private int silverSold;
+    private int bronzeSold;
+    private int generalSold;
 
     public Event() {
         this.eventId = 0;
@@ -25,6 +30,11 @@ public abstract class Event {
         this.bronzePrice = 0;
         this.generalAdmissionPrice = 0;
         this.eventType = null;
+        this.vipSold = 0;
+        this.goldSold = 0;
+        this.silverSold = 0;
+        this.bronzeSold = 0;
+        this.generalSold = 0;
     }
 
     public Event(int eventId, String eventName, LocalDate date, LocalTime time,
@@ -40,6 +50,11 @@ public abstract class Event {
         this.bronzePrice = bronzePrice;
         this.generalAdmissionPrice = generalAdmissionPrice;
         this.eventType = eventType;
+        this.vipSold = 0;
+        this.goldSold = 0;
+        this.silverSold = 0;
+        this.bronzeSold = 0;
+        this.generalSold = 0;
     }
 
     public int getEventId() {
@@ -120,6 +135,46 @@ public abstract class Event {
 
     public void setEventType(String eventType) {
         this.eventType = eventType;
+    }
+
+    public int getVipSold() {
+        return vipSold;
+    }
+
+    public void setVipSold(int vipSold) {
+        this.vipSold = vipSold;
+    }
+
+    public int getGoldSold() {
+        return goldSold;
+    }
+
+    public void setGoldSold(int goldSold) {
+        this.goldSold = goldSold;
+    }
+
+    public int getSilverSold() {
+        return silverSold;
+    }
+
+    public void setSilverSold(int silverSold) {
+        this.silverSold = silverSold;
+    }
+
+    public int getBronzeSold() {
+        return bronzeSold;
+    }
+
+    public void setBronzeSold(int bronzeSold) {
+        this.bronzeSold = bronzeSold;
+    }
+
+    public int getGeneralSold() {
+        return generalSold;
+    }
+
+    public void setGeneralSold(int generalSold) {
+        this.generalSold = generalSold;
     }
 
     public boolean matchesSearch(String input) {

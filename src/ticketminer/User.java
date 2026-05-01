@@ -275,39 +275,6 @@ class Customer extends User {
 }
 
 /**
- * Organizer user.
- */
-class Organizer extends User {
-
-    public Organizer(int userId, String firstName, String lastName, String userName,
-            String password, String userType, Scanner keyboard) {
-        super(userId, firstName, lastName, userName, password, userType, keyboard);
-    }
-
-    @Override
-    public void userMenu() {
-        String userInput = "";
-
-        while (!userInput.equals("2")) {
-            System.out.println("\nOrganizer Menu");
-            System.out.println("1: View Profile");
-            System.out.println("2: Back");
-
-            userInput = getKeyboard().nextLine().trim();
-
-            switch (userInput) {
-                case "1" -> {
-                    System.out.println(this);
-                    RunTicketMiner.log(getUserName() + " viewed organizer profile");
-                }
-                case "2" -> back();
-                default -> System.out.println("Invalid option entered.");
-            }
-        }
-    }
-}
-
-/**
  * Admin user with manage-users functionality.
  */
 class Admin extends User {

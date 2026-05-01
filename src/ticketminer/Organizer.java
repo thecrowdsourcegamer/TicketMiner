@@ -17,6 +17,13 @@ class Organizer extends User {
         this.events = events;
     }
 
+    public Organizer(int userId, String firstName, String lastName,
+                     String userName, String password, String userType,
+                     Scanner keyboard) {
+        this(userId, firstName, lastName, userName, password, userType,
+                keyboard, RunTicketMiner.getEvents());
+    }
+
     public void userMenu() {
         Scanner kb = getKeyboard();
         String input = "";
