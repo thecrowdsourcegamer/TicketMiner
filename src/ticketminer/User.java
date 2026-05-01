@@ -208,13 +208,15 @@ public abstract class User {
 class Customer extends User {
     private double moneyAvailable;
     private boolean membership;
+    private int concertsPurchased;
 
     public Customer(int userId, String firstName, String lastName, String userName,
             String password, String userType, Scanner keyboard,
-            double moneyAvailable, boolean membership) {
+            double moneyAvailable, boolean membership, int concertsPurchased) {
         super(userId, firstName, lastName, userName, password, userType, keyboard);
         this.moneyAvailable = moneyAvailable;
         this.membership = membership;
+        this.concertsPurchased = concertsPurchased;
     }
 
     public double getMoneyAvailable() {
@@ -225,6 +227,10 @@ class Customer extends User {
         return membership;
     }
 
+    public int getConcertsPurchased(){
+        return concertsPurchased;
+    }
+
     public void setMembership(boolean membership) {
         this.membership = membership;
     }
@@ -233,11 +239,16 @@ class Customer extends User {
         this.moneyAvailable = moneyAvailable;
     }
 
+    public void setConcertsPurchased(int concertsPurchased){
+        this.concertsPurchased = concertsPurchased;
+    }
+
     @Override
     public String toString() {
         return super.toString()
                 + ", Money Available: " + moneyAvailable
-                + ", Membership: " + membership;
+                + ", Membership: " + membership
+                + ", Concerts Purchased: " + concertsPurchased;
     }
 
     @Override
@@ -394,8 +405,11 @@ class Admin extends User {
                 System.out.print("Membership (true/false): ");
                 boolean membership = Boolean.parseBoolean(getKeyboard().nextLine().trim());
 
+                System.out.print("Enter concerts purchsed: ");
+                int concertsPurchased = Integer.parseInt(getKeyboard().nextLine().trim());
+
                 users.add(new Customer(newId, firstName, lastName, username,
-                        password, "customer", getKeyboard(), money, membership));
+                        password, "customer", getKeyboard(), money, membership, concertsPurchased));
                 RunTicketMiner.log(getUserName() + " added customer " + username + " with ID " + newId);
                 System.out.println("Customer added successfully.");
             }

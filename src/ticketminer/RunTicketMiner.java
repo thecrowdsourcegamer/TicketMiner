@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -888,6 +889,14 @@ d888888P              88b             d888888P
         }
     }
 
+    public static int [] headerIndexes(String header[], String params[]){
+        int headerIndexes[] = new int[params.length];
+        for(int i = 0; i < params.length; i++){
+            headerIndexes[i] = Arrays.binarySearch(header, params[i]);
+        }
+        return headerIndexes;
+    }
+
     /**
      * Reads user information from a CSV file and loads
      * users into the system.
@@ -897,6 +906,9 @@ d888888P              88b             d888888P
     public static void readUserCSV(String filePath) {
         try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath))) {
             String line = reader.readLine(); // skip header
+            String header[] = line.split(",", -1);
+            String params[] = {"ID", "First Name", "Last Name", "Username", "Password", "User Type", "Money Available", "TicketMiner Membership"};
+            int headerIndexes[] = headerIndexes(header, params);
 
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
@@ -906,12 +918,12 @@ d888888P              88b             d888888P
                     continue;
                 }
 
-                String id = fields[0].trim();
-                String firstName = fields[1].trim();
-                String lastName = fields[2].trim();
-                String username = fields[3].trim();
-                String password = fields[4].trim();
-                String userType = fields[5].trim();
+                String id = fields[headerIndexes[0]].trim();
+                String firstName = fields[headerIndexes[1]].trim();
+                String lastName = fields[headerIndexes[2]].trim();
+                String username = fields[headerIndexes[3]].trim();
+                String password = fields[headerIndexes[4]].trim();
+                String userType = fields[headerIndexes[5]].trim();
 
                 if (userType.equalsIgnoreCase("customer")) {
                     if (fields.length < 8) {
@@ -919,8 +931,9 @@ d888888P              88b             d888888P
                         continue;
                     }
 
-                    String moneyAvailable = fields[6].trim();
-                    String membership = fields[7].trim();
+                    String moneyAvailable = fields[headerIndexes[6]].trim();
+                    String membership = fields[headerIndexes[7]].trim();
+                    String concertsPurchased = fields[headerIndexes[8]].trim();
 
                     Customer customer = new Customer(
                             parseIntField(id, "user id", line),
@@ -931,7 +944,8 @@ d888888P              88b             d888888P
                             userType,
                             KEYBOARD,
                             parseDoubleField(moneyAvailable, "money available", line),
-                            Boolean.parseBoolean(membership));
+                            Boolean.parseBoolean(membership),
+                            parseIntField(concertsPurchased, "concerts purchased", line));
                     users.add(customer);
                 } else if (userType.equalsIgnoreCase("organizer")) {
                     Organizer organizer = new Organizer(
@@ -975,6 +989,9 @@ d888888P              88b             d888888P
     public static void readVenueCSV(String filePath) {
         try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath))) {
             String line = reader.readLine(); // skip header
+            String header[] = line.split(",", -1);
+            String params[] = {"ID", "Name", "Type", "Capacity", "Concert Capacity", "Cost", "VIP Percent", "Gold Percent", "Silver Percent", "Bronze Percent", "General Admission Percent", "Reserved Extra Percent"};
+            int headerIndexes[] = headerIndexes(header, params);
 
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
@@ -984,18 +1001,18 @@ d888888P              88b             d888888P
                     continue;
                 }
 
-                int id = parseIntField(fields[0], "venue id", line);
-                String name = fields[1].trim();
-                String type = fields[2].trim();
-                int capacity = parseIntField(fields[3], "capacity", line);
-                int concertCapacity = parseIntField(fields[4], "concert capacity", line);
-                double cost = parseDoubleField(fields[5], "cost", line);
-                double vipPercent = parseDoubleField(fields[6], "VIP percent", line);
-                double goldPercent = parseDoubleField(fields[7], "Gold percent", line);
-                double silverPercent = parseDoubleField(fields[8], "Silver percent", line);
-                double bronzePercent = parseDoubleField(fields[9], "Bronze percent", line);
-                double generalAdmissionPercent = parseDoubleField(fields[10], "General Admission percent", line);
-                double reservedExtraPercent = parseDoubleField(fields[11], "Reserved Extra percent", line);
+                int id = parseIntField(fields[headerIndexes[0]], "venue id", line);
+                String name = fields[headerIndexes[1]].trim();
+                String type = fields[headerIndexes[2]].trim();
+                int capacity = parseIntField(fields[headerIndexes[3]], "capacity", line);
+                int concertCapacity = parseIntField(fields[headerIndexes[4]], "concert capacity", line);
+                double cost = parseDoubleField(fields[headerIndexes[5]], "cost", line);
+                double vipPercent = parseDoubleField(fields[headerIndexes[6]], "VIP percent", line);
+                double goldPercent = parseDoubleField(fields[headerIndexes[7]], "Gold percent", line);
+                double silverPercent = parseDoubleField(fields[headerIndexes[8]], "Silver percent", line);
+                double bronzePercent = parseDoubleField(fields[headerIndexes[9]], "Bronze percent", line);
+                double generalAdmissionPercent = parseDoubleField(fields[headerIndexes[10]], "General Admission percent", line);
+                double reservedExtraPercent = parseDoubleField(fields[headerIndexes[11]], "Reserved Extra percent", line);
 
                 Venue venue = createVenue(id, name, type, capacity, concertCapacity, cost,
                         vipPercent, goldPercent, silverPercent, bronzePercent,
@@ -1023,6 +1040,9 @@ d888888P              88b             d888888P
     public static void readEventCSV(String filePath) {
         try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath))) {
             String line = reader.readLine(); // skip header
+            String header[] = line.split(",", -1);
+            String params[] = {"ID", "Name", "Type", "Date", "Time", "VIP Price", "Gold Price", "Silver Price", "Bronze Price", "General Admission Price"};
+            int headerIndexes[] = headerIndexes(header, params);
 
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
@@ -1032,16 +1052,16 @@ d888888P              88b             d888888P
                     continue;
                 }
 
-                int id = parseIntField(fields[0], "event id", line);
-                String type = fields[1].trim();
-                String name = fields[2].trim();
-                String date = fields[3].trim();
-                String time = fields[4].trim();
-                double vipPrice = parseDoubleField(fields[5], "VIP price", line);
-                double goldPrice = parseDoubleField(fields[6], "gold price", line);
-                double silverPrice = parseDoubleField(fields[7], "silver price", line);
-                double bronzePrice = parseDoubleField(fields[8], "bronze price", line);
-                double generalAdmissionPrice = parseDoubleField(fields[9], "general admission price", line);
+                int id = parseIntField(fields[headerIndexes[0]], "event id", line);
+                String type = fields[headerIndexes[1]].trim();
+                String name = fields[headerIndexes[2]].trim();
+                String date = fields[headerIndexes[3]].trim();
+                String time = fields[headerIndexes[4]].trim();
+                double vipPrice = parseDoubleField(fields[headerIndexes[5]], "VIP price", line);
+                double goldPrice = parseDoubleField(fields[headerIndexes[6]], "gold price", line);
+                double silverPrice = parseDoubleField(fields[headerIndexes[7]], "silver price", line);
+                double bronzePrice = parseDoubleField(fields[headerIndexes[8]], "bronze price", line);
+                double generalAdmissionPrice = parseDoubleField(fields[headerIndexes[9]], "general admission price", line);
 
                 try {
                     LocalDate eventDate = LocalDate.parse(date, DATE_FORMAT);
@@ -1122,6 +1142,7 @@ d888888P              88b             d888888P
 
         double money = readDouble(keyboard, "Enter money available: ");
         boolean membership = readBoolean(keyboard, "Membership (true/false): ");
+        int concertsPurchased = readInt(keyboard, "Enter concerts purchased: ");
 
         int newId = users.size() + admins.size() + 1;
 
@@ -1134,7 +1155,8 @@ d888888P              88b             d888888P
                 "customer",
                 keyboard,
                 money,
-                membership);
+                membership,
+                concertsPurchased);
 
         users.add(customer);
         writeUserCSV(USER_OUTPUT_CSV);
