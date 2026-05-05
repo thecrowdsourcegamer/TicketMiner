@@ -197,7 +197,7 @@ class Organizer extends User {
       System.out.println("Invalid event type.");
       return;
     }
-
+    event.setEventType(type);
     events.add(event);
     System.out.println("Event added successfully.");
   }
