@@ -1,601 +1,264 @@
 package ticketminer;
-import java.util.List;
+
 import java.util.Scanner;
 
 /**
- * User hierarchy for TicketMiner.
- * Supports Customer, Organizer, and Admin users.
+ * Represents a TicketMiner user.
  */
 public abstract class User {
-    private int userId;
-    private String firstName;
-    private String lastName;
-    private String userName;
-    private String password;
-    private String userType;
-    private boolean canEdit;
-    private Scanner keyboard;
-
-    public User(int userId, String firstName, String lastName, String userName, String password, String userType,
-            Scanner keyboard) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.userType = userType;
-        this.keyboard = keyboard;
-    }
-
-    public abstract void userMenu();
-
-    public void back() {
-        System.out.println("Going back.");
-    }
-
-    /** 
-     * @return String
-     */
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
-
-    /** 
-     * @param id
-     * @return boolean
-     */
-    public boolean matchesId(int id) {
-        return this.userId == id;
-    }
-
-    /** 
-     * @param username
-     * @return boolean
-     */
-    public boolean matchesUsername(String username) {
-        return this.userName.equalsIgnoreCase(username);
-    }
-
-    /** 
-     * @param name
-     * @return boolean
-     */
-    public boolean matchesName(String name) {
-        return getFullName().equalsIgnoreCase(name);
-    }
-
-    /** 
-     * @param password
-     * @return boolean
-     */
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
-    }
-
-    /** 
-     * @return String
-     */
-    @Override
-    public String toString() {
-        return "ID: " + userId
-                + ", Name: " + firstName + " " + lastName
-                + ", Username: " + userName
-                + ", Password: " + password
-                + ", Type: " + userType;
-    }
-
-    // GETTERS ------------------------------------------
-
-    /** 
-     * @return int
-     */
-    public int getUserId() {
-        return userId;
-    }
-
-    /** 
-     * @return String
-     */
-    public String getFirstName() {
-        return firstName;
-    }
-
-    /** 
-     * @return String
-     */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /** 
-     * @return String
-     */
-    public String getUserName() {
-        return userName;
-    }
-
-    /** 
-     * @return String
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /** 
-     * @return String
-     */
-    public String getUserType() {
-        return userType;
-    }
-
-    /** 
-     * @return boolean
-     */
-    public boolean isCanEdit() {
-        return canEdit;
-    }
-
-    /** 
-     * @return Scanner
-     */
-    public Scanner getKeyboard() {
-        return keyboard;
-    }
-
-
-    // SETTERS -------------------------------------
-
-     /** 
-     * @param userId
-     */
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    /** 
-     * @param firstName
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    /** 
-     * @param lastName
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    /** 
-     * @param userName
-     */
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    /** 
-     * @param password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /** 
-     * @param userType
-     */
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
-    /** 
-     * @param canEdit
-     */
-    public void setCanEdit(boolean canEdit) {
-        this.canEdit = canEdit;
-    }
-
-    /** 
-     * @param keyboard
-     */
-    public void setKeyboard(Scanner keyboard) {
-        this.keyboard = keyboard;
-    }
-}
-
-/**
- * Customer user.
- */
-class Customer extends User {
-    private double moneyAvailable;
-    private boolean membership;
-    private int concertsPurchased;
-
-    public Customer(int userId, String firstName, String lastName, String userName,
-            String password, String userType, Scanner keyboard,
-            double moneyAvailable, boolean membership, int concertsPurchased) {
-        super(userId, firstName, lastName, userName, password, userType, keyboard);
-        this.moneyAvailable = moneyAvailable;
-        this.membership = membership;
-        this.concertsPurchased = concertsPurchased;
-    }
-
-    public double getMoneyAvailable() {
-        return moneyAvailable;
-    }
-
-    public boolean isMembership() {
-        return membership;
-    }
-
-    public int getConcertsPurchased(){
-        return concertsPurchased;
-    }
-
-    public void setMembership(boolean membership) {
-        this.membership = membership;
-    }
-
-    public void setMoneyAvailable(double moneyAvailable) {
-        this.moneyAvailable = moneyAvailable;
-    }
-
-    public void setConcertsPurchased(int concertsPurchased){
-        this.concertsPurchased = concertsPurchased;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString()
-                + ", Money Available: " + moneyAvailable
-                + ", Membership: " + membership
-                + ", Concerts Purchased: " + concertsPurchased;
-    }
-
-    @Override
-    public void userMenu() {
-        String userInput = "";
-
-        while (!userInput.equals("2")) {
-            System.out.println("\nCustomer Menu");
-            System.out.println("1: View Profile");
-            System.out.println("2: Back");
-
-            userInput = getKeyboard().nextLine().trim();
-
-            switch (userInput) {
-                case "1" -> {
-                    System.out.println(this);
-                    RunTicketMiner.log(getUserName() + " viewed customer profile");
-                }
-                case "2" -> back();
-                default -> System.out.println("Invalid option entered.");
-            }
-        }
-    }
-}
-
-/**
- * Admin user with manage-users functionality.
- */
-class Admin extends User {
-    private final List<User> users;
-    private final List<Admin> admins;
-
-    public Admin(int userId, String firstName, String lastName, String userName,
-            String password, String userType, Scanner keyboard,
-            List<User> users, List<Admin> admins) {
-        super(userId, firstName, lastName, userName, password, userType, keyboard);
-        this.users = users;
-        this.admins = admins;
-    }
-
-    @Override
-    public void userMenu() {
-        String userInput = "";
-
-        while (!userInput.equals("4")) {
-            System.out.println("\nAdmin Menu");
-            System.out.println("1: Manage Users");
-            System.out.println("2: Manage Venue");
-            System.out.println("3: Manage Event");
-            System.out.println("4: Back");
-
-            userInput = getKeyboard().nextLine().trim();
-
-            switch (userInput) {
-                case "1" -> manageUsers();
-                case "2" -> RunTicketMiner.manageVenue(getKeyboard());
-                case "3" -> RunTicketMiner.manageEvent(getKeyboard());
-                case "4" -> back();
-                default -> System.out.println("Invalid option entered.");
-            }
-        }
-    }
-
-    private void manageUsers() {
-        String userInput = "";
-
-        while (!userInput.equals("5")) {
-            System.out.println("\nManage Users");
-            System.out.println("1: Add");
-            System.out.println("2: View");
-            System.out.println("3: Update");
-            System.out.println("4: Delete");
-            System.out.println("5: Back");
-
-            userInput = getKeyboard().nextLine().trim();
-
-            switch (userInput) {
-                case "1" -> add();
-                case "2" -> view();
-                case "3" -> update();
-                case "4" -> delete();
-                case "5" -> back();
-                default -> System.out.println("Invalid option entered.");
-            }
-        }
-    }
-
-    private void add() {
-        System.out.println("Please select an option");
-        System.out.println("1: Add new organizer");
-        System.out.println("2: Add new customer");
-        System.out.println("3: Add new admin");
-
-        String userInput = getKeyboard().nextLine().trim();
-
-        System.out.print("Enter first name: ");
-        String firstName = getKeyboard().nextLine().trim();
-
-        System.out.print("Enter last name: ");
-        String lastName = getKeyboard().nextLine().trim();
-
-        String username = promptUniqueUsername();
-
-        System.out.print("Enter password: ");
-        String password = getKeyboard().nextLine().trim();
-
-        int newId = getNextUserId();
-
-        switch (userInput) {
-            case "1" -> {
-                users.add(new Organizer(newId, firstName, lastName, username,
-                        password, "organizer", getKeyboard()));
-                RunTicketMiner.log(getUserName() + " added organizer " + username + " with ID " + newId);
-                System.out.println("Organizer added successfully.");
-            }
-
-            case "2" -> {
-                System.out.print("Enter money available: ");
-                double money = Double.parseDouble(getKeyboard().nextLine().trim());
-
-                System.out.print("Membership (true/false): ");
-                boolean membership = Boolean.parseBoolean(getKeyboard().nextLine().trim());
-
-                System.out.print("Enter concerts purchsed: ");
-                int concertsPurchased = Integer.parseInt(getKeyboard().nextLine().trim());
-
-                users.add(new Customer(newId, firstName, lastName, username,
-                        password, "customer", getKeyboard(), money, membership, concertsPurchased));
-                RunTicketMiner.log(getUserName() + " added customer " + username + " with ID " + newId);
-                System.out.println("Customer added successfully.");
-            }
-
-            case "3" -> {
-                admins.add(new Admin(newId, firstName, lastName, username,
-                        password, "admin", getKeyboard(), users, admins));
-                RunTicketMiner.log(getUserName() + " added admin " + username + " with ID " + newId);
-                System.out.println("Admin added successfully.");
-            }
-
-            default -> System.out.println("Invalid option entered.");
-        }
-    }
-
-    private void view() {
-        System.out.println("Please select an option");
-        System.out.println("1: Display all members");
-        System.out.println("2: Search for user");
-
-        String userInput = getKeyboard().nextLine().trim();
-
-        switch (userInput) {
-            case "1" -> displayUsers();
-            case "2" -> search();
-            default -> System.out.println("Invalid option entered.");
-        }
-    }
-
-    private void displayUsers() {
-        if (users.isEmpty() && admins.isEmpty()) {
-            System.out.println("No users found.");
-            return;
-        }
-
-        RunTicketMiner.log(getUserName() + " displayed all members");
-
-        for (User u : users) {
-            System.out.println(u);
-        }
-
-        for (Admin a : admins) {
-            System.out.println(a);
-        }
-    }
-
-    private void search() {
-        System.out.println("Enter ID, name, or username:");
-        String input = getKeyboard().nextLine().trim();
-
-        User found = findAnyUser(input);
-
-        if (found != null) {
-            System.out.println(found);
-            RunTicketMiner.log(getUserName() + " searched for user " + input + " and found user ID " + found.getUserId());
-        } else {
-            System.out.println("User not found.");
-            RunTicketMiner.log(getUserName() + " searched for user " + input + " but no match was found");
-        }
-    }
-
-    private void update() {
-        System.out.println("Enter ID, name, or username to update:");
-        String input = getKeyboard().nextLine().trim();
-
-        User found = findAnyUser(input);
-
-        if (found == null) {
-            System.out.println("User not found.");
-            RunTicketMiner.log(getUserName() + " attempted to update user " + input + " but no match was found");
-            return;
-        }
-
-        System.out.println("Please select an option");
-        System.out.println("1: Change Name");
-        System.out.println("2: Change Username");
-        System.out.println("3: Change Password");
-
-        String userInput = getKeyboard().nextLine().trim();
-
-        switch (userInput) {
-            case "1" -> {
-                System.out.print("Enter new first name: ");
-                String firstName = getKeyboard().nextLine().trim();
-                System.out.print("Enter new last name: ");
-                String lastName = getKeyboard().nextLine().trim();
-                found.setFirstName(firstName);
-                found.setLastName(lastName);
-                RunTicketMiner.log(getUserName() + " updated name for user ID " + found.getUserId());
-                System.out.println("Name updated successfully.");
-            }
-
-            case "2" -> {
-                String oldUsername = found.getUserName();
-                String newUsername = promptUniqueUsername();
-                found.setUserName(newUsername);
-                RunTicketMiner.log(getUserName() + " updated username for user ID " + found.getUserId()
-                        + " from " + oldUsername + " to " + newUsername);
-                System.out.println("Username updated successfully.");
-            }
-
-            case "3" -> {
-                System.out.print("Enter new password: ");
-                String newPassword = getKeyboard().nextLine().trim();
-                found.setPassword(newPassword);
-                RunTicketMiner.log(getUserName() + " updated password for user ID " + found.getUserId());
-                System.out.println("Password updated successfully.");
-            }
-
-            default -> System.out.println("Invalid option entered.");
-        }
-    }
-
-    private void delete() {
-        System.out.println("Enter ID, name, or username to delete:");
-        String input = getKeyboard().nextLine().trim();
-
-        User found = findAnyUser(input);
-
-        if (found == null) {
-            System.out.println("User not found.");
-            RunTicketMiner.log(getUserName() + " attempted to delete user " + input + " but no match was found");
-            return;
-        }
-
-        System.out.println("Found user: " + found);
-        System.out.print("Confirm delete? (yes/no): ");
-        String confirm = getKeyboard().nextLine().trim();
-
-        if (!confirm.equalsIgnoreCase("yes")) {
-            System.out.println("Delete cancelled.");
-            return;
-        }
-
-        if (found instanceof Admin) {
-            admins.remove(found);
-        } else {
-            users.remove(found);
-        }
-
-        RunTicketMiner.log(getUserName() + " deleted user ID " + found.getUserId());
-        System.out.println("User deleted successfully.");
-    }
-
-    private User findAnyUser(String input) {
-        for (User u : users) {
-            if (matchesSearch(u, input)) {
-                return u;
-            }
-        }
-
-        for (Admin a : admins) {
-            if (matchesSearch(a, input)) {
-                return a;
-            }
-        }
-
-        return null;
-    }
-
-    private boolean matchesSearch(User user, String input) {
-        if (user.matchesUsername(input) || user.matchesName(input)) {
-            return true;
-        }
-
-        try {
-            int id = Integer.parseInt(input);
-            return user.matchesId(id);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private boolean usernameExists(String username) {
-        for (User u : users) {
-            if (u.getUserName().equalsIgnoreCase(username)) {
-                return true;
-            }
-        }
-
-        for (Admin a : admins) {
-            if (a.getUserName().equalsIgnoreCase(username)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private String promptUniqueUsername() {
-        String username;
-
-        do {
-            System.out.print("Enter username: ");
-            username = getKeyboard().nextLine().trim();
-
-            if (usernameExists(username)) {
-                System.out.println("Username already exists. Enter a different username.");
-            }
-        } while (usernameExists(username));
-
-        return username;
-    }
-
-    private int getNextUserId() {
-        int maxId = getUserId();
-
-        for (User u : users) {
-            if (u.getUserId() > maxId) {
-                maxId = u.getUserId();
-            }
-        }
-
-        for (Admin a : admins) {
-            if (a.getUserId() > maxId) {
-                maxId = a.getUserId();
-            }
-        }
-
-        return maxId + 1;
-    }
+  private int userId;
+  private String firstName;
+  private String lastName;
+  private String userName;
+  private String password;
+  private String userType;
+  private boolean canEdit;
+  private Scanner keyboard;
+
+  /**
+   * Creates a user.
+   *
+   * @param userId unique user id
+   * @param firstName user's first name
+   * @param lastName user's last name
+   * @param userName user's login username
+   * @param password user's login password
+   * @param userType user's role
+   * @param keyboard scanner used for menu input
+   */
+  public User(
+      int userId,
+      String firstName,
+      String lastName,
+      String userName,
+      String password,
+      String userType,
+      Scanner keyboard) {
+    this.userId = userId;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.userName = userName;
+    this.password = password;
+    this.userType = userType;
+    this.keyboard = keyboard;
+  }
+
+  /**
+   * Displays the menu for this user type.
+   */
+  public abstract void userMenu();
+
+  /**
+   * Prints a menu navigation message.
+   */
+  public void back() {
+    System.out.println("Going back.");
+  }
+
+  /**
+   * Returns the user's full name.
+   *
+   * @return first and last name
+   */
+  public String getFullName() {
+    return firstName + " " + lastName;
+  }
+
+  /**
+   * Checks whether this user's id matches the given id.
+   *
+   * @param id id to compare
+   * @return true when the ids match
+   */
+  public boolean matchesId(int id) {
+    return userId == id;
+  }
+
+  /**
+   * Checks whether this user's username matches the given username.
+   *
+   * @param username username to compare
+   * @return true when the usernames match
+   */
+  public boolean matchesUsername(String username) {
+    return userName.equalsIgnoreCase(username);
+  }
+
+  /**
+   * Checks whether this user's full name matches the given name.
+   *
+   * @param name name to compare
+   * @return true when the names match
+   */
+  public boolean matchesName(String name) {
+    return getFullName().equalsIgnoreCase(name);
+  }
+
+  /**
+   * Checks whether the given password matches this user's password.
+   *
+   * @param password password to compare
+   * @return true when the passwords match
+   */
+  public boolean checkPassword(String password) {
+    return this.password.equals(password);
+  }
+
+  /**
+   * Returns the user's printable details.
+   *
+   * @return user details
+   */
+  @Override
+  public String toString() {
+    return "ID: " + userId
+        + ", Name: " + firstName + " " + lastName
+        + ", Username: " + userName
+        + ", Password: " + password
+        + ", Type: " + userType;
+  }
+
+  /**
+   * Returns the user's id.
+   *
+   * @return user id
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+  /**
+   * Returns the user's first name.
+   *
+   * @return first name
+   */
+  public String getFirstName() {
+    return firstName;
+  }
+
+  /**
+   * Returns the user's last name.
+   *
+   * @return last name
+   */
+  public String getLastName() {
+    return lastName;
+  }
+
+  /**
+   * Returns the user's username.
+   *
+   * @return username
+   */
+  public String getUserName() {
+    return userName;
+  }
+
+  /**
+   * Returns the user's password.
+   *
+   * @return password
+   */
+  public String getPassword() {
+    return password;
+  }
+
+  /**
+   * Returns the user's role.
+   *
+   * @return user type
+   */
+  public String getUserType() {
+    return userType;
+  }
+
+  /**
+   * Returns whether this user can edit records.
+   *
+   * @return true when the user can edit
+   */
+  public boolean isCanEdit() {
+    return canEdit;
+  }
+
+  /**
+   * Returns the scanner used for user input.
+   *
+   * @return keyboard scanner
+   */
+  public Scanner getKeyboard() {
+    return keyboard;
+  }
+
+  /**
+   * Sets the user's id.
+   *
+   * @param userId user id
+   */
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
+
+  /**
+   * Sets the user's first name.
+   *
+   * @param firstName first name
+   */
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
+  /**
+   * Sets the user's last name.
+   *
+   * @param lastName last name
+   */
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  /**
+   * Sets the user's username.
+   *
+   * @param userName username
+   */
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+
+  /**
+   * Sets the user's password.
+   *
+   * @param password password
+   */
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  /**
+   * Sets the user's role.
+   *
+   * @param userType user type
+   */
+  public void setUserType(String userType) {
+    this.userType = userType;
+  }
+
+  /**
+   * Sets whether this user can edit records.
+   *
+   * @param canEdit true when the user can edit
+   */
+  public void setCanEdit(boolean canEdit) {
+    this.canEdit = canEdit;
+  }
+
+  /**
+   * Sets the scanner used for user input.
+   *
+   * @param keyboard keyboard scanner
+   */
+  public void setKeyboard(Scanner keyboard) {
+    this.keyboard = keyboard;
+  }
 }

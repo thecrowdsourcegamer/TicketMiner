@@ -16,7 +16,6 @@ import java.util.Scanner;
 
 /**
  * Main driver class for the TicketMiner system.
- *
  * This class starts the application, loads CSV data,
  * and provides menu navigation for users to manage
  * venues, events, and accounts.
@@ -923,10 +922,10 @@ d888888P              88b             d888888P
     public static void readUserCSV(String filePath) {
         try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath))) {
             String line = reader.readLine(); // skip header
-            String header[] = line.split(",", -1);
-            String params[] = {"ID", "First Name", "Last Name", "Username", "Password", "User Type",
-                "Money Available", "TicketMiner Membership", "Concerts Purchased"};
-            int headerIndexes[] = headerIndexes(header, params);
+            String[] header = line.split(",", -1);
+            String[] params = { "ID", "First Name", "Last Name", "Username", "Password", "User Type",
+                    "Money Available", "TicketMiner Membership", "Concerts Purchased" };
+            int[] headerIndexes = headerIndexes(header, params);
 
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
@@ -1007,9 +1006,11 @@ d888888P              88b             d888888P
     public static void readVenueCSV(String filePath) {
         try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath))) {
             String line = reader.readLine(); // skip header
-            String header[] = line.split(",", -1);
-            String params[] = {"ID", "Name", "Type", "Capacity", "Concert Capacity", "Cost", "VIP Percent", "Gold Percent", "Silver Percent", "Bronze Percent", "General Admission Percent", "Reserved Extra Percent"};
-            int headerIndexes[] = headerIndexes(header, params);
+            String[] header = line.split(",", -1);
+            String[] params = { "ID", "Name", "Type", "Capacity", "Concert Capacity", "Cost", "VIP Percent",
+                    "Gold Percent", "Silver Percent", "Bronze Percent", "General Admission Percent",
+                    "Reserved Extra Percent" };
+            int[] headerIndexes = headerIndexes(header, params);
 
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
@@ -1029,8 +1030,10 @@ d888888P              88b             d888888P
                 double goldPercent = parseDoubleField(fields[headerIndexes[7]], "Gold percent", line);
                 double silverPercent = parseDoubleField(fields[headerIndexes[8]], "Silver percent", line);
                 double bronzePercent = parseDoubleField(fields[headerIndexes[9]], "Bronze percent", line);
-                double generalAdmissionPercent = parseDoubleField(fields[headerIndexes[10]], "General Admission percent", line);
-                double reservedExtraPercent = parseDoubleField(fields[headerIndexes[11]], "Reserved Extra percent", line);
+                double generalAdmissionPercent = parseDoubleField(fields[headerIndexes[10]],
+                        "General Admission percent", line);
+                double reservedExtraPercent = parseDoubleField(fields[headerIndexes[11]], "Reserved Extra percent",
+                        line);
 
                 Venue venue = createVenue(id, name, type, capacity, concertCapacity, cost,
                         vipPercent, goldPercent, silverPercent, bronzePercent,
@@ -1058,9 +1061,10 @@ d888888P              88b             d888888P
     public static void readEventCSV(String filePath) {
         try (BufferedReader reader = Files.newBufferedReader(Path.of(filePath))) {
             String line = reader.readLine(); // skip header
-            String header[] = line.split(",", -1);
-            String params[] = {"ID", "Name", "Type", "Date", "Time", "VIP Price", "Gold Price", "Silver Price", "Bronze Price", "General Admission Price"};
-            int headerIndexes[] = headerIndexes(header, params);
+            String[] header = line.split(",", -1);
+            String[] params = { "ID", "Name", "Type", "Date", "Time", "VIP Price", "Gold Price", "Silver Price",
+                    "Bronze Price", "General Admission Price" };
+            int[] headerIndexes = headerIndexes(header, params);
 
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
