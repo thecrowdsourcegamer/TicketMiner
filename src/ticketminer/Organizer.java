@@ -53,7 +53,7 @@ class Organizer extends User {
       System.out.println("3: Log Out");
       System.out.print("Choose an option: ");
 
-      input = kb.nextLine();
+      input = kb.nextLine().trim();
 
       switch (input) {
         case "1":
@@ -84,7 +84,7 @@ class Organizer extends User {
       System.out.println("5: Back");
       System.out.print("Choose an option: ");
 
-      input = kb.nextLine();
+      input = kb.nextLine().trim();
 
       switch (input) {
         case "1":
@@ -113,10 +113,10 @@ class Organizer extends User {
     int id = RunTicketMiner.readInt(kb, "Enter Event ID: ");
 
     System.out.print("Enter Event Name: ");
-    String name = kb.nextLine();
+    String name = kb.nextLine().trim();
 
     System.out.print("Enter Event Type (Concert / Sport / Special): ");
-    String type = kb.nextLine();
+    String type = kb.nextLine().trim();
 
     LocalDate date = RunTicketMiner.readDate(kb, "Enter Event Date");
     LocalTime time = RunTicketMiner.readTime(kb, "Enter Event Time");
@@ -131,10 +131,10 @@ class Organizer extends User {
 
     if (type.equalsIgnoreCase("Concert")) {
       System.out.print("Enter Artist Name: ");
-      String artist = kb.nextLine();
+      String artist = kb.nextLine().trim();
 
       System.out.print("Enter Genre: ");
-      String genre = kb.nextLine();
+      String genre = kb.nextLine().trim();
 
       event =
           new Concert(
@@ -151,13 +151,13 @@ class Organizer extends User {
               genre);
     } else if (type.equalsIgnoreCase("Sport")) {
       System.out.print("Enter Team 1: ");
-      String team1 = kb.nextLine();
+      String team1 = kb.nextLine().trim();
 
       System.out.print("Enter Team 2: ");
-      String team2 = kb.nextLine();
+      String team2 = kb.nextLine().trim();
 
       System.out.print("Enter League: ");
-      String league = kb.nextLine();
+      String league = kb.nextLine().trim();
 
       event =
           new Sport(
@@ -175,10 +175,10 @@ class Organizer extends User {
               league);
     } else if (type.equalsIgnoreCase("Special")) {
       System.out.print("Enter Description: ");
-      String description = kb.nextLine();
+      String description = kb.nextLine().trim();
 
       System.out.print("Enter Category: ");
-      String category = kb.nextLine();
+      String category = kb.nextLine().trim();
 
       event =
           new Special(
@@ -197,9 +197,13 @@ class Organizer extends User {
       System.out.println("Invalid event type.");
       return;
     }
-    event.setEventType(type);
-    events.add(event);
-    System.out.println("Event added successfully.");
+event.setEventType(type);
+events.add(event);
+
+RunTicketMiner.writeEventCSV("csvs/Updated_Event_List_PA1.csv");
+RunTicketMiner.log(getUserName() + " added event ID " + id);
+
+System.out.println("Event added successfully.");
   }
 
   private void viewEventMenu() {
@@ -213,7 +217,7 @@ class Organizer extends User {
       System.out.println("3: Back");
       System.out.print("Choose an option: ");
 
-      input = kb.nextLine();
+      input = kb.nextLine().trim();
 
       switch (input) {
         case "1":
@@ -231,7 +235,7 @@ class Organizer extends User {
   }
 
   private void displayAllEvents() {
-    if (events.size() == 0) {
+    if (events.isEmpty()) {
       System.out.println("No events found.");
       return;
     }
@@ -245,7 +249,7 @@ class Organizer extends User {
     Scanner kb = getKeyboard();
 
     System.out.print("Enter Event ID, Name, or Date: ");
-    String search = kb.nextLine();
+    String search = kb.nextLine().trim();
 
     boolean found = false;
 
@@ -265,7 +269,7 @@ class Organizer extends User {
     Scanner kb = getKeyboard();
 
     System.out.print("Enter Event ID, Name, or Date: ");
-    String search = kb.nextLine();
+    String search = kb.nextLine().trim();
 
     Event event = findEvent(search);
 
@@ -279,25 +283,33 @@ class Organizer extends User {
     System.out.println("2: Event Date and Time");
     System.out.print("Choose an option: ");
 
-    String choice = kb.nextLine();
+    String choice = kb.nextLine().trim();
 
     switch (choice) {
       case "1":
         System.out.print("Enter New Event Name: ");
-        String newName = kb.nextLine();
+        String newName = kb.nextLine().trim();
         event.setEventName(newName);
-        System.out.println("Event name updated.");
-        break;
+
+RunTicketMiner.writeEventCSV("csvs/Updated_Event_List_PA1.csv");
+RunTicketMiner.log(getUserName() + " updated event name for event ID " + event.getEventId());
+
+System.out.println("Event name updated.");
+break;
 
       case "2":
         LocalDate newDate = RunTicketMiner.readDate(kb, "Enter New Date");
         LocalTime newTime = RunTicketMiner.readTime(kb, "Enter New Time");
 
-        event.setDate(newDate);
-        event.setTime(newTime);
+  event.setDate(newDate);
+event.setTime(newTime);
 
-        System.out.println("Event date and time updated.");
-        break;
+
+RunTicketMiner.writeEventCSV("csvs/Updated_Event_List_PA1.csv");
+RunTicketMiner.log(getUserName() + " updated event date/time for event ID " + event.getEventId());
+
+System.out.println("Event date and time updated.");
+break;
 
       default:
         System.out.println("Invalid option.");
@@ -308,7 +320,7 @@ class Organizer extends User {
     Scanner kb = getKeyboard();
 
     System.out.print("Enter Event ID, Name, or Date: ");
-    String search = kb.nextLine();
+    String search = kb.nextLine().trim();
 
     Event event = findEvent(search);
 
@@ -320,11 +332,16 @@ class Organizer extends User {
     System.out.println(event);
     System.out.print("Are you sure you want to delete this event? yes/no: ");
 
-    String answer = kb.nextLine();
+    String answer = kb.nextLine().trim();
 
     if (answer.equalsIgnoreCase("yes")) {
       events.remove(event);
-      System.out.println("Event deleted.");
+
+
+RunTicketMiner.writeEventCSV("csvs/Updated_Event_List_PA1.csv");
+RunTicketMiner.log(getUserName() + " deleted event ID " + event.getEventId());
+
+System.out.println("Event deleted.");
     } else {
       System.out.println("Delete cancelled.");
     }
