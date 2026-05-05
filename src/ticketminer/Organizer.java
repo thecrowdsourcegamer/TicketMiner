@@ -329,45 +329,64 @@ class Organizer extends User {
       System.out.println("Delete cancelled.");
     }
   }
-
   private void generateEventReport() {
-    Scanner kb = getKeyboard();
+        Scanner kb = getKeyboard();
 
-    System.out.print("Enter Event ID, Name, or Date: ");
-    String search = kb.nextLine();
+        System.out.print("Enter Event ID, Name, or Date: ");
+        String search = kb.nextLine().trim();
 
-    Event event = findEvent(search);
+        Event event = findEvent(search);
 
-    if (event == null) {
-      System.out.println("Event not found.");
-      return;
+        if (event == null) {
+            System.out.println("Event not found.");
+            RunTicketMiner.log(getUserName() + " attempted to generate report for " + search + " but no match was found");
+            return;
+        }
+
+        int vipSold = event.getVipSold();
+        int goldSold = event.getGoldSold();
+        int silverSold = event.getSilverSold();
+        int bronzeSold = event.getBronzeSold();
+        int generalSold = event.getGeneralSold();
+
+        int totalSold = vipSold + goldSold + silverSold + bronzeSold + generalSold;
+
+        double vipRevenue = vipSold * event.getVipPrice();
+        double goldRevenue = goldSold * event.getGoldPrice();
+        double silverRevenue = silverSold * event.getSilverPrice();
+        double bronzeRevenue = bronzeSold * event.getBronzePrice();
+        double generalRevenue = generalSold * event.getGeneralAdmissionPrice();
+
+        double totalRevenue = vipRevenue + goldRevenue + silverRevenue + bronzeRevenue + generalRevenue;
+
+        System.out.println("\n--- Event Report ---");
+        System.out.println("Event ID: " + event.getEventId());
+        System.out.println("Event Type: " + event.getEventType());
+        System.out.println("Event Name: " + event.getEventName());
+        System.out.println("Event Date: " + event.getDate());
+        System.out.println("Event Time: " + event.getTime());
+
+        System.out.println("\n--- Seats Sold ---");
+        System.out.println("Total Seats Sold: " + totalSold);
+        System.out.println("VIP Seats Sold: " + vipSold);
+        System.out.println("Gold Seats Sold: " + goldSold);
+        System.out.println("Silver Seats Sold: " + silverSold);
+        System.out.println("Bronze Seats Sold: " + bronzeSold);
+        System.out.println("General Admission Seats Sold: " + generalSold);
+
+        System.out.println("\n--- Revenue ---");
+        System.out.printf("Total Revenue for VIP Tickets: $%.2f%n", vipRevenue);
+        System.out.printf("Total Revenue for Gold Tickets: $%.2f%n", goldRevenue);
+        System.out.printf("Total Revenue for Silver Tickets: $%.2f%n", silverRevenue);
+        System.out.printf("Total Revenue for Bronze Tickets: $%.2f%n", bronzeRevenue);
+        System.out.printf("Total Revenue for General Admission Tickets: $%.2f%n", generalRevenue);
+        System.out.printf("Total Revenue for All Tickets: $%.2f%n", totalRevenue);
+
+        System.out.println("\nExpected Profit: Not calculated yet");
+        System.out.println("Actual Profit: Not calculated yet");
+
+        RunTicketMiner.log(getUserName() + " generated event report for event ID " + event.getEventId());
     }
-
-    int vipSold = event.getVipSold();
-    int goldSold = event.getGoldSold();
-    int silverSold = event.getSilverSold();
-    int bronzeSold = event.getBronzeSold();
-    int generalSold = event.getGeneralSold();
-
-    final int totalSold = vipSold + goldSold + silverSold + bronzeSold + generalSold;
-
-    double revenue = 0;
-
-    revenue = revenue + vipSold * event.getVipPrice();
-    revenue = revenue + goldSold * event.getGoldPrice();
-    revenue = revenue + silverSold * event.getSilverPrice();
-    revenue = revenue + bronzeSold * event.getBronzePrice();
-    revenue = revenue + generalSold * event.getGeneralAdmissionPrice();
-
-    System.out.println("\n--- Event Report ---");
-    System.out.println("Event ID: " + event.getEventId());
-    System.out.println("Type: " + event.getEventType());
-    System.out.println("Name: " + event.getEventName());
-    System.out.println("Date: " + event.getDate());
-    System.out.println("Time: " + event.getTime());
-    System.out.println("Total Tickets Sold: " + totalSold);
-    System.out.println("Total Revenue: $" + revenue);
-  }
 
   private Event findEvent(String search) {
     for (Event event : events) {
