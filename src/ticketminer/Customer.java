@@ -2,9 +2,7 @@ package ticketminer;
 
 import java.util.Scanner;
 
-/**
- * Represents a customer user.
- */
+/** Represents a customer user. */
 public class Customer extends User {
   private double moneyAvailable;
   private boolean membership;
@@ -103,14 +101,15 @@ public class Customer extends User {
   @Override
   public String toString() {
     return super.toString()
-        + ", Money Available: " + moneyAvailable
-        + ", Membership: " + membership
-        + ", Concerts Purchased: " + concertsPurchased;
+        + ", Money Available: "
+        + moneyAvailable
+        + ", Membership: "
+        + membership
+        + ", Concerts Purchased: "
+        + concertsPurchased;
   }
 
-  /**
-   * Displays the customer menu.
-   */
+  /** Displays the customer menu. */
   @Override
   public void userMenu() {
     String userInput = "";

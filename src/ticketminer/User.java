@@ -2,9 +2,7 @@ package ticketminer;
 
 import java.util.Scanner;
 
-/**
- * Represents a TicketMiner user.
- */
+/** Represents a TicketMiner user. */
 public abstract class User {
   private int userId;
   private String firstName;
@@ -43,14 +41,10 @@ public abstract class User {
     this.keyboard = keyboard;
   }
 
-  /**
-   * Displays the menu for this user type.
-   */
+  /** Displays the menu for this user type. */
   public abstract void userMenu();
 
-  /**
-   * Prints a menu navigation message.
-   */
+  /** Prints a menu navigation message. */
   public void back() {
     System.out.println("Going back.");
   }
@@ -111,11 +105,18 @@ public abstract class User {
    */
   @Override
   public String toString() {
-    return "ID: " + userId
-        + ", Name: " + firstName + " " + lastName
-        + ", Username: " + userName
-        + ", Password: " + password
-        + ", Type: " + userType;
+    return "ID: "
+        + userId
+        + ", Name: "
+        + firstName
+        + " "
+        + lastName
+        + ", Username: "
+        + userName
+        + ", Password: "
+        + password
+        + ", Type: "
+        + userType;
   }
 
   /**

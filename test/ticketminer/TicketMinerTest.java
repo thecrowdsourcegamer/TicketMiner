@@ -9,25 +9,24 @@ import java.time.LocalTime;
 import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 
-/**
- * Unit tests for TicketMiner helper behavior.
- */
+/** Unit tests for TicketMiner helper behavior. */
 public class TicketMinerTest {
 
   @Test
   public void testEventMatchesSearchByIdNameAndDate() {
-    Event event = new Concert(
-        101,
-        "Rock Night",
-        LocalDate.of(2026, 5, 6),
-        LocalTime.of(19, 30),
-        100.00,
-        80.00,
-        60.00,
-        40.00,
-        25.00,
-        "Test Artist",
-        "Rock");
+    Event event =
+        new Concert(
+            101,
+            "Rock Night",
+            LocalDate.of(2026, 5, 6),
+            LocalTime.of(19, 30),
+            100.00,
+            80.00,
+            60.00,
+            40.00,
+            25.00,
+            "Test Artist",
+            "Rock");
 
     assertTrue(event.matchesSearch("101"));
     assertTrue(event.matchesSearch("Rock Night"));
@@ -41,19 +40,20 @@ public class TicketMinerTest {
 
   @Test
   public void testVenueMatchesSearchByIdNameAndType() {
-    Venue venue = new Arena(
-        5,
-        "Don Haskins Center",
-        "Arena",
-        12000,
-        10000,
-        50000.00,
-        5.0,
-        10.0,
-        20.0,
-        25.0,
-        40.0,
-        2.0);
+    Venue venue =
+        new Arena(
+            5,
+            "Don Haskins Center",
+            "Arena",
+            12000,
+            10000,
+            50000.00,
+            5.0,
+            10.0,
+            20.0,
+            25.0,
+            40.0,
+            2.0);
 
     assertTrue(venue.matchesSearch("5"));
     assertTrue(venue.matchesSearch("Don Haskins Center"));

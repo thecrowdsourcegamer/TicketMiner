@@ -3,9 +3,7 @@ package ticketminer;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Represents an admin user with manage-users functionality.
- */
+/** Represents an admin user with manage-users functionality. */
 public class Admin extends User {
   private final List<User> users;
   private final List<Admin> admins;
@@ -38,9 +36,7 @@ public class Admin extends User {
     this.admins = admins;
   }
 
-  /**
-   * Displays the admin menu.
-   */
+  /** Displays the admin menu. */
   @Override
   public void userMenu() {
     String userInput = "";
@@ -94,7 +90,7 @@ public class Admin extends User {
     System.out.println("2: Add new customer");
     System.out.println("3: Add new admin");
 
-    String userInput = getKeyboard().nextLine().trim();
+    final String userInput = getKeyboard().nextLine().trim();
 
     System.out.print("Enter first name: ");
     String firstName = getKeyboard().nextLine().trim();
@@ -113,15 +109,8 @@ public class Admin extends User {
       case "1" -> {
         users.add(
             new Organizer(
-                newId,
-                firstName,
-                lastName,
-                username,
-                password,
-                "organizer",
-                getKeyboard()));
-        RunTicketMiner.log(
-            getUserName() + " added organizer " + username + " with ID " + newId);
+                newId, firstName, lastName, username, password, "organizer", getKeyboard()));
+        RunTicketMiner.log(getUserName() + " added organizer " + username + " with ID " + newId);
         System.out.println("Organizer added successfully.");
       }
 
@@ -147,8 +136,7 @@ public class Admin extends User {
                 money,
                 membership,
                 concertsPurchased));
-        RunTicketMiner.log(
-            getUserName() + " added customer " + username + " with ID " + newId);
+        RunTicketMiner.log(getUserName() + " added customer " + username + " with ID " + newId);
         System.out.println("Customer added successfully.");
       }
 
@@ -164,8 +152,7 @@ public class Admin extends User {
                 getKeyboard(),
                 users,
                 admins));
-        RunTicketMiner.log(
-            getUserName() + " added admin " + username + " with ID " + newId);
+        RunTicketMiner.log(getUserName() + " added admin " + username + " with ID " + newId);
         System.out.println("Admin added successfully.");
       }
 
@@ -220,8 +207,7 @@ public class Admin extends User {
               + found.getUserId());
     } else {
       System.out.println("User not found.");
-      RunTicketMiner.log(
-          getUserName() + " searched for user " + input + " but no match was found");
+      RunTicketMiner.log(getUserName() + " searched for user " + input + " but no match was found");
     }
   }
 
