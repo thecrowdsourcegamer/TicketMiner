@@ -177,7 +177,7 @@ class Organizer extends User {
     RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
     RunTicketMiner.log(getUserName() + " added event ID " + id);
 
-  System.out.println("Event added successfully.");
+    System.out.println("Event added successfully.");
   }
 
   private void viewEventMenu() {
@@ -211,8 +211,11 @@ class Organizer extends User {
   private void displayAllEvents() {
     if (events.isEmpty()) {
       System.out.println("No events found.");
+      RunTicketMiner.log(getUserName() + " attempted to display events but none were found");
       return;
     }
+
+    RunTicketMiner.log(getUserName() + " displayed all events");
 
     for (Event event : events) {
       System.out.println(event);
@@ -227,8 +230,11 @@ class Organizer extends User {
 
     boolean found = RunTicketMiner.printMatches(events, search);
 
-    if (!found) {
+    if (found) {
+      RunTicketMiner.log(getUserName() + " searched for event " + search);
+    } else {
       System.out.println("Event not found.");
+      RunTicketMiner.log(getUserName() + " searched for event " + search + " but no match was found");
     }
   }
 
@@ -258,25 +264,26 @@ class Organizer extends User {
         String newName = kb.nextLine().trim();
         event.setEventName(newName);
 
-    RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
-    RunTicketMiner.log(getUserName() + " updated event name for event ID " + event.getEventId());
+        RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
+        RunTicketMiner.log(
+            getUserName() + " updated event name for event ID " + event.getEventId());
 
-    System.out.println("Event name updated.");
-    break;
+        System.out.println("Event name updated.");
+        break;
 
       case "2":
         LocalDate newDate = RunTicketMiner.readDate(kb, "Enter New Date");
         LocalTime newTime = RunTicketMiner.readTime(kb, "Enter New Time");
 
-  event.setDate(newDate);
-  event.setTime(newTime);
+        event.setDate(newDate);
+        event.setTime(newTime);
 
+        RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
+        RunTicketMiner.log(
+            getUserName() + " updated event date/time for event ID " + event.getEventId());
 
-  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
-  RunTicketMiner.log(getUserName() + " updated event date/time for event ID " + event.getEventId());
-
-  System.out.println("Event date and time updated.");
-  break;
+        System.out.println("Event date and time updated.");
+        break;
 
       default:
         System.out.println("Invalid option.");
@@ -304,76 +311,80 @@ class Organizer extends User {
     if (answer.equalsIgnoreCase("yes")) {
       events.remove(event);
 
+      RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
+      RunTicketMiner.log(getUserName() + " deleted event ID " + event.getEventId());
 
-  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
-  RunTicketMiner.log(getUserName() + " deleted event ID " + event.getEventId());
-
-  System.out.println("Event deleted.");
+      System.out.println("Event deleted.");
     } else {
       System.out.println("Delete cancelled.");
+      RunTicketMiner.log(getUserName() + " cancelled delete for event ID " + event.getEventId());
     }
   }
+
   private void generateEventReport() {
-        Scanner kb = getKeyboard();
+    Scanner kb = getKeyboard();
 
-        System.out.print("Enter Event ID, Name, or Date: ");
-        String search = kb.nextLine().trim();
+    System.out.print("Enter Event ID, Name, or Date: ");
+    String search = kb.nextLine().trim();
 
-        Event event = findEvent(search);
+    Event event = findEvent(search);
 
-        if (event == null) {
-            System.out.println("Event not found.");
-            RunTicketMiner.log(getUserName() + " attempted to generate report for " + search + " but no match was found");
-            return;
-        }
-
-        int vipSold = event.getVipSold();
-        int goldSold = event.getGoldSold();
-        int silverSold = event.getSilverSold();
-        int bronzeSold = event.getBronzeSold();
-        int generalSold = event.getGeneralSold();
-
-        int totalSold = vipSold + goldSold + silverSold + bronzeSold + generalSold;
-
-      double vipRevenue = event.getVipRevenue();
-      double goldRevenue = event.getGoldRevenue();
-      double silverRevenue = event.getSilverRevenue();
-      double bronzeRevenue = event.getBronzeRevenue();
-      double generalRevenue = event.getGeneralRevenue();
-
-      double totalRevenue = event.getTotalRevenue();
-
-        System.out.println("\n--- Event Report ---");
-        System.out.println("Event ID: " + event.getEventId());
-        System.out.println("Event Type: " + event.getEventType());
-        System.out.println("Event Name: " + event.getEventName());
-        System.out.println("Event Date: " + event.getDate());
-        System.out.println("Event Time: " + event.getTime());
-
-        System.out.println("\n--- Seats Sold ---");
-        System.out.println("Total Seats Sold: " + totalSold);
-        System.out.println("VIP Seats Sold: " + vipSold);
-        System.out.println("Gold Seats Sold: " + goldSold);
-        System.out.println("Silver Seats Sold: " + silverSold);
-        System.out.println("Bronze Seats Sold: " + bronzeSold);
-        System.out.println("General Admission Seats Sold: " + generalSold);
-
-        System.out.println("\n--- Revenue ---");
-        System.out.printf("Total Revenue for VIP Tickets: $%.2f%n", vipRevenue);
-        System.out.printf("Total Revenue for Gold Tickets: $%.2f%n", goldRevenue);
-        System.out.printf("Total Revenue for Silver Tickets: $%.2f%n", silverRevenue);
-        System.out.printf("Total Revenue for Bronze Tickets: $%.2f%n", bronzeRevenue);
-        System.out.printf("Total Revenue for General Admission Tickets: $%.2f%n", generalRevenue);
-        System.out.printf("Total Revenue for All Tickets: $%.2f%n", totalRevenue);
-
-       System.out.printf("%nExpected Profit: $%.2f%n",
-          event.getExpectedProfit());
-
-      System.out.printf("Actual Profit: $%.2f%n",
-          event.getActualProfit());
-
-        RunTicketMiner.log(getUserName() + " generated event report for event ID " + event.getEventId());
+    if (event == null) {
+      System.out.println("Event not found.");
+      RunTicketMiner.log(
+          getUserName()
+              + " attempted to generate report for "
+              + search
+              + " but no match was found");
+      return;
     }
+
+    int vipSold = event.getVipSold();
+    int goldSold = event.getGoldSold();
+    int silverSold = event.getSilverSold();
+    int bronzeSold = event.getBronzeSold();
+    int generalSold = event.getGeneralSold();
+
+    int totalSold = vipSold + goldSold + silverSold + bronzeSold + generalSold;
+
+    double vipRevenue = event.getVipRevenue();
+    double goldRevenue = event.getGoldRevenue();
+    double silverRevenue = event.getSilverRevenue();
+    double bronzeRevenue = event.getBronzeRevenue();
+    double generalRevenue = event.getGeneralRevenue();
+
+    double totalRevenue = event.getTotalRevenue();
+
+    System.out.println("\n--- Event Report ---");
+    System.out.println("Event ID: " + event.getEventId());
+    System.out.println("Event Type: " + event.getEventType());
+    System.out.println("Event Name: " + event.getEventName());
+    System.out.println("Event Date: " + event.getDate());
+    System.out.println("Event Time: " + event.getTime());
+
+    System.out.println("\n--- Seats Sold ---");
+    System.out.println("Total Seats Sold: " + totalSold);
+    System.out.println("VIP Seats Sold: " + vipSold);
+    System.out.println("Gold Seats Sold: " + goldSold);
+    System.out.println("Silver Seats Sold: " + silverSold);
+    System.out.println("Bronze Seats Sold: " + bronzeSold);
+    System.out.println("General Admission Seats Sold: " + generalSold);
+
+    System.out.println("\n--- Revenue ---");
+    System.out.printf("Total Revenue for VIP Tickets: $%.2f%n", vipRevenue);
+    System.out.printf("Total Revenue for Gold Tickets: $%.2f%n", goldRevenue);
+    System.out.printf("Total Revenue for Silver Tickets: $%.2f%n", silverRevenue);
+    System.out.printf("Total Revenue for Bronze Tickets: $%.2f%n", bronzeRevenue);
+    System.out.printf("Total Revenue for General Admission Tickets: $%.2f%n", generalRevenue);
+    System.out.printf("Total Revenue for All Tickets: $%.2f%n", totalRevenue);
+
+    System.out.printf("%nExpected Profit: $%.2f%n", event.getExpectedProfit());
+
+    System.out.printf("Actual Profit: $%.2f%n", event.getActualProfit());
+
+    RunTicketMiner.log(
+        getUserName() + " generated event report for event ID " + event.getEventId());
+  }
 
   private Event findEvent(String search) {
     return RunTicketMiner.findMatch(events, search);
