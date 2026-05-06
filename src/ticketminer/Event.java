@@ -20,6 +20,7 @@ public abstract class Event implements Searchable {
   private int silverSold;
   private int bronzeSold;
   private int generalSold;
+  private int totalCapacity;
 
   /** Creates an empty event. */
   public Event() {
@@ -38,6 +39,7 @@ public abstract class Event implements Searchable {
     this.silverSold = 0;
     this.bronzeSold = 0;
     this.generalSold = 0;
+    this.totalCapacity = 0;
   }
 
   /**
@@ -80,6 +82,7 @@ public abstract class Event implements Searchable {
     this.silverSold = 0;
     this.bronzeSold = 0;
     this.generalSold = 0;
+    this.totalCapacity = 0;
   }
 
   public int getEventId() {
@@ -201,6 +204,14 @@ public abstract class Event implements Searchable {
   public void setGeneralSold(int generalSold) {
     this.generalSold = generalSold;
   }
+  
+  public int getTotalCapacity() {
+    return totalCapacity;
+}
+
+  public void setTotalCapacity(int totalCapacity) {
+    this.totalCapacity = totalCapacity;
+}
 
   /**
    * Checks whether the event matches an id, name, or date search.
@@ -230,6 +241,49 @@ public abstract class Event implements Searchable {
       return false;
     }
   }
+  
+public double getVipRevenue() {
+  return vipSold * vipPrice;
+}
+
+public double getGoldRevenue() {
+  return goldSold * goldPrice;
+}
+
+public double getSilverRevenue() {
+  return silverSold * silverPrice;
+}
+
+public double getBronzeRevenue() {
+  return bronzeSold * bronzePrice;
+}
+
+public double getGeneralRevenue() {
+  return generalSold * generalAdmissionPrice;
+}
+  
+  public double getTotalRevenue() {
+    return getVipRevenue()
+      + getGoldRevenue()
+      + getSilverRevenue()
+      + getBronzeRevenue()
+      + getGeneralRevenue();
+}
+
+public double getExpectedProfit() {
+  double averageTicketPrice =
+      (vipPrice
+      + goldPrice
+      + silverPrice
+      + bronzePrice
+      + generalAdmissionPrice) / 5.0;
+
+  return totalCapacity * averageTicketPrice;
+}
+
+public double getActualProfit() {
+  return getTotalRevenue();
+}
 
   @Override
   public String toString() {
@@ -254,4 +308,5 @@ public abstract class Event implements Searchable {
         + ", General Admission: $"
         + generalAdmissionPrice;
   }
+
 }
