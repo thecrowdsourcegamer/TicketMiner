@@ -809,6 +809,10 @@ public class RunTicketMiner {
             firstDetail,
             secondDetail,
             thirdDetail);
+  if (newEvent == null) {
+    System.out.println("Invalid event type.");
+    return;
+}
 
     events.add(newEvent);
     writeEventCsv(EVENT_OUTPUT_CSV);
