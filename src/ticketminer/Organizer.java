@@ -361,6 +361,7 @@ class Organizer extends User {
     System.out.println("Event Name: " + event.getEventName());
     System.out.println("Event Date: " + event.getDate());
     System.out.println("Event Time: " + event.getTime());
+    System.out.println("Event Capacity: " + event.getTotalCapacity());
 
     System.out.println("\n--- Seats Sold ---");
     System.out.println("Total Seats Sold: " + totalSold);
