@@ -127,6 +127,8 @@ class Organizer extends User {
     double bronzePrice = RunTicketMiner.readDouble(kb, "Enter Bronze Ticket Price: $");
     double generalPrice = RunTicketMiner.readDouble(kb, "Enter General Admission Ticket Price: $");
 
+    int totalCapacity = RunTicketMiner.readInt(kb, "Enter Event Capacity: ");
+    
     String firstDetail = null;
     String secondDetail = null;
     String thirdDetail = null;
@@ -171,8 +173,14 @@ class Organizer extends User {
             firstDetail,
             secondDetail,
             thirdDetail);
+    if (event == null) {
+      System.out.println("Invalid event type.");
+      return;
+}
     event.setEventType(type);
+    event.setTotalCapacity(totalCapacity);
     events.add(event);
+    
 
     RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
     RunTicketMiner.log(getUserName() + " added event ID " + id);
