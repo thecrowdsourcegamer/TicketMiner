@@ -3,7 +3,7 @@ package ticketminer;
 import java.util.Scanner;
 
 /** Represents a TicketMiner user. */
-public abstract class User {
+public abstract class User implements Searchable {
   private int userId;
   private String firstName;
   private String lastName;
@@ -96,6 +96,26 @@ public abstract class User {
    */
   public boolean checkPassword(String password) {
     return this.password.equals(password);
+  }
+
+  /**
+   * Checks whether the user matches an id, full name, or username search.
+   *
+   * @param input search input
+   * @return true when the user matches the search input
+   */
+  @Override
+  public boolean matchesSearch(String input) {
+    if (matchesUsername(input) || matchesName(input)) {
+      return true;
+    }
+
+    try {
+      int id = Integer.parseInt(input);
+      return matchesId(id);
+    } catch (NumberFormatException e) {
+      return false;
+    }
   }
 
   /**

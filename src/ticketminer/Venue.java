@@ -1,7 +1,7 @@
 package ticketminer;
 
 /** Represents a TicketMiner venue. */
-public abstract class Venue {
+public abstract class Venue implements Searchable {
 
   private int venueId;
   private String venueName;
@@ -95,6 +95,7 @@ public abstract class Venue {
    * @param input search input
    * @return true when the venue matches the search input
    */
+  @Override
   public boolean matchesSearch(String input) {
     if (matchesVenueName(input) || matchesVenueType(input)) {
       return true;

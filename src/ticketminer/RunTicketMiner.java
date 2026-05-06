@@ -111,6 +111,45 @@ public class RunTicketMiner {
   }
 
   /**
+   * Finds the first searchable item that matches the input.
+   *
+   * @param items searchable items
+   * @param input search input
+   * @param <T> searchable item type
+   * @return first matching item, or null if there is no match
+   */
+  public static <T extends Searchable> T findMatch(List<T> items, String input) {
+    for (T item : items) {
+      if (item.matchesSearch(input)) {
+        return item;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Prints all searchable items that match the input.
+   *
+   * @param items searchable items
+   * @param input search input
+   * @param <T> searchable item type
+   * @return true when at least one item matched
+   */
+  public static <T extends Searchable> boolean printMatches(List<T> items, String input) {
+    boolean found = false;
+
+    for (T item : items) {
+      if (item.matchesSearch(input)) {
+        System.out.println(item);
+        found = true;
+      }
+    }
+
+    return found;
+  }
+
+  /**
    * Creates the correct venue subtype for a CSV row.
    *
    * @param venueId unique venue id
@@ -532,14 +571,7 @@ public class RunTicketMiner {
     System.out.println("Enter venue ID, name, or type:");
     String input = keyboard.nextLine().trim();
 
-    boolean found = false;
-
-    for (Venue venue : venues) {
-      if (venue.matchesSearch(input)) {
-        System.out.println(venue);
-        found = true;
-      }
-    }
+    boolean found = printMatches(venues, input);
 
     if (found) {
       log(getActorName() + " searched for venue " + input);
@@ -557,13 +589,7 @@ public class RunTicketMiner {
    */
   public static Venue findVenue(String input) {
 
-    for (Venue venue : venues) {
-      if (venue.matchesSearch(input)) {
-        return venue;
-      }
-    }
-
-    return null;
+    return findMatch(venues, input);
   }
 
   /**
@@ -735,79 +761,54 @@ public class RunTicketMiner {
 
     double generalAdmissionPrice = readDouble(keyboard, "Enter General Admission price: ");
 
-    Event newEvent = null;
+    String firstDetail = null;
+    String secondDetail = null;
+    String thirdDetail = null;
 
     if (type.equalsIgnoreCase("Concert")) {
       System.out.print("Enter artist: ");
-      String artist = keyboard.nextLine().trim();
+      firstDetail = keyboard.nextLine().trim();
 
       System.out.print("Enter genre: ");
-      String genre = keyboard.nextLine().trim();
-
-      newEvent =
-          new Concert(
-              id,
-              name,
-              date,
-              time,
-              vipPrice,
-              goldPrice,
-              silverPrice,
-              bronzePrice,
-              generalAdmissionPrice,
-              artist,
-              genre);
+      secondDetail = keyboard.nextLine().trim();
 
     } else if (type.equalsIgnoreCase("Sport")) {
       System.out.print("Enter team1: ");
-      String team1 = keyboard.nextLine().trim();
+      firstDetail = keyboard.nextLine().trim();
 
       System.out.print("Enter team2: ");
-      String team2 = keyboard.nextLine().trim();
+      secondDetail = keyboard.nextLine().trim();
 
       System.out.print("Enter league: ");
-      String league = keyboard.nextLine().trim();
-
-      newEvent =
-          new Sport(
-              id,
-              name,
-              date,
-              time,
-              vipPrice,
-              goldPrice,
-              silverPrice,
-              bronzePrice,
-              generalAdmissionPrice,
-              team1,
-              team2,
-              league);
+      thirdDetail = keyboard.nextLine().trim();
 
     } else if (type.equalsIgnoreCase("Special")) {
       System.out.print("Enter description: ");
-      String description = keyboard.nextLine().trim();
+      firstDetail = keyboard.nextLine().trim();
 
       System.out.print("Enter category: ");
-      String category = keyboard.nextLine().trim();
-
-      newEvent =
-          new Special(
-              id,
-              name,
-              date,
-              time,
-              vipPrice,
-              goldPrice,
-              silverPrice,
-              bronzePrice,
-              generalAdmissionPrice,
-              description,
-              category);
+      secondDetail = keyboard.nextLine().trim();
 
     } else {
       System.out.println("Invalid event type.");
       return;
     }
+
+    Event newEvent =
+        EventFactory.createEvent(
+            id,
+            name,
+            type,
+            date,
+            time,
+            vipPrice,
+            goldPrice,
+            silverPrice,
+            bronzePrice,
+            generalAdmissionPrice,
+            firstDetail,
+            secondDetail,
+            thirdDetail);
 
     events.add(newEvent);
     writeEventCsv(EVENT_OUTPUT_CSV);
@@ -842,14 +843,7 @@ public class RunTicketMiner {
     System.out.println("Enter event ID, name, or date:");
     String input = keyboard.nextLine().trim();
 
-    boolean found = false;
-
-    for (Event event : events) {
-      if (event.matchesSearch(input)) {
-        System.out.println(event);
-        found = true;
-      }
-    }
+    boolean found = printMatches(events, input);
 
     if (found) {
       log(getActorName() + " searched for event " + input);
@@ -866,13 +860,7 @@ public class RunTicketMiner {
    * @return matching event or null if not found
    */
   public static Event findEvent(String input) {
-    for (Event event : events) {
-      if (event.matchesSearch(input)) {
-        return event;
-      }
-    }
-
-    return null;
+    return findMatch(events, input);
   }
 
   /**
@@ -1227,49 +1215,24 @@ public class RunTicketMiner {
           LocalDate eventDate = LocalDate.parse(date, DATE_FORMAT);
           LocalTime eventTime = LocalTime.parse(time, TIME_FORMAT);
 
-          if (type.equalsIgnoreCase("concert")) {
-            events.add(
-                new Concert(
-                    id,
-                    name,
-                    eventDate,
-                    eventTime,
-                    vipPrice,
-                    goldPrice,
-                    silverPrice,
-                    bronzePrice,
-                    generalAdmissionPrice,
-                    null,
-                    null));
-          } else if (type.equalsIgnoreCase("sport")) {
-            events.add(
-                new Sport(
-                    id,
-                    name,
-                    eventDate,
-                    eventTime,
-                    vipPrice,
-                    goldPrice,
-                    silverPrice,
-                    bronzePrice,
-                    generalAdmissionPrice,
-                    null,
-                    null,
-                    null));
-          } else if (type.equalsIgnoreCase("special")) {
-            events.add(
-                new Special(
-                    id,
-                    name,
-                    eventDate,
-                    eventTime,
-                    vipPrice,
-                    goldPrice,
-                    silverPrice,
-                    bronzePrice,
-                    generalAdmissionPrice,
-                    null,
-                    null));
+          Event event =
+              EventFactory.createEvent(
+                  id,
+                  name,
+                  type,
+                  eventDate,
+                  eventTime,
+                  vipPrice,
+                  goldPrice,
+                  silverPrice,
+                  bronzePrice,
+                  generalAdmissionPrice,
+                  null,
+                  null,
+                  null);
+
+          if (event != null) {
+            events.add(event);
           } else {
             System.out.println("Invalid event type for ID: " + id);
           }

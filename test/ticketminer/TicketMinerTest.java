@@ -66,6 +66,52 @@ public class TicketMinerTest {
   }
 
   @Test
+  public void testUserMatchesSearchByIdNameAndUsername() {
+    User user =
+        new Customer(
+            12,
+            "Derek",
+            "Garcia",
+            "dgarcia",
+            "password",
+            "customer",
+            new Scanner(""),
+            100.00,
+            true,
+            0);
+
+    assertTrue(user.matchesSearch("12"));
+    assertTrue(user.matchesSearch("Derek Garcia"));
+    assertTrue(user.matchesSearch("dgarcia"));
+
+    assertFalse(user.matchesSearch("13"));
+    assertFalse(user.matchesSearch("Wrong Name"));
+    assertFalse(user.matchesSearch("otheruser"));
+  }
+
+  @Test
+  public void testEventFactoryCreatesRequestedEventType() {
+    Event event =
+        EventFactory.createEvent(
+            20,
+            "Championship",
+            "Sport",
+            LocalDate.of(2026, 6, 1),
+            LocalTime.of(18, 0),
+            120.00,
+            90.00,
+            70.00,
+            50.00,
+            30.00,
+            "Team A",
+            "Team B",
+            "NCAA");
+
+    assertTrue(event instanceof Sport);
+    assertTrue(event.matchesSearch("Championship"));
+  }
+
+  @Test
   public void testReadIntHandlesInvalidInputThenValidInput() {
     Scanner scanner = new Scanner("abc\n42\n");
 

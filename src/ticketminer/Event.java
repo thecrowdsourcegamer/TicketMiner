@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /** Represents a TicketMiner event. */
-public abstract class Event {
+public abstract class Event implements Searchable {
   private int eventId;
   private String eventName;
   private LocalDate date;
@@ -208,6 +208,7 @@ public abstract class Event {
    * @param input search input
    * @return true when the event matches the search input
    */
+  @Override
   public boolean matchesSearch(String input) {
     if (eventName.equalsIgnoreCase(input)) {
       return true;

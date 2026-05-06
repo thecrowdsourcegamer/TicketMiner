@@ -303,32 +303,13 @@ public class Admin extends User {
   }
 
   private User findAnyUser(String input) {
-    for (User user : users) {
-      if (matchesSearch(user, input)) {
-        return user;
-      }
+    User found = RunTicketMiner.findMatch(users, input);
+
+    if (found != null) {
+      return found;
     }
 
-    for (Admin admin : admins) {
-      if (matchesSearch(admin, input)) {
-        return admin;
-      }
-    }
-
-    return null;
-  }
-
-  private boolean matchesSearch(User user, String input) {
-    if (user.matchesUsername(input) || user.matchesName(input)) {
-      return true;
-    }
-
-    try {
-      int id = Integer.parseInt(input);
-      return user.matchesId(id);
-    } catch (NumberFormatException e) {
-      return false;
-    }
+    return RunTicketMiner.findMatch(admins, input);
   }
 
   private boolean usernameExists(String username) {
