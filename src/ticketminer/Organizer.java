@@ -174,7 +174,7 @@ class Organizer extends User {
     event.setEventType(type);
     events.add(event);
 
-    RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+    RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
     RunTicketMiner.log(getUserName() + " added event ID " + id);
 
   System.out.println("Event added successfully.");
@@ -258,7 +258,7 @@ class Organizer extends User {
         String newName = kb.nextLine().trim();
         event.setEventName(newName);
 
-    RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+    RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
     RunTicketMiner.log(getUserName() + " updated event name for event ID " + event.getEventId());
 
     System.out.println("Event name updated.");
@@ -272,7 +272,7 @@ class Organizer extends User {
   event.setTime(newTime);
 
 
-  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
   RunTicketMiner.log(getUserName() + " updated event date/time for event ID " + event.getEventId());
 
   System.out.println("Event date and time updated.");
@@ -305,7 +305,7 @@ class Organizer extends User {
       events.remove(event);
 
 
-  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
   RunTicketMiner.log(getUserName() + " deleted event ID " + event.getEventId());
 
   System.out.println("Event deleted.");

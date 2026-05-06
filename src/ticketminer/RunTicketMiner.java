@@ -30,9 +30,9 @@ public class RunTicketMiner {
   private static final String VENUE_INPUT_CSV = CSV_DIR + "Venue_List_PA1.csv";
   private static final String EVENT_INPUT_CSV = CSV_DIR + "Event_List_PA1.csv";
 
-  private static final String USER_OUTPUT_CSV = CSV_DIR + "Updated_Customer_List_PA1.csv";
-  private static final String VENUE_OUTPUT_CSV = CSV_DIR + "Updated_Venue_List_PA1.csv";
-  private static final String EVENT_OUTPUT_CSV = CSV_DIR + "Updated_Event_List_PA1.csv";
+  private static final String USER_OUTPUT_CSV = CSV_DIR + "Updated_Customer_List_PA2.csv";
+  private static final String VENUE_OUTPUT_CSV = CSV_DIR + "Updated_Venue_List_PA2.csv";
+  private static final String EVENT_OUTPUT_CSV = CSV_DIR + "Updated_Event_List_PA2.csv";
 
   private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM/dd/yyyy");
   private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("h:mm a");
