@@ -171,13 +171,13 @@ class Organizer extends User {
             firstDetail,
             secondDetail,
             thirdDetail);
-event.setEventType(type);
-events.add(event);
+    event.setEventType(type);
+    events.add(event);
 
-RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
-RunTicketMiner.log(getUserName() + " added event ID " + id);
+    RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+    RunTicketMiner.log(getUserName() + " added event ID " + id);
 
-System.out.println("Event added successfully.");
+  System.out.println("Event added successfully.");
   }
 
   private void viewEventMenu() {
@@ -258,25 +258,25 @@ System.out.println("Event added successfully.");
         String newName = kb.nextLine().trim();
         event.setEventName(newName);
 
-RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
-RunTicketMiner.log(getUserName() + " updated event name for event ID " + event.getEventId());
+    RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+    RunTicketMiner.log(getUserName() + " updated event name for event ID " + event.getEventId());
 
-System.out.println("Event name updated.");
-break;
+    System.out.println("Event name updated.");
+    break;
 
       case "2":
         LocalDate newDate = RunTicketMiner.readDate(kb, "Enter New Date");
         LocalTime newTime = RunTicketMiner.readTime(kb, "Enter New Time");
 
   event.setDate(newDate);
-event.setTime(newTime);
+  event.setTime(newTime);
 
 
-RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
-RunTicketMiner.log(getUserName() + " updated event date/time for event ID " + event.getEventId());
+  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+  RunTicketMiner.log(getUserName() + " updated event date/time for event ID " + event.getEventId());
 
-System.out.println("Event date and time updated.");
-break;
+  System.out.println("Event date and time updated.");
+  break;
 
       default:
         System.out.println("Invalid option.");
@@ -305,10 +305,10 @@ break;
       events.remove(event);
 
 
-RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
-RunTicketMiner.log(getUserName() + " deleted event ID " + event.getEventId());
+  RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA1.csv");
+  RunTicketMiner.log(getUserName() + " deleted event ID " + event.getEventId());
 
-System.out.println("Event deleted.");
+  System.out.println("Event deleted.");
     } else {
       System.out.println("Delete cancelled.");
     }
@@ -335,13 +335,13 @@ System.out.println("Event deleted.");
 
         int totalSold = vipSold + goldSold + silverSold + bronzeSold + generalSold;
 
-        double vipRevenue = vipSold * event.getVipPrice();
-        double goldRevenue = goldSold * event.getGoldPrice();
-        double silverRevenue = silverSold * event.getSilverPrice();
-        double bronzeRevenue = bronzeSold * event.getBronzePrice();
-        double generalRevenue = generalSold * event.getGeneralAdmissionPrice();
+      double vipRevenue = event.getVipRevenue();
+      double goldRevenue = event.getGoldRevenue();
+      double silverRevenue = event.getSilverRevenue();
+      double bronzeRevenue = event.getBronzeRevenue();
+      double generalRevenue = event.getGeneralRevenue();
 
-        double totalRevenue = vipRevenue + goldRevenue + silverRevenue + bronzeRevenue + generalRevenue;
+      double totalRevenue = event.getTotalRevenue();
 
         System.out.println("\n--- Event Report ---");
         System.out.println("Event ID: " + event.getEventId());
@@ -366,8 +366,11 @@ System.out.println("Event deleted.");
         System.out.printf("Total Revenue for General Admission Tickets: $%.2f%n", generalRevenue);
         System.out.printf("Total Revenue for All Tickets: $%.2f%n", totalRevenue);
 
-        System.out.println("\nExpected Profit: Not calculated yet");
-        System.out.println("Actual Profit: Not calculated yet");
+       System.out.printf("%nExpected Profit: $%.2f%n",
+          event.getExpectedProfit());
+
+      System.out.printf("Actual Profit: $%.2f%n",
+          event.getActualProfit());
 
         RunTicketMiner.log(getUserName() + " generated event report for event ID " + event.getEventId());
     }
