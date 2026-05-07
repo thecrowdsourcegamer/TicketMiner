@@ -364,22 +364,12 @@ public class Customer extends User {
     setMoneyAvailable(balanceBefore - total);
     setConcertsPurchased(getConcertsPurchased() + totalTicketQuantity(cart));
 
-    orders += "Order Confirmation: " + confirmationNumber + "\n";
+    orders += "Confirmation Number: " + confirmationNumber + "\n";
     orders += "Balance before: $" + balanceBefore + "\n";
 
-    for (Map.Entry<String, CartItem> entry : cart.entrySet()) {
-      CartItem item = entry.getValue();
+    for (CartItem item : cart.values()) {
       updateSoldTickets(item);
-      orders +=
-          "Item: "
-              + entry.getKey()
-              + " | Qty: "
-              + item.quantity()
-              + " | Price: $"
-              + item.price()
-              + " | Subtotal: $"
-              + item.subtotal()
-              + "\n";
+      orders += orderLine(item, confirmationNumber);
     }
 
     orders += "Subtotal: $" + subtotal + "\n";
@@ -393,6 +383,26 @@ public class Customer extends User {
     System.out.println("Purchase successful! Confirmation number: " + confirmationNumber);
     System.out.println("Remaining balance: $" + getMoneyAvailable());
     RunTicketMiner.log(getUserName() + " completed purchase " + confirmationNumber);
+  }
+
+  private String orderLine(CartItem item, String confirmationNumber) {
+    Event event = item.event();
+
+    return "Event Type: "
+        + event.getEventType()
+        + "\nEvent Name: "
+        + event.getEventName()
+        + "\nEvent Date: "
+        + event.getDate()
+        + "\nTicket Type: "
+        + item.tierName()
+        + "\nNumber of Tickets: "
+        + item.quantity()
+        + "\nTotal Price: $"
+        + item.subtotal()
+        + "\nConfirmation Number: "
+        + confirmationNumber
+        + "\n";
   }
 
   private void printOrderSummary() {
