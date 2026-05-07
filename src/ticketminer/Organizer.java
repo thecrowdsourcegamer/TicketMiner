@@ -110,7 +110,7 @@ class Organizer extends User {
   private void addEvent() {
     Scanner kb = getKeyboard();
 
-    int id = RunTicketMiner.readInt(kb, "Enter Event ID: ");
+    final int id = RunTicketMiner.readInt(kb, "Enter Event ID: ");
 
     System.out.print("Enter Event Name: ");
     String name = kb.nextLine().trim();
@@ -127,8 +127,8 @@ class Organizer extends User {
     double bronzePrice = RunTicketMiner.readDouble(kb, "Enter Bronze Ticket Price: $");
     double generalPrice = RunTicketMiner.readDouble(kb, "Enter General Admission Ticket Price: $");
 
-    int totalCapacity = RunTicketMiner.readInt(kb, "Enter Event Capacity: ");
-    
+    final int totalCapacity = RunTicketMiner.readInt(kb, "Enter Event Capacity: ");
+
     String firstDetail = null;
     String secondDetail = null;
     String thirdDetail = null;
@@ -176,11 +176,10 @@ class Organizer extends User {
     if (event == null) {
       System.out.println("Invalid event type.");
       return;
-}
+    }
     event.setEventType(type);
     event.setTotalCapacity(totalCapacity);
     events.add(event);
-    
 
     RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
     RunTicketMiner.log(getUserName() + " added event ID " + id);
@@ -242,7 +241,8 @@ class Organizer extends User {
       RunTicketMiner.log(getUserName() + " searched for event " + search);
     } else {
       System.out.println("Event not found.");
-      RunTicketMiner.log(getUserName() + " searched for event " + search + " but no match was found");
+      RunTicketMiner.log(
+          getUserName() + " searched for event " + search + " but no match was found");
     }
   }
 
