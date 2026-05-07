@@ -307,6 +307,17 @@ public class RunTicketMiner {
     }
   }
 
+  private static int parseOptionalIntField(
+      String[] fields, String[] header, String columnName, String line) {
+    int index = findHeaderIndex(header, columnName);
+
+    if (index < 0 || index >= fields.length || fields[index].trim().isEmpty()) {
+      return 0;
+    }
+
+    return parseIntField(fields[index], columnName, line);
+  }
+
   /**
    * Reads a decimal value from the keyboard.
    *
@@ -739,7 +750,7 @@ public class RunTicketMiner {
    * @param keyboard Scanner used to read user input
    */
   public static void addEvent(Scanner keyboard) {
-    int id = readInt(keyboard, "Enter event ID: ");
+    final int id = readInt(keyboard, "Enter event ID: ");
 
     System.out.print("Enter event name: ");
     String name = keyboard.nextLine().trim();
@@ -809,10 +820,10 @@ public class RunTicketMiner {
             firstDetail,
             secondDetail,
             thirdDetail);
-  if (newEvent == null) {
-    System.out.println("Invalid event type.");
-    return;
-}
+    if (newEvent == null) {
+      System.out.println("Invalid event type.");
+      return;
+    }
 
     events.add(newEvent);
     writeEventCsv(EVENT_OUTPUT_CSV);
@@ -887,6 +898,7 @@ public class RunTicketMiner {
     System.out.println("Found event: " + event);
     System.out.println("1: Change Name");
     System.out.println("2: Change Date and Time");
+    System.out.println("3: Change Capacity");
 
     String choice = keyboard.nextLine().trim();
 
@@ -909,7 +921,36 @@ public class RunTicketMiner {
         log(getActorName() + " updated event date/time for event ID " + event.getEventId());
         System.out.println("Event date and time updated successfully.");
       }
+      case "3" -> updateEventCapacity(keyboard, event);
       default -> System.out.println("Invalid option.");
+    }
+  }
+
+  private static void updateEventCapacity(Scanner keyboard, Event event) {
+    int newCapacity = readInt(keyboard, "Enter new event capacity: ");
+
+    try {
+      validateEventCapacity(event, newCapacity);
+      event.setTotalCapacity(newCapacity);
+      writeEventCsv(EVENT_OUTPUT_CSV);
+      log(getActorName() + " updated event capacity for event ID " + event.getEventId());
+      System.out.println("Event capacity updated successfully.");
+    } catch (NotEnoughTicketsException e) {
+      System.out.println(e.getMessage());
+      log(
+          getActorName()
+              + " attempted to set event ID "
+              + event.getEventId()
+              + " capacity below sold tickets");
+    }
+  }
+
+  private static void validateEventCapacity(Event event, int newCapacity)
+      throws NotEnoughTicketsException {
+    if (newCapacity < event.getTotalTicketsSold()) {
+      throw new NotEnoughTicketsException(
+          "Capacity cannot be lower than tickets already sold: "
+              + event.getTotalTicketsSold());
     }
   }
 
@@ -1236,6 +1277,12 @@ public class RunTicketMiner {
                   null);
 
           if (event != null) {
+            event.setTotalCapacity(parseOptionalIntField(fields, header, "Total Capacity", line));
+            event.setVipSold(parseOptionalIntField(fields, header, "VIP Sold", line));
+            event.setGoldSold(parseOptionalIntField(fields, header, "Gold Sold", line));
+            event.setSilverSold(parseOptionalIntField(fields, header, "Silver Sold", line));
+            event.setBronzeSold(parseOptionalIntField(fields, header, "Bronze Sold", line));
+            event.setGeneralSold(parseOptionalIntField(fields, header, "General Sold", line));
             events.add(event);
           } else {
             System.out.println("Invalid event type for ID: " + id);
@@ -1384,7 +1431,7 @@ public class RunTicketMiner {
         if (user instanceof Customer customer) {
           moneyAvailable = String.valueOf(customer.getMoneyAvailable());
           membership = String.valueOf(customer.isMembership());
-          concertsPurchased = "0";
+          concertsPurchased = String.valueOf(customer.getConcertsPurchased());
         }
 
         writeCsvLine(
@@ -1481,7 +1528,13 @@ public class RunTicketMiner {
           "Gold Price",
           "Silver Price",
           "Bronze Price",
-          "General Admission Price");
+          "General Admission Price",
+          "Total Capacity",
+          "VIP Sold",
+          "Gold Sold",
+          "Silver Sold",
+          "Bronze Sold",
+          "General Sold");
 
       for (Event event : events) {
         writeCsvLine(
@@ -1495,7 +1548,13 @@ public class RunTicketMiner {
             String.valueOf(event.getGoldPrice()),
             String.valueOf(event.getSilverPrice()),
             String.valueOf(event.getBronzePrice()),
-            String.valueOf(event.getGeneralAdmissionPrice()));
+            String.valueOf(event.getGeneralAdmissionPrice()),
+            String.valueOf(event.getTotalCapacity()),
+            String.valueOf(event.getVipSold()),
+            String.valueOf(event.getGoldSold()),
+            String.valueOf(event.getSilverSold()),
+            String.valueOf(event.getBronzeSold()),
+            String.valueOf(event.getGeneralSold()));
       }
 
     } catch (IOException e) {

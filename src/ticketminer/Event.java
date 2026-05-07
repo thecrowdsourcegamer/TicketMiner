@@ -204,14 +204,14 @@ public abstract class Event implements Searchable {
   public void setGeneralSold(int generalSold) {
     this.generalSold = generalSold;
   }
-  
+
   public int getTotalCapacity() {
     return totalCapacity;
-}
+  }
 
   public void setTotalCapacity(int totalCapacity) {
     this.totalCapacity = totalCapacity;
-}
+  }
 
   /**
    * Checks whether the event matches an id, name, or date search.
@@ -241,49 +241,59 @@ public abstract class Event implements Searchable {
       return false;
     }
   }
-  
-public double getVipRevenue() {
-  return vipSold * vipPrice;
-}
 
-public double getGoldRevenue() {
-  return goldSold * goldPrice;
-}
+  public double getVipRevenue() {
+    return vipSold * vipPrice;
+  }
 
-public double getSilverRevenue() {
-  return silverSold * silverPrice;
-}
+  public double getGoldRevenue() {
+    return goldSold * goldPrice;
+  }
 
-public double getBronzeRevenue() {
-  return bronzeSold * bronzePrice;
-}
+  public double getSilverRevenue() {
+    return silverSold * silverPrice;
+  }
 
-public double getGeneralRevenue() {
-  return generalSold * generalAdmissionPrice;
-}
-  
+  public double getBronzeRevenue() {
+    return bronzeSold * bronzePrice;
+  }
+
+  public double getGeneralRevenue() {
+    return generalSold * generalAdmissionPrice;
+  }
+
   public double getTotalRevenue() {
     return getVipRevenue()
-      + getGoldRevenue()
-      + getSilverRevenue()
-      + getBronzeRevenue()
-      + getGeneralRevenue();
-}
+        + getGoldRevenue()
+        + getSilverRevenue()
+        + getBronzeRevenue()
+        + getGeneralRevenue();
+  }
 
-public double getExpectedProfit() {
-  double averageTicketPrice =
-      (vipPrice
-      + goldPrice
-      + silverPrice
-      + bronzePrice
-      + generalAdmissionPrice) / 5.0;
+  /**
+   * Returns the total number of sold tickets across all ticket tiers.
+   *
+   * @return total sold tickets
+   */
+  public int getTotalTicketsSold() {
+    return vipSold + goldSold + silverSold + bronzeSold + generalSold;
+  }
 
-  return totalCapacity * averageTicketPrice;
-}
+  /**
+   * Returns expected profit when all tickets sell at the average ticket price.
+   *
+   * @return expected event profit
+   */
+  public double getExpectedProfit() {
+    double averageTicketPrice =
+        (vipPrice + goldPrice + silverPrice + bronzePrice + generalAdmissionPrice) / 5.0;
 
-public double getActualProfit() {
-  return getTotalRevenue();
-}
+    return totalCapacity * averageTicketPrice;
+  }
+
+  public double getActualProfit() {
+    return getTotalRevenue();
+  }
 
   @Override
   public String toString() {
@@ -308,5 +318,4 @@ public double getActualProfit() {
         + ", General Admission: $"
         + generalAdmissionPrice;
   }
-
 }

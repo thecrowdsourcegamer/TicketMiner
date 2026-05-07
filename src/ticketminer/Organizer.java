@@ -262,6 +262,7 @@ class Organizer extends User {
     System.out.println("\nWhat do you want to update?");
     System.out.println("1: Event Name");
     System.out.println("2: Event Date and Time");
+    System.out.println("3: Event Capacity");
     System.out.print("Choose an option: ");
 
     String choice = kb.nextLine().trim();
@@ -293,8 +294,43 @@ class Organizer extends User {
         System.out.println("Event date and time updated.");
         break;
 
+      case "3":
+        updateEventCapacity(event);
+        break;
+
       default:
         System.out.println("Invalid option.");
+    }
+  }
+
+  private void updateEventCapacity(Event event) {
+    Scanner kb = getKeyboard();
+    int newCapacity = RunTicketMiner.readInt(kb, "Enter New Event Capacity: ");
+
+    try {
+      validateCapacity(event, newCapacity);
+      event.setTotalCapacity(newCapacity);
+
+      RunTicketMiner.writeEventCsv("csvs/Updated_Event_List_PA2.csv");
+      RunTicketMiner.log(
+          getUserName() + " updated event capacity for event ID " + event.getEventId());
+
+      System.out.println("Event capacity updated.");
+    } catch (NotEnoughTicketsException e) {
+      System.out.println(e.getMessage());
+      RunTicketMiner.log(
+          getUserName()
+              + " attempted to set event ID "
+              + event.getEventId()
+              + " capacity below sold tickets");
+    }
+  }
+
+  private void validateCapacity(Event event, int newCapacity) throws NotEnoughTicketsException {
+    if (newCapacity < event.getTotalTicketsSold()) {
+      throw new NotEnoughTicketsException(
+          "Capacity cannot be lower than tickets already sold: "
+              + event.getTotalTicketsSold());
     }
   }
 
