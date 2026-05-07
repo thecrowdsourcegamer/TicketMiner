@@ -1,0 +1,16 @@
+----ORDERS----
+Confirmation Number: TM-75-1778128837859
+Balance before: $2913597.39
+Event Type: Sport
+Event Name: UTEP Basketball 31
+Event Date: 2026-03-05
+Ticket Type: VIP
+Number of Tickets: 1
+Total Price: $31.5
+Confirmation Number: TM-75-1778128837859
+Subtotal: $31.5
+Membership discount: $3.1500000000000004
+Tax: $2.3388750000000003
+Total charged: $30.688875000000003
+Balance after: $2913566.701125
+
